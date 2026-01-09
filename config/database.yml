@@ -19,16 +19,15 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   <<: *default
-  database: bi_dashboard_management_system_development
+  database: st_insight_hub_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
   # the same name as the operating system user running Rails.
-  #username: bi_dashboard_management_system
+  #username: st_insight_hub
 
   # The password associated with the PostgreSQL role (username).
   #password:
@@ -56,7 +55,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: bi_dashboard_management_system_test
+  database: st_insight_hub_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -87,18 +86,18 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: bi_dashboard_management_system_production
-    username: bi_dashboard_management_system
-    password: <%= ENV["BI_DASHBOARD_MANAGEMENT_SYSTEM_DATABASE_PASSWORD"] %>
+    database: st_insight_hub_production
+    username: st_insight_hub
+    password: <%= ENV["ST_INSIGHT_HUB_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
-    database: bi_dashboard_management_system_production_cache
+    database: st_insight_hub_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: bi_dashboard_management_system_production_queue
+    database: st_insight_hub_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: bi_dashboard_management_system_production_cable
+    database: st_insight_hub_production_cable
     migrations_paths: db/cable_migrate

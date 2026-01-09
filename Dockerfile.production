@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t bi_dashboard_management_system .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name bi_dashboard_management_system bi_dashboard_management_system
+# docker build -t st_insight_hub .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name st_insight_hub st_insight_hub
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 

@@ -14,7 +14,6 @@ RUN apt-get update -qq && \
     nodejs \
     npm \
     postgresql-client \
-    vim \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set working directory

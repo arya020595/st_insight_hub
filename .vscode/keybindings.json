@@ -1,0 +1,12 @@
+[
+  {
+    "key": "ctrl+shift+f",
+    "command": "rubocop.formatAutocorrects",
+    "when": "editorLangId == ruby"
+  },
+  {
+    "key": "ctrl+alt+f",
+    "command": "rubocop.autocorrectAll",
+    "when": "editorLangId == ruby"
+  }
+]

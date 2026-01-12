@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   # Eager load role and permissions to avoid N+1 queries in sidebar navigation
   # The sidebar calls has_permission? multiple times, so we preload the associations
   def eager_load_user_permissions
-    return unless current_user&.role_id?
+    return unless current_user&.role_id.present?
 
     # Preload role and its permissions if not already loaded
     ActiveRecord::Associations::Preloader.new(

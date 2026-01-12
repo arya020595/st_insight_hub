@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
   before_action :set_current_user
+  before_action :eager_load_user_permissions
 
   # Smart layout switching: dashboard for authenticated pages, application for public pages
   layout :set_layout
@@ -28,6 +29,18 @@ class ApplicationController < ActionController::Base
 
   def set_current_user
     Current.user = current_user
+  end
+
+  # Eager load role and permissions to avoid N+1 queries in sidebar navigation
+  # The sidebar calls has_permission? multiple times, so we preload the associations
+  def eager_load_user_permissions
+    return unless current_user&.role_id?
+
+    # Preload role and its permissions if not already loaded
+    ActiveRecord::Associations::Preloader.new(
+      records: [current_user],
+      associations: { role: :permissions }
+    ).call
   end
 
   # Override Devise method to redirect users to their first accessible resource

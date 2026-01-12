@@ -9,7 +9,9 @@ class Role < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  # Touch role when permissions change to invalidate user permission cache
   before_destroy :check_for_users
+  after_touch :clear_users_permission_cache
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
@@ -27,5 +29,10 @@ class Role < ApplicationRecord
 
     errors.add(:base, "Cannot delete role with associated users")
     throw(:abort)
+  end
+
+  # Clear permission cache for all users with this role when role is touched
+  def clear_users_permission_cache
+    users.find_each(&:clear_permission_cache)
   end
 end

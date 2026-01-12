@@ -13,6 +13,9 @@ class User < ApplicationRecord
 
   validates :name, presence: true
 
+  # Clear cached permissions when role changes
+  after_save :clear_permission_cache, if: :saved_change_to_role_id?
+
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
     %w[id email name role_id created_at updated_at current_sign_in_at last_sign_in_at sign_in_count]
@@ -29,8 +32,7 @@ class User < ApplicationRecord
     return false unless role
     return true if superadmin?
 
-    @permission_codes ||= role.permissions.pluck(:code)
-    @permission_codes.include?(code)
+    permission_codes.include?(code)
   end
 
   # Check if user has any permission for a resource
@@ -39,8 +41,35 @@ class User < ApplicationRecord
     return false unless role
     return true if superadmin?
 
-    @permission_codes ||= role.permissions.pluck(:code)
-    @permission_codes.any? { |code| code.start_with?("#{resource}.") }
+    permission_codes.any? { |code| code.start_with?("#{resource}.") }
+  end
+
+  # Clear the permission cache (useful when role permissions are updated)
+  def clear_permission_cache
+    @permission_codes = nil
+  end
+
+  private
+
+  # Cache permission codes with role/permissions as cache key
+  # Cache is automatically invalidated when role or its permissions change
+  def permission_codes
+    # Use a composite cache key based on role ID and role's updated_at timestamp
+    # This ensures cache invalidation when role's permissions are modified
+    cache_key = "user_#{id}_role_#{role.id}_#{role.updated_at.to_i}"
+
+    @permission_codes = nil if @cache_key != cache_key
+    @cache_key = cache_key
+
+    @permission_codes ||= begin
+      # Use loaded association if available (eager loaded in controller)
+      # Otherwise, use pluck for performance
+      if role.association(:permissions).loaded?
+        role.permissions.map(&:code)
+      else
+        role.permissions.pluck(:code)
+      end
+    end
   end
 
   # Check if user is superadmin (bypasses all permission checks)

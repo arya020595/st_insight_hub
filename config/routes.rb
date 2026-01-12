@@ -11,16 +11,16 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Health check for load balancers and uptime monitors
-  get 'up' => 'rails/health#show', as: :rails_health_check
+  get "up" => "rails/health#show", as: :rails_health_check
 
   # Root path
-  root 'dashboard#index'
+  root "dashboard#index"
 
   # Dashboard
-  get 'dashboard', to: 'dashboard#index'
+  get "dashboard", to: "dashboard#index"
 
   # BI Dashboard Display (view dashboards)
-  resources :bi_dashboards, only: [:index]
+  resources :bi_dashboards, only: [ :index ]
 
   # Projects and Dashboards Management
   resources :projects, concerns: :restorable do

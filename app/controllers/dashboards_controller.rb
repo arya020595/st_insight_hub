@@ -15,13 +15,13 @@ class DashboardsController < ApplicationController
 
     if @dashboard.save
       log_audit(
-        action: 'create',
-        module_name: 'dashboards',
+        action: "create",
+        module_name: "dashboards",
         auditable: @dashboard,
         summary: "Created dashboard: #{@dashboard.name} in project: #{@project.name}",
         data_after: @dashboard.attributes
       )
-      redirect_to @project, notice: 'Dashboard was successfully created.'
+      redirect_to @project, notice: "Dashboard was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -37,14 +37,14 @@ class DashboardsController < ApplicationController
 
     if @dashboard.update(dashboard_params)
       log_audit(
-        action: 'update',
-        module_name: 'dashboards',
+        action: "update",
+        module_name: "dashboards",
         auditable: @dashboard,
         summary: "Updated dashboard: #{@dashboard.name}",
         data_before: data_before,
         data_after: @dashboard.attributes
       )
-      redirect_to @project, notice: 'Dashboard was successfully updated.'
+      redirect_to @project, notice: "Dashboard was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -56,13 +56,13 @@ class DashboardsController < ApplicationController
     @dashboard.discard
 
     log_audit(
-      action: 'delete',
-      module_name: 'dashboards',
+      action: "delete",
+      module_name: "dashboards",
       auditable: @dashboard,
       summary: "Deleted dashboard: #{@dashboard.name}",
       data_before: data_before
     )
-    redirect_to @project, notice: 'Dashboard was successfully deleted.'
+    redirect_to @project, notice: "Dashboard was successfully deleted."
   end
 
   private

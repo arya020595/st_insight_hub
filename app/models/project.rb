@@ -9,8 +9,8 @@ class Project < ApplicationRecord
   validates :code, presence: true, uniqueness: true
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
 
-  scope :active, -> { where(status: 'active') }
-  scope :inactive, -> { where(status: 'inactive') }
+  scope :active, -> { where(status: "active") }
+  scope :inactive, -> { where(status: "inactive") }
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
@@ -22,7 +22,7 @@ class Project < ApplicationRecord
   end
 
   def active?
-    status == 'active'
+    status == "active"
   end
 
   def dashboards_count

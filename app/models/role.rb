@@ -25,7 +25,7 @@ class Role < ApplicationRecord
   def check_for_users
     return unless users.exists?
 
-    errors.add(:base, 'Cannot delete role with associated users')
+    errors.add(:base, "Cannot delete role with associated users")
     throw(:abort)
   end
 end

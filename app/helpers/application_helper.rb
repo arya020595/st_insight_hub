@@ -34,20 +34,20 @@ module ApplicationHelper
   # @return [String] Bootstrap badge class
   def action_badge_class(action)
     case action.to_s.downcase
-    when 'create'
-      'success'
-    when 'update'
-      'primary'
-    when 'delete'
-      'danger'
-    when 'login'
-      'info'
-    when 'logout'
-      'secondary'
-    when 'view', 'export'
-      'warning'
+    when "create"
+      "success"
+    when "update"
+      "primary"
+    when "delete"
+      "danger"
+    when "login"
+      "info"
+    when "logout"
+      "secondary"
+    when "view", "export"
+      "warning"
     else
-      'secondary'
+      "secondary"
     end
   end
 
@@ -56,12 +56,12 @@ module ApplicationHelper
   # @return [String] Bootstrap badge class
   def status_badge_class(status)
     case status.to_s.downcase
-    when 'active'
-      'success'
-    when 'inactive'
-      'secondary'
+    when "active"
+      "success"
+    when "inactive"
+      "secondary"
     else
-      'secondary'
+      "secondary"
     end
   end
 
@@ -70,15 +70,15 @@ module ApplicationHelper
   # @param format [Symbol] the format to use (:short, :long, :date_only)
   # @return [String] formatted datetime
   def format_datetime(datetime, format = :short)
-    return '-' if datetime.blank?
+    return "-" if datetime.blank?
 
     case format
     when :short
-      datetime.strftime('%Y-%m-%d %H:%M')
+      datetime.strftime("%Y-%m-%d %H:%M")
     when :long
-      datetime.strftime('%B %d, %Y at %I:%M %p')
+      datetime.strftime("%B %d, %Y at %I:%M %p")
     when :date_only
-      datetime.strftime('%Y-%m-%d')
+      datetime.strftime("%Y-%m-%d")
     else
       datetime.to_s
     end

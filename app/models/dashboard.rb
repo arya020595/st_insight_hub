@@ -10,8 +10,8 @@ class Dashboard < ApplicationRecord
   validates :embed_type, presence: true, inclusion: { in: %w[iframe embed_url] }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
 
-  scope :active, -> { where(status: 'active') }
-  scope :inactive, -> { where(status: 'inactive') }
+  scope :active, -> { where(status: "active") }
+  scope :inactive, -> { where(status: "inactive") }
   scope :ordered, -> { order(position: :asc, created_at: :desc) }
 
   # Ransack configuration
@@ -24,6 +24,6 @@ class Dashboard < ApplicationRecord
   end
 
   def active?
-    status == 'active'
+    status == "active"
   end
 end

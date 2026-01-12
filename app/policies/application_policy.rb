@@ -9,15 +9,15 @@ class ApplicationPolicy
   end
 
   def index?
-    user.has_permission?(build_permission_code('index'))
+    user.has_permission?(build_permission_code("index"))
   end
 
   def show?
-    user.has_permission?(build_permission_code('show'))
+    user.has_permission?(build_permission_code("show"))
   end
 
   def create?
-    user.has_permission?(build_permission_code('create'))
+    user.has_permission?(build_permission_code("create"))
   end
 
   def new?
@@ -25,7 +25,7 @@ class ApplicationPolicy
   end
 
   def update?
-    user.has_permission?(build_permission_code('update'))
+    user.has_permission?(build_permission_code("update"))
   end
 
   def edit?
@@ -33,7 +33,7 @@ class ApplicationPolicy
   end
 
   def destroy?
-    user.has_permission?(build_permission_code('destroy'))
+    user.has_permission?(build_permission_code("destroy"))
   end
 
   def restore?
@@ -68,7 +68,7 @@ class ApplicationPolicy
       return scope.all if user.superadmin?
 
       # Check permission for non-superadmin users
-      return scope.none unless user.has_permission?(build_permission_code('index'))
+      return scope.none unless user.has_permission?(build_permission_code("index"))
 
       # Apply role-based filtering for non-superadmin users
       apply_role_based_scope

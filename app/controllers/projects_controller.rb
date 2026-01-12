@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
   def index
     authorize Project
     @q = policy_scope(Project).kept.ransack(params[:q])
-    @q.sorts = 'created_at desc' if @q.sorts.empty?
+    @q.sorts = "created_at desc" if @q.sorts.empty?
     @pagy, @projects = pagy(@q.result.includes(:dashboards))
   end
 
@@ -25,13 +25,13 @@ class ProjectsController < ApplicationController
 
     if @project.save
       log_audit(
-        action: 'create',
-        module_name: 'projects',
+        action: "create",
+        module_name: "projects",
         auditable: @project,
         summary: "Created project: #{@project.name}",
         data_after: @project.attributes
       )
-      redirect_to @project, notice: 'Project was successfully created.'
+      redirect_to @project, notice: "Project was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -44,14 +44,14 @@ class ProjectsController < ApplicationController
 
     if @project.update(project_params)
       log_audit(
-        action: 'update',
-        module_name: 'projects',
+        action: "update",
+        module_name: "projects",
         auditable: @project,
         summary: "Updated project: #{@project.name}",
         data_before: data_before,
         data_after: @project.attributes
       )
-      redirect_to @project, notice: 'Project was successfully updated.'
+      redirect_to @project, notice: "Project was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -62,13 +62,13 @@ class ProjectsController < ApplicationController
     @project.discard
 
     log_audit(
-      action: 'delete',
-      module_name: 'projects',
+      action: "delete",
+      module_name: "projects",
       auditable: @project,
       summary: "Deleted project: #{@project.name}",
       data_before: data_before
     )
-    redirect_to projects_path, notice: 'Project was successfully deleted.'
+    redirect_to projects_path, notice: "Project was successfully deleted."
   end
 
   private

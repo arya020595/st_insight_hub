@@ -18,12 +18,12 @@ class Permission < ApplicationRecord
 
   # Extract action from code (e.g., 'user_management.users.index' => 'index')
   def action
-    code.split('.').last
+    code.split(".").last
   end
 
   # Extract namespace from resource (e.g., 'user_management.users' => 'user_management')
   def namespace
-    parts = resource.split('.')
+    parts = resource.split(".")
     parts.length > 1 ? parts.first : nil
   end
 

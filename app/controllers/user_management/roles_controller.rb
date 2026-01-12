@@ -7,7 +7,7 @@ module UserManagement
     def index
       authorize Role, policy_class: UserManagement::RolePolicy
       @q = policy_scope(Role, policy_scope_class: UserManagement::RolePolicy::Scope).kept.ransack(params[:q])
-      @q.sorts = 'name asc' if @q.sorts.empty?
+      @q.sorts = "name asc" if @q.sorts.empty?
       @pagy, @roles = pagy(@q.result.includes(:permissions))
     end
 
@@ -28,13 +28,13 @@ module UserManagement
       if @role.save
         update_permissions
         log_audit(
-          action: 'create',
-          module_name: 'user_management',
+          action: "create",
+          module_name: "user_management",
           auditable: @role,
           summary: "Created role: #{@role.name}",
           data_after: @role.attributes.merge(permission_ids: @role.permission_ids)
         )
-        redirect_to user_management_roles_path, notice: 'Role was successfully created.'
+        redirect_to user_management_roles_path, notice: "Role was successfully created."
       else
         @permissions = Permission.kept.order(:section, :name)
         render :new, status: :unprocessable_entity
@@ -51,14 +51,14 @@ module UserManagement
       if @role.update(role_params)
         update_permissions
         log_audit(
-          action: 'update',
-          module_name: 'user_management',
+          action: "update",
+          module_name: "user_management",
           auditable: @role,
           summary: "Updated role: #{@role.name}",
           data_before: data_before,
           data_after: @role.attributes.merge(permission_ids: @role.permission_ids)
         )
-        redirect_to user_management_roles_path, notice: 'Role was successfully updated.'
+        redirect_to user_management_roles_path, notice: "Role was successfully updated."
       else
         @permissions = Permission.kept.order(:section, :name)
         render :edit, status: :unprocessable_entity
@@ -70,13 +70,13 @@ module UserManagement
       @role.discard
 
       log_audit(
-        action: 'delete',
-        module_name: 'user_management',
+        action: "delete",
+        module_name: "user_management",
         auditable: @role,
         summary: "Deleted role: #{@role.name}",
         data_before: data_before
       )
-      redirect_to user_management_roles_path, notice: 'Role was successfully deleted.'
+      redirect_to user_management_roles_path, notice: "Role was successfully deleted."
     end
 
     private

@@ -7,7 +7,7 @@ module UserManagement
     def index
       authorize User, policy_class: UserManagement::UserPolicy
       @q = policy_scope(User, policy_scope_class: UserManagement::UserPolicy::Scope).kept.ransack(params[:q])
-      @q.sorts = 'created_at desc' if @q.sorts.empty?
+      @q.sorts = "created_at desc" if @q.sorts.empty?
       @pagy, @users = pagy(@q.result.includes(:role))
     end
 
@@ -24,13 +24,13 @@ module UserManagement
 
       if @user.save
         log_audit(
-          action: 'create',
-          module_name: 'user_management',
+          action: "create",
+          module_name: "user_management",
           auditable: @user,
           summary: "Created user: #{@user.email}",
-          data_after: @user.attributes.except('encrypted_password')
+          data_after: @user.attributes.except("encrypted_password")
         )
-        redirect_to user_management_users_path, notice: 'User was successfully created.'
+        redirect_to user_management_users_path, notice: "User was successfully created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module UserManagement
     def edit; end
 
     def update
-      data_before = @user.attributes.except('encrypted_password').dup
+      data_before = @user.attributes.except("encrypted_password").dup
 
       # Remove password params if blank
       user_update_params = user_params
@@ -50,43 +50,43 @@ module UserManagement
 
       if @user.update(user_update_params)
         log_audit(
-          action: 'update',
-          module_name: 'user_management',
+          action: "update",
+          module_name: "user_management",
           auditable: @user,
           summary: "Updated user: #{@user.email}",
           data_before: data_before,
-          data_after: @user.attributes.except('encrypted_password')
+          data_after: @user.attributes.except("encrypted_password")
         )
-        redirect_to user_management_users_path, notice: 'User was successfully updated.'
+        redirect_to user_management_users_path, notice: "User was successfully updated."
       else
         render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
-      data_before = @user.attributes.except('encrypted_password').dup
+      data_before = @user.attributes.except("encrypted_password").dup
       @user.discard
 
       log_audit(
-        action: 'delete',
-        module_name: 'user_management',
+        action: "delete",
+        module_name: "user_management",
         auditable: @user,
         summary: "Deleted user: #{@user.email}",
         data_before: data_before
       )
-      redirect_to user_management_users_path, notice: 'User was successfully deleted.'
+      redirect_to user_management_users_path, notice: "User was successfully deleted."
     end
 
     def restore
       @user.undiscard
 
       log_audit(
-        action: 'restore',
-        module_name: 'user_management',
+        action: "restore",
+        module_name: "user_management",
         auditable: @user,
         summary: "Restored user: #{@user.email}"
       )
-      redirect_to user_management_users_path, notice: 'User was successfully restored.'
+      redirect_to user_management_users_path, notice: "User was successfully restored."
     end
 
     private

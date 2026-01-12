@@ -45,7 +45,7 @@ class User < ApplicationRecord
 
   # Check if user is superadmin (bypasses all permission checks)
   def superadmin?
-    role&.name&.casecmp('superadmin')&.zero?
+    role&.name&.casecmp("superadmin")&.zero?
   end
 
   # Get user's first accessible path based on their permissions
@@ -53,12 +53,12 @@ class User < ApplicationRecord
     return :dashboard_path if superadmin?
 
     # Check dashboard access first
-    return :dashboard_path if has_permission?('dashboard.index')
+    return :dashboard_path if has_permission?("dashboard.index")
 
     # Check other permissions in order of priority
-    return :bi_dashboards_path if has_permission?('bi_dashboards.index')
-    return :user_management_users_path if has_permission?('user_management.users.index')
-    return :audit_logs_path if has_permission?('audit_logs.index')
+    return :bi_dashboards_path if has_permission?("bi_dashboards.index")
+    return :user_management_users_path if has_permission?("user_management.users.index")
+    return :audit_logs_path if has_permission?("audit_logs.index")
 
     # Default fallback
     :dashboard_path

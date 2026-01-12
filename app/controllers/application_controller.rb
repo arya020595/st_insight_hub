@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def set_layout
     # Use clean layout for Devise controllers (login, signup, password reset)
     # Use dashboard layout for all other authenticated pages
-    devise_controller? ? 'application' : 'dashboard/application'
+    devise_controller? ? "application" : "dashboard/application"
   end
 
   def set_current_user
@@ -42,13 +42,13 @@ class ApplicationController < ActionController::Base
   end
 
   def user_not_authorized
-    flash[:alert] = 'You are not authorized to perform this action.'
+    flash[:alert] = "You are not authorized to perform this action."
 
     redirect_path = if request.referrer.present? && request.referrer != request.url
                       request.referrer
-                    else
+    else
                       send(current_user.first_accessible_path)
-                    end
+    end
 
     redirect_to redirect_path, allow_other_host: true
   end

@@ -2,12 +2,12 @@
 
 class DashboardPolicy < ApplicationPolicy
   def index?
-    user.has_permission?('dashboard.index')
+    user.has_permission?("dashboard.index")
   end
 
   private
 
   def permission_resource
-    'dashboard'
+    "dashboard"
   end
 end

@@ -1093,6 +1093,6 @@ db/
 
 ---
 
-**Last Updated:** October 27, 2025  
+**Last Updated:** January 12, 2026  
 **Devise Version:** 4.9.4  
 **Rails Version:** 8.x

@@ -1,39 +1,61 @@
 services:
   db:
     image: postgres:16.1-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-st_insight_hub_development}
+    ports:
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - st_insight_hub_network
 
   web:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
-    volumes:
-      - .:/rails
-      - bundle_cache:/usr/local/bundle
+    command: ["./bin/rails", "server", "-p", "3000", "-b", "0.0.0.0"]
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST:-db}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-st_insight_hub_development}
+      RAILS_ENV: ${RAILS_ENV:-development}
+      RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-5}
+      # Disable Spring in Docker for better compatibility
+      DISABLE_SPRING: 1
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "3000:3000"
+    volumes:
+      # Mount source code for live reloading
+      - .:/rails
+      # Use named volume for bundle to persist gems and improve performance
+      - bundle_cache:/usr/local/bundle
+      # Prevent node_modules conflicts if using Node
+      - /rails/node_modules
     depends_on:
       db:
         condition: service_healthy
-    env_file:
-      - .env
     stdin_open: true
     tty: true
+    networks:
+      - st_insight_hub_network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   bundle_cache:
+
+networks:
+  st_insight_hub_network:
+    driver: bridge

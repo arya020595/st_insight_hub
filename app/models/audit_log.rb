@@ -5,7 +5,7 @@ class AuditLog < ApplicationRecord
   belongs_to :auditable, polymorphic: true, optional: true
 
   validates :module_name, presence: true
-  validates :action, presence: true
+  validates :action, presence: true, inclusion: { in: ACTIONS }
 
   # Available actions
   ACTIONS = %w[create update delete login logout view export].freeze

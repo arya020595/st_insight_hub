@@ -1,0 +1,67 @@
+<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end" style="width: 280px; min-height: calc(100vh - 56px);">
+  <ul id="sidebarAccordion" class="nav nav-pills flex-column mb-auto">
+    <!-- Dashboard -->
+    <% if can_view_menu?('dashboard.index') %>
+      <li class="nav-item">
+        <%= link_to dashboard_path, class: "nav-link #{active_nav_item?(dashboard_path) ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-speedometer2 me-2"></i> Dashboard
+        <% end %>
+      </li>
+    <% end %>
+    <!-- BI Dashboard -->
+    <% if can_view_menu?('bi_dashboards.index') %>
+      <li class="nav-item">
+        <%= link_to bi_dashboards_path, class: "nav-link #{active_controller?('bi_dashboards') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-bar-chart-line-fill me-2"></i> BI Dashboards
+        <% end %>
+      </li>
+    <% end %>
+    <!-- BI Dashboard Management -->
+    <% if can_view_menu?('bi_dashboards.projects.index') %>
+      <li class="nav-item">
+        <%= link_to projects_path, class: "nav-link #{active_controller?('projects') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-kanban-fill me-2"></i> Dashboard Management
+        <% end %>
+      </li>
+    <% end %>
+    <!-- User Management -->
+    <% has_user_management_access = can_view_menu?('user_management.users.index') || can_view_menu?('user_management.roles.index') %>
+    <% if has_user_management_access %>
+      <% user_management_active = active_controller?('user_management') %>
+      <li class="nav-item">
+        <a class="nav-link <%= user_management_active ? 'active' : 'link-dark' %>"
+           data-bs-toggle="collapse"
+           data-bs-target="#userManagementCollapse"
+           href="#" role="button"
+           aria-expanded="<%= user_management_active %>"
+           aria-controls="userManagementCollapse">
+          <i class="bi bi-people-fill me-2"></i> User Management
+          <i class="bi bi-chevron-right float-end collapse-chevron"></i>
+        </a>
+        <div class="collapse <%= 'show' if user_management_active %>" id="userManagementCollapse" data-bs-parent="#sidebarAccordion">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-4">
+            <% if can_view_menu?('user_management.users.index') %>
+              <li><%= link_to "Users", user_management_users_path, class: "nav-link #{active_controller?('user_management/users') ? 'active' : 'link-dark'}" %></li>
+            <% end %>
+            <% if can_view_menu?('user_management.roles.index') %>
+              <li><%= link_to "Roles", user_management_roles_path, class: "nav-link #{active_controller?('user_management/roles') ? 'active' : 'link-dark'}" %></li>
+            <% end %>
+          </ul>
+        </div>
+      </li>
+    <% end %>
+    <!-- Audit Logs -->
+    <% if can_view_menu?('audit_logs.index') %>
+      <li class="nav-item">
+        <%= link_to audit_logs_path, class: "nav-link #{active_controller?('audit_logs') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-journal-text me-2"></i> Audit Logs
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <!-- Footer -->
+  <hr>
+  <div class="text-muted small text-center">
+    &copy; <%= Date.current.year %> <%= ENV.fetch('APP_COMPANY_FULL_NAME', 'ST Insight Hub') %>
+  </div>
+</div>

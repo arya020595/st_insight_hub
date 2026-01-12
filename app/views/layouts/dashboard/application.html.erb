@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub') %> - Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Flatpickr CSS for date pickers -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <%= render "layouts/dashboard/navbar" %>
+    <div class="d-flex flex-grow-1">
+      <!-- Sidebar -->
+      <%= render "layouts/dashboard/sidebar" %>
+      <!-- Main Content -->
+      <main class="flex-grow-1 p-4 bg-light">
+        <%= render "layouts/flash" %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_12_010007) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_12_072528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -126,4 +126,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_12_010007) do
   add_foreign_key "dashboards", "projects"
   add_foreign_key "roles_permissions", "permissions"
   add_foreign_key "roles_permissions", "roles"
+  add_foreign_key "users", "roles"
 end

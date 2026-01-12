@@ -44,13 +44,26 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = "You are not authorized to perform this action."
 
-    redirect_path = if request.referrer.present? && request.referrer != request.url
+    redirect_path = if request.referrer.present? && request.referrer != request.url && safe_referrer?
                       request.referrer
-    else
+                    else
                       send(current_user.first_accessible_path)
-    end
+                    end
 
-    redirect_to redirect_path, allow_other_host: true
+    redirect_to redirect_path
+  end
+
+  # Validate that the referrer is from the same host to prevent open redirect attacks
+  def safe_referrer?
+    return false unless request.referrer.present?
+
+    referrer_uri = URI.parse(request.referrer)
+    request_uri = URI.parse(request.url)
+
+    # Only allow redirects to the same host
+    referrer_uri.host == request_uri.host
+  rescue URI::InvalidURIError
+    false
   end
 
   # Helper to log audit events

@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
     # Preload role and its permissions if not already loaded
     ActiveRecord::Associations::Preloader.new(
-      records: [current_user],
+      records: [ current_user ],
       associations: { role: :permissions }
     ).call
   end
@@ -59,9 +59,9 @@ class ApplicationController < ActionController::Base
 
     redirect_path = if request.referrer.present? && request.referrer != request.url && safe_referrer?
                       request.referrer
-                    else
+    else
                       send(current_user.first_accessible_path)
-                    end
+    end
 
     redirect_to redirect_path
   end

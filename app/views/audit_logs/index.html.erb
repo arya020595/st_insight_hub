@@ -1,0 +1,102 @@
+<div id="url-manager"></div>
+<div id="audit-logs" class="container-fluid px-4 py-4 audit-logs-list" data-controller="multi-sort">
+  <div class="card shadow-sm">
+    <div class="audit_logs_page">
+      <h1 class="mb-5">Audit Logs</h1>
+      <div class="d-flex justify-content-end">
+      </div>
+      <div class="card-body">
+        <%= search_form_for @q, url: audit_logs_path, html: { id: 'audit-log-search-form', data: { controller: "search-form", action: "submit->search-form#resetPage" } } do |f| %>
+          <div class="table-responsive">
+            <table class="table table-hover table-sm mb-0">
+              <thead class="header-row">
+                <tr class="header-row">
+                  <th></th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :id, 'ID') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :user_name, 'User') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :module_name, 'Module') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :action, 'Action') %>
+                  </th>
+                  <th class="text-center">
+                    Summary
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :ip_address, 'IP Address') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :created_at, 'Time') %>
+                  </th>
+                </tr>
+                <tr>
+                  <th class="text-center">
+                    <div class="d-flex gap-1 justify-content-center">
+                      <%= link_to 'Reset', audit_logs_path, class: 'btn reset-btn', style: 'font-weight: normal; width: 100px;' %>
+                    </div>
+                  </th>
+                  <th class="text-center">
+                    <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1, data: { action: "input->search-form#autoSubmit" } %>
+                  </th>
+                  <th>
+                    <%= f.select :user_id_eq,
+                      options_from_collection_for_select(User.kept, :id, :name, f.object.user_id_eq),
+                      { include_blank: 'All Users..' },
+                      { class: 'form-select form-select-sm',
+                      data: { action: "input->search-form#instantSubmit" } } %>
+                  </th>
+                  <th>
+                    <%= f.select :module_name_eq,
+                      options_for_select(AuditLog.distinct.pluck(:module_name).compact.sort.map { |m| [m, m] }, f.object.module_name_eq),
+                      { include_blank: 'All Modules..' },
+                      { class: 'form-select form-select-sm',
+                      data: { action: "input->search-form#instantSubmit" } } %>
+                  </th>
+                  <th>
+                    <%= f.select :action_eq,
+                      options_for_select(AuditLog::ACTIONS.map { |a| [a.titleize, a] }, f.object.action_eq),
+                      { include_blank: 'All Actions..' },
+                      { class: 'form-select form-select-sm',
+                      data: { action: "input->search-form#instantSubmit" } } %>
+                  </th>
+                  <th>
+                    <%= f.search_field :summary_cont, class: 'form-control form-control-sm', placeholder: 'Search summary..', data: { action: "input->search-form#autoSubmit" } %>
+                  </th>
+                  <th></th>
+                  <th>
+                    <%= f.date_field :created_at_gteq, class: 'form-control form-control-sm', placeholder: 'From date', data: { action: "input->search-form#instantSubmit" } %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="audit-logs-table-body">
+                <% if @audit_logs.any? %>
+                  <%= render partial: 'audit_log_row', collection: @audit_logs, as: :audit_log %>
+                <% else %>
+                  <tr>
+                    <td colspan="8" class="text-center text-muted py-4">
+                      No audit logs found.
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div class="text-muted small">
+            Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> logs
+          </div>
+          <div>
+            <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'modal' %>
+</div>

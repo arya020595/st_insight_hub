@@ -1,0 +1,40 @@
+<tr id="<%= dom_id(audit_log) %>">
+  <td class="text-center">
+    <div class="action-buttons">
+      <% if policy(audit_log).show? %>
+        <%= link_to audit_log_path(audit_log), class: "action-btn info", title: "View Details", **modal_link_data(size: 'modal-lg') do %>
+          <i class="bi bi-info-circle-fill"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+  <td class="text-center"><%= audit_log.id %></td>
+  <td>
+    <% if audit_log.user %>
+      <%= audit_log.user.name || audit_log.user.email %>
+    <% else %>
+      <span class="text-muted"><%= audit_log.user_name || 'System' %></span>
+    <% end %>
+  </td>
+  <td>
+    <span class="badge bg-secondary"><%= audit_log.module_name %></span>
+  </td>
+  <td class="text-center">
+    <span class="badge bg-<%= action_badge_class(audit_log.action) %>">
+      <%= audit_log.action.upcase %>
+    </span>
+  </td>
+  <td>
+    <span class="text-truncate d-inline-block" style="max-width: 200px;" title="<%= audit_log.summary %>">
+      <%= truncate(audit_log.summary, length: 50) %>
+    </span>
+  </td>
+  <td class="text-center">
+    <code class="small"><%= audit_log.ip_address || '-' %></code>
+  </td>
+  <td class="text-center">
+    <span title="<%= audit_log.created_at.strftime('%Y-%m-%d %H:%M:%S') %>">
+      <%= time_ago_in_words(audit_log.created_at) %> ago
+    </span>
+  </td>
+</tr>

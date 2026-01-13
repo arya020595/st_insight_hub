@@ -1,0 +1,99 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="auditLogModalLabel">
+      <strong>View Audit Log Details</strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Audit Log Basic Info -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted">Action:</dt>
+              <dd class="col-sm-8">
+                <span class="badge bg-<%= action_badge_class(@audit_log.action) %> fs-6">
+                  <%= @audit_log.action.upcase %>
+                </span>
+              </dd>
+              <dt class="col-sm-4 text-muted">Module:</dt>
+              <dd class="col-sm-8 fw-semibold"><%= @audit_log.module_name %></dd>
+              <dt class="col-sm-4 text-muted">Object:</dt>
+              <dd class="col-sm-8">
+                <% if @audit_log.auditable_type.present? %>
+                  <%= @audit_log.auditable_type %> (ID: <%= @audit_log.auditable_id %>)
+                <% else %>
+                  <span class="text-muted">N/A</span>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">By User:</dt>
+              <dd class="col-sm-8">
+                <% if @audit_log.user %>
+                  <%= @audit_log.user.name || @audit_log.user.email %>
+                  <% if @audit_log.user.role %>
+                    (<span class="text-primary"><%= @audit_log.user.role.name %></span>)
+                  <% end %>
+                <% else %>
+                  <span class="text-muted"><%= @audit_log.user_name || 'System' %></span>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">At:</dt>
+              <dd class="col-sm-8"><%= @audit_log.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+              <dt class="col-sm-4 text-muted">IP Address:</dt>
+              <dd class="col-sm-8">
+                <%= @audit_log.ip_address.presence || '<span class="text-muted">N/A</span>'.html_safe %>
+              </dd>
+              <% if @audit_log.user_agent.present? %>
+                <dt class="col-sm-4 text-muted">User Agent:</dt>
+                <dd class="col-sm-8">
+                  <small class="text-muted"><%= truncate(@audit_log.user_agent, length: 80) %></small>
+                </dd>
+              <% end %>
+              <% if @audit_log.summary.present? %>
+                <dt class="col-sm-4 text-muted">Summary:</dt>
+                <dd class="col-sm-8"><%= @audit_log.summary %></dd>
+              <% end %>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Data Section -->
+    <% if @audit_log.data_before.present? || @audit_log.data_after.present? %>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          <% case @audit_log.action %>
+          <% when 'delete' %>
+            <i class="bi bi-database text-danger me-1"></i> Data (Before Delete)
+          <% when 'update' %>
+            <i class="bi bi-arrow-left-right text-primary me-1"></i> Data (Before → After)
+          <% when 'create' %>
+            <i class="bi bi-plus-circle text-success me-1"></i> Data (Created)
+          <% else %>
+            <i class="bi bi-database me-1"></i> Data
+          <% end %>
+        </label>
+        <div class="border rounded p-3" style="max-height: 350px; overflow-y: auto;">
+          <% if @audit_log.action == 'update' && @audit_log.data_before.present? && @audit_log.data_after.present? %>
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="text-muted mb-2">Before:</h6>
+                <pre class="bg-light p-3 rounded small mb-0"><%= JSON.pretty_generate(@audit_log.data_before) %></pre>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-muted mb-2">After:</h6>
+                <pre class="bg-light p-3 rounded small mb-0"><%= JSON.pretty_generate(@audit_log.data_after) %></pre>
+              </div>
+            </div>
+          <% elsif @audit_log.data_before.present? %>
+            <pre class="bg-light p-3 rounded small mb-0"><%= JSON.pretty_generate(@audit_log.data_before) %></pre>
+          <% elsif @audit_log.data_after.present? %>
+            <pre class="bg-light p-3 rounded small mb-0"><%= JSON.pretty_generate(@audit_log.data_after) %></pre>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

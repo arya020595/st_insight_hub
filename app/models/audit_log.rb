@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class AuditLog < ApplicationRecord
+  # Available actions
+  ACTIONS = %w[create update delete login logout view export].freeze
+
   belongs_to :user, optional: true
   belongs_to :auditable, polymorphic: true, optional: true
 
   validates :module_name, presence: true
   validates :action, presence: true, inclusion: { in: ACTIONS }
-
-  # Available actions
-  ACTIONS = %w[create update delete login logout view export].freeze
 
   scope :recent, -> { order(created_at: :desc) }
   scope :by_action, ->(action) { where(action: action) if action.present? }

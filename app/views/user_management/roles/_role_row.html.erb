@@ -1,0 +1,28 @@
+<tr id="<%= dom_id(role) %>">
+  <td class="text-center">
+    <div class="action-buttons">
+      <!-- VIEW -->
+      <% if record_policy(role, UserManagement::RolePolicy).show? %>
+        <%= link_to user_management_role_path(role), class: "action-btn info", title: "View Details", data: { turbo_frame: "modal" } do %>
+          <i class="bi bi-info-circle-fill"></i>
+        <% end %>
+      <% end %>
+      <!-- EDIT -->
+      <% if record_policy(role, UserManagement::RolePolicy).edit? %>
+        <%= link_to edit_user_management_role_path(role), class: "action-btn warning", title: "Edit", data: { turbo_frame: "modal" } do %>
+          <i class="bi bi-pencil-fill"></i>
+        <% end %>
+      <% end %>
+      <!-- DELETE -->
+      <% if record_policy(role, UserManagement::RolePolicy).destroy? %>
+        <%= button_to user_management_role_path(role), method: :delete, class: "action-btn danger", title: "Delete", form: { data: { turbo_confirm: "Are you sure you want to delete #{role.name}?" } } do %>
+          <i class="bi bi-trash-fill"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+  <td class="text-center"><%= role.id %></td>
+  <td><%= role.name %></td>
+  <td class="text-center"><%= role.created_at.strftime("%b %d, %Y %H:%M") %></td>
+  <td class="text-center"><%= role.updated_at.strftime("%b %d, %Y %H:%M") %></td>
+</tr>

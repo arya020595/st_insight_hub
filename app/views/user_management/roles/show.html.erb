@@ -1,0 +1,97 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="roleModalLabel">
+      <strong>View Role Details</strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Role Basic Info -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted">Role Name:</dt>
+              <dd class="col-sm-8 fw-semibold"><%= @role.name %></dd>
+              <dt class="col-sm-4 text-muted">Description:</dt>
+              <dd class="col-sm-8">
+                <%= @role.description.presence || '<span class="text-muted">No description</span>'.html_safe %>
+              </dd>
+              <dt class="col-sm-4 text-muted">Users Count:</dt>
+              <dd class="col-sm-8"><span class="badge bg-info"><%= @role.users.count %></span></dd>
+              <dt class="col-sm-4 text-muted">Created At:</dt>
+              <dd class="col-sm-8"><%= @role.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+              <dt class="col-sm-4 text-muted">Updated At:</dt>
+              <dd class="col-sm-8"><%= @role.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Permissions Section -->
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        Permissions (<%= @role.permissions.count %>)
+      </label>
+      <div class="border rounded p-3" style="max-height: 450px; overflow-y: auto;">
+        <table class="table table-borderless mb-0">
+          <tbody>
+            <% section_order = ["Dashboard", "BI Dashboard", "Dashboard Management", "User Management", "Audit Logs"] %>
+            <% section_counter = 0 %>
+            <% section_order.each do |section_name| %>
+              <% section_permissions = Permission.kept.where(section: section_name) %>
+              <% next if section_permissions.empty? %>
+              <% section_counter += 1 %>
+              <!-- SECTION HEADER -->
+              <tr>
+                <td colspan="2" style="font-size: 1.1rem; background-color: #28a745; color: white; font-weight: bold;">
+                  <%= "#{section_counter}. #{section_name.upcase}" %>
+                </td>
+              </tr>
+              <% module_counter = 0 %>
+              <% section_permissions.group_by(&:resource).sort.each do |resource, perms| %>
+                <% module_counter += 1 %>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                  <!-- Module Name -->
+                  <td style="width: 250px; font-weight: 600; vertical-align: top;">
+                    <%= "#{section_counter}.#{module_counter} #{resource.split('.').last.upcase}" %>
+                  </td>
+                  <!-- Permission Checkboxes -->
+                  <td>
+                    <div class="d-flex flex-wrap">
+                      <% perms.sort_by(&:name).each do |perm| %>
+                        <% checked = @role.permissions.exists?(perm.id) %>
+                        <div class="form-check me-3 mb-2">
+                          <input class="form-check-input" type="checkbox"
+                                 id="perm_<%= perm.id %>"
+                                 <%= "checked" if checked %>
+                                 disabled>
+                          <label class="form-check-label text-black" for="perm_<%= perm.id %>">
+                            <%= perm.name.upcase %>
+                          </label>
+                        </div>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <style>
+    .form-check-input:checked:disabled {
+      background-color: green !important;
+      border-color: green !important;
+    }
+
+    /* Green background for section headers */
+    .section-header-cell {
+      background-color: #28a745; /* Bootstrap green */
+      color: white;
+    }
+  </style>
+<% end %>

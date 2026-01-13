@@ -1,0 +1,62 @@
+<%= form_with(model: [:user_management, user]) do |form| %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="userModalLabel">
+      <strong>
+        <%= user.persisted? ? 'Edit User' : 'Add New User' %>
+      </strong>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <% if user.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6 class="alert-heading">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
+        </h6>
+        <ul class="mb-0 mt-2">
+          <% user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <%= form.label :name, class: "form-label fw-semibold" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Enter full name", required: true %>
+      </div>
+      <div class="col-md-6 mb-3">
+        <%= form.label :email, class: "form-label fw-semibold" %>
+        <%= form.email_field :email, class: "form-control", placeholder: "Enter email address", required: true %>
+      </div>
+    </div>
+    <div class="mb-3">
+      <%= form.label :role_id, "Role", class: "form-label fw-semibold" %>
+      <%= form.collection_select :role_id, Role.kept, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true } %>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <%= form.label :password, class: "form-label fw-semibold" %>
+        <%= form.password_field :password, class: "form-control", placeholder: user.persisted? ? "Leave blank to keep current password" : "Enter password", required: user.new_record? %>
+        <small class="form-text text-muted">
+          <% if user.persisted? %>
+            Leave blank if you don't want to change the password
+          <% else %>
+            Minimum 6 characters
+          <% end %>
+        </small>
+      </div>
+      <div class="col-md-6 mb-3">
+        <%= form.label :password_confirmation, "Confirm Password", class: "form-label fw-semibold" %>
+        <%= form.password_field :password_confirmation, class: "form-control", placeholder: user.persisted? ? "Leave blank to keep current password" : "Re-enter password", required: user.new_record? %>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <%= button_tag type: :submit, class: "btn btn-success" do %>
+      <i class="bi bi-save-fill text-white me-1"></i>Save
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,98 @@
+<div id="url-manager"></div>
+<div id="users" class="container-fluid px-4 py-4 users-list" data-controller="multi-sort">
+  <div class="card shadow-sm">
+    <div class="users_page">
+      <h1 class="mb-0">User Management - Users</h1>
+      <div class="d-flex justify-content-end">
+        <% if record_policy(User.new, UserManagement::UserPolicy).new? %>
+          <%= link_to new_user_management_user_path, class: "add-button btn btn-primary btn-sm" do %>
+            <i class="bi bi-plus-circle-fill text-white me-1"></i>Add User
+          <% end %>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <%= search_form_for @q, url: user_management_users_path, html: { id: 'user-search-form', data: { controller: "search-form", action: "submit->search-form#resetPage" } } do |f| %>
+          <div class="table-responsive">
+            <table class="table table-hover table-sm mb-0">
+              <thead class="header-row">
+                <tr class="header-row">
+                  <th></th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :id, 'ID') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :name, 'Name') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :email, 'Email') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :role_id, 'Role') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :current_sign_in_at, 'Last Sign In') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :created_at, 'Created At') %>
+                  </th>
+                  <th class="text-center">
+                    <%= sort_link(@q, :updated_at, 'Updated At') %>
+                  </th>
+                </tr>
+                <tr>
+                  <th class="text-center">
+                    <div class="d-flex gap-1 justify-content-center">
+                      <%= link_to 'Reset', user_management_users_path, class: 'btn reset-btn', style: 'font-weight: normal; width: 100px;' %>
+                    </div>
+                  </th>
+                  <th class="text-center">
+                    <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1, data: { action: "input->search-form#autoSubmit" } %>
+                  </th>
+                  <th>
+                    <%= f.search_field :name_cont, class: 'form-control form-control-sm', placeholder: 'Search Name..', data: { action: "input->search-form#autoSubmit" } %>
+                  </th>
+                  <th>
+                    <%= f.search_field :email_cont, class: 'form-control form-control-sm', placeholder: 'Search Email..', data: { action: "input->search-form#autoSubmit" } %>
+                  </th>
+                  <th>
+                    <%= f.select :role_id_eq,
+                      options_from_collection_for_select(Role.kept, :id, :name, f.object.role_id_eq),
+                      { include_blank: 'Select Role..' },
+                      { class: 'form-select form-select-sm',
+                      data: { action: "input->search-form#instantSubmit" } } %>
+                  </th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <% if @users.any? %>
+                  <%= render partial: 'user_row', collection: @users, as: :user %>
+                <% else %>
+                  <tr>
+                    <td colspan="8" class="text-center text-muted py-4">
+                      No users found.
+                      <% if record_policy(User.new, UserManagement::UserPolicy).new? %>
+                        <%= link_to 'Add a new user', new_user_management_user_path, class: 'text-decoration-none' %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div class="text-muted small">
+            Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> users
+          </div>
+          <div>
+            <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= render 'modal' %>
+</div>

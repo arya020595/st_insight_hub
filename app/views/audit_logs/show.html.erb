@@ -43,7 +43,7 @@
               <dd class="col-sm-8"><%= @audit_log.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
               <dt class="col-sm-4 text-muted">IP Address:</dt>
               <dd class="col-sm-8">
-                <%= @audit_log.ip_address.presence || '<span class="text-muted">N/A</span>'.html_safe %>
+                <%= @audit_log.ip_address.presence || content_tag(:span, 'N/A', class: 'text-muted') %>
               </dd>
               <% if @audit_log.user_agent.present? %>
                 <dt class="col-sm-4 text-muted">User Agent:</dt>

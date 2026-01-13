@@ -5,7 +5,7 @@
       <h1 class="mb-0">User Management - Roles</h1>
       <div class="d-flex justify-content-end">
         <% if record_policy(Role.new, UserManagement::RolePolicy).new? %>
-          <%= link_to new_user_management_role_path, class: "add-button btn btn-primary btn-sm" do %>
+          <%= link_to new_user_management_role_path, class: "add-button btn btn-primary btn-sm", **modal_link_data(size: 'modal-xl') do %>
             <i class="bi bi-plus-circle-fill text-white me-1"></i>Add Role
           <% end %>
         <% end %>

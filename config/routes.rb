@@ -29,8 +29,16 @@ Rails.application.routes.draw do
 
   # User Management Namespace
   namespace :user_management do
-    resources :users, concerns: :restorable
-    resources :roles, concerns: :restorable
+    resources :users, concerns: :restorable do
+      member do
+        get :confirm_delete
+      end
+    end
+    resources :roles, concerns: :restorable do
+      member do
+        get :confirm_delete
+      end
+    end
   end
 
   # Audit Logs

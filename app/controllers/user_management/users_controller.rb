@@ -2,7 +2,7 @@
 
 module UserManagement
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[show edit update destroy restore]
+    before_action :set_user, only: %i[show edit update destroy restore confirm_delete]
 
     def index
       authorize User, policy_class: UserManagement::UserPolicy
@@ -75,6 +75,16 @@ module UserManagement
         data_before: data_before
       )
       redirect_to user_management_users_path, notice: "User was successfully deleted."
+    end
+
+    def confirm_delete
+      authorize @user, :confirm_delete?, policy_class: UserManagement::UserPolicy
+
+      if turbo_frame_request?
+        render layout: false
+      else
+        redirect_to user_management_users_path
+      end
     end
 
     def restore

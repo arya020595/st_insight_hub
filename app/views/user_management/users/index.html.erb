@@ -5,7 +5,7 @@
       <h1 class="mb-0">User Management - Users</h1>
       <div class="d-flex justify-content-end">
         <% if record_policy(User.new, UserManagement::UserPolicy).new? %>
-          <%= link_to new_user_management_user_path, class: "add-button btn btn-primary btn-sm" do %>
+          <%= link_to new_user_management_user_path, class: "add-button btn btn-primary btn-sm", **modal_link_data(size: 'modal-lg') do %>
             <i class="bi bi-plus-circle-fill text-white me-1"></i>Add User
           <% end %>
         <% end %>

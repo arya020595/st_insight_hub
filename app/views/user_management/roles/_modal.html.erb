@@ -1,10 +1,2 @@
 <%# Roles Modal - Uses Shared Modal Component %>
-<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <%= turbo_frame_tag "modal", data: { turbo_action: "advance", action: "turbo:frame-load->modal#show" } do %>
-        <!-- Content will be dynamically loaded here via Turbo Frame -->
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render "shared/modal", **modal_config(id: "roleModal", default_size: "modal-xl") %>

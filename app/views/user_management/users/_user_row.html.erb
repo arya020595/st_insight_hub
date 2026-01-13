@@ -2,17 +2,17 @@
   <td class="text-center">
     <div class="action-buttons">
       <% if record_policy(user, UserManagement::UserPolicy).show? %>
-        <%= link_to user_management_user_path(user), class: "action-btn info", title: "View Details", data: { turbo_frame: "modal" } do %>
+        <%= link_to user_management_user_path(user), class: "action-btn info", title: "View Details", **modal_link_data(size: 'modal-lg') do %>
           <i class="bi bi-info-circle-fill"></i>
         <% end %>
       <% end %>
       <% if record_policy(user, UserManagement::UserPolicy).edit? %>
-        <%= link_to edit_user_management_user_path(user), class: "action-btn warning", title: "Edit", data: { turbo_frame: "modal" } do %>
+        <%= link_to edit_user_management_user_path(user), class: "action-btn warning", title: "Edit", **modal_link_data(size: 'modal-lg') do %>
           <i class="bi bi-pencil-fill"></i>
         <% end %>
       <% end %>
-      <% if record_policy(user, UserManagement::UserPolicy).destroy? %>
-        <%= button_to user_management_user_path(user), method: :delete, class: "action-btn danger", title: "Delete", form: { data: { turbo_confirm: "Are you sure you want to delete #{user.name}?" } } do %>
+      <% if record_policy(user, UserManagement::UserPolicy).confirm_delete? %>
+        <%= link_to confirm_delete_user_management_user_path(user), class: "action-btn danger", title: "Delete", **modal_link_data(size: 'modal-md') do %>
           <i class="bi bi-trash-fill"></i>
         <% end %>
       <% end %>

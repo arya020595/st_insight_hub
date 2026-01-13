@@ -2,7 +2,7 @@
 
 module UserManagement
   class RolesController < ApplicationController
-    before_action :set_role, only: %i[show edit update destroy]
+    before_action :set_role, only: %i[show edit update destroy confirm_delete]
 
     def index
       authorize Role, policy_class: UserManagement::RolePolicy
@@ -77,6 +77,16 @@ module UserManagement
         data_before: data_before
       )
       redirect_to user_management_roles_path, notice: "Role was successfully deleted."
+    end
+
+    def confirm_delete
+      authorize @role, :confirm_delete?, policy_class: UserManagement::RolePolicy
+
+      if turbo_frame_request?
+        render layout: false
+      else
+        redirect_to user_management_roles_path
+      end
     end
 
     private

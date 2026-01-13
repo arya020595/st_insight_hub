@@ -3,19 +3,19 @@
     <div class="action-buttons">
       <!-- VIEW -->
       <% if record_policy(role, UserManagement::RolePolicy).show? %>
-        <%= link_to user_management_role_path(role), class: "action-btn info", title: "View Details", data: { turbo_frame: "modal" } do %>
+        <%= link_to user_management_role_path(role), class: "action-btn info", title: "View Details", **modal_link_data(size: 'modal-xl') do %>
           <i class="bi bi-info-circle-fill"></i>
         <% end %>
       <% end %>
       <!-- EDIT -->
       <% if record_policy(role, UserManagement::RolePolicy).edit? %>
-        <%= link_to edit_user_management_role_path(role), class: "action-btn warning", title: "Edit", data: { turbo_frame: "modal" } do %>
+        <%= link_to edit_user_management_role_path(role), class: "action-btn warning", title: "Edit", **modal_link_data(size: 'modal-xl') do %>
           <i class="bi bi-pencil-fill"></i>
         <% end %>
       <% end %>
       <!-- DELETE -->
-      <% if record_policy(role, UserManagement::RolePolicy).destroy? %>
-        <%= button_to user_management_role_path(role), method: :delete, class: "action-btn danger", title: "Delete", form: { data: { turbo_confirm: "Are you sure you want to delete #{role.name}?" } } do %>
+      <% if record_policy(role, UserManagement::RolePolicy).confirm_delete? %>
+        <%= link_to confirm_delete_user_management_role_path(role), class: "action-btn danger", title: "Delete", **modal_link_data(size: 'modal-md') do %>
           <i class="bi bi-trash-fill"></i>
         <% end %>
       <% end %>

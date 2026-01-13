@@ -47,7 +47,11 @@
                 Last Sign In:
               </dt>
               <dd class="col-sm-8">
-                <%= @user.current_sign_in_at&.strftime("%B %d, %Y at %I:%M %p") || '<span class="text-muted">Never signed in</span>'.html_safe %>
+                <% if @user.current_sign_in_at %>
+                  <%= @user.current_sign_in_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <% else %>
+                  <%= tag.span "Never signed in", class: "text-muted" %>
+                <% end %>
               </dd>
               <dt class="col-sm-4 text-muted">
                 Created At:

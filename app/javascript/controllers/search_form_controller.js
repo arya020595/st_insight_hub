@@ -17,15 +17,21 @@ import { Controller } from "@hotwired/stimulus";
  *  - resetPage: Rebuilds URL and removes pagination before navigating
  */
 export default class extends Controller {
+  static values = {
+    debounceDelay: Number,
+  };
+
   /**
    * Debounced auto-submit (e.g. for text inputs)
    */
   autoSubmit(event) {
     clearTimeout(this.timeout);
 
+    const delay = this.hasDebounceDelayValue ? this.debounceDelayValue : 300;
+
     this.timeout = setTimeout(() => {
       this.element.requestSubmit();
-    }, 300); // adjust debounce time as needed
+    }, delay);
   }
 
   /**

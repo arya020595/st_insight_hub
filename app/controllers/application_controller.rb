@@ -2,7 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
-  include Pagy::Backend
+  include Pagy::Method
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :set_current_user
   before_action :eager_load_user_permissions
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   # Smart layout switching: dashboard for authenticated pages, application for public pages
   layout :set_layout
@@ -24,7 +25,7 @@ class ApplicationController < ActionController::Base
   def set_layout
     # Use clean layout for Devise controllers (login, signup, password reset)
     # Use dashboard layout for all other authenticated pages
-    devise_controller? ? "application" : "dashboard/application"
+    devise_controller? ? "devise" : "dashboard/application"
   end
 
   def set_current_user
@@ -91,5 +92,11 @@ class ApplicationController < ActionController::Base
       data_after: data_after,
       request: request
     )
+  end
+
+  # Permit additional parameters for Devise
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :name ])
   end
 end

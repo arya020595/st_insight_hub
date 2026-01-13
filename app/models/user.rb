@@ -49,6 +49,27 @@ class User < ApplicationRecord
     @permission_codes = nil
   end
 
+  # Check if user is superadmin (bypasses all permission checks)
+  def superadmin?
+    role&.name&.casecmp("superadmin")&.zero?
+  end
+
+  # Get user's first accessible path based on their permissions
+  def first_accessible_path
+    return :dashboard_path if superadmin?
+
+    # Check dashboard access first
+    return :dashboard_path if has_permission?("dashboard.index")
+
+    # Check other permissions in order of priority
+    return :bi_dashboards_path if has_permission?("bi_dashboards.index")
+    return :user_management_users_path if has_permission?("user_management.users.index")
+    return :audit_logs_path if has_permission?("audit_logs.index")
+
+    # Default fallback
+    :dashboard_path
+  end
+
   private
 
   # Cache permission codes with role/permissions as cache key
@@ -70,26 +91,5 @@ class User < ApplicationRecord
         role.permissions.pluck(:code)
       end
     end
-  end
-
-  # Check if user is superadmin (bypasses all permission checks)
-  def superadmin?
-    role&.name&.casecmp("superadmin")&.zero?
-  end
-
-  # Get user's first accessible path based on their permissions
-  def first_accessible_path
-    return :dashboard_path if superadmin?
-
-    # Check dashboard access first
-    return :dashboard_path if has_permission?("dashboard.index")
-
-    # Check other permissions in order of priority
-    return :bi_dashboards_path if has_permission?("bi_dashboards.index")
-    return :user_management_users_path if has_permission?("user_management.users.index")
-    return :audit_logs_path if has_permission?("audit_logs.index")
-
-    # Default fallback
-    :dashboard_path
   end
 end

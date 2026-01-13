@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  include Pagy::Frontend
+  include Pagy::Method
 
   # Check if current page matches any of the given paths
   def active_nav_item?(*paths)

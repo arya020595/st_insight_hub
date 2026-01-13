@@ -1,0 +1,35 @@
+<div id="login-page">
+  <div class="login-wrapper">
+    <div class="login-container">
+      <div class="brand-section">
+        <i class="bi bi-bar-chart-fill brand-icon" aria-hidden="true"></i>
+        <h1 class="brand-title">ST Insight Hub</h1>
+        <p class="brand-subtitle">Change your password</p>
+      </div>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
+        <div class="field">
+          <%= f.label :password, "New password" %><br />
+          <%= f.password_field :password, autofocus: true, placeholder: "Enter new password", autocomplete: "new-password", class: "custom-input" %>
+          <% if @minimum_password_length %>
+            <em class="password-hint"><%= @minimum_password_length %> characters minimum</em>
+          <% end %>
+        </div>
+        <div class="field">
+          <%= f.label :password_confirmation, "Confirm new password" %><br />
+          <%= f.password_field :password_confirmation, placeholder: "Confirm new password", autocomplete: "new-password", class: "custom-input" %>
+        </div>
+        <%= render "layouts/flash" %>
+        <div class="actions">
+          <%= f.submit "CHANGE PASSWORD" %>
+        </div>
+      <% end %>
+      <div class="auth-links">
+        <%= link_to "Back to login", new_session_path(resource_name) %>
+      </div>
+      <p class="powered-by">Powered By ST Datablu</p>
+    </div>
+    <div class="login-background"></div>
+  </div>
+</div>

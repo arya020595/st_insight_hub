@@ -11,7 +11,7 @@ module ModalHelper
   # This centralizes the modal trigger configuration in one place (DRY)
   #
   # @param size [String] Bootstrap modal size class (modal-sm, modal-md, modal-lg, modal-xl, modal-fullscreen)
-  # @param frame [String] Turbo frame ID to target (default: 'modal')
+  # @param frame [String] Turbo frame ID to target (default: "modal")
   # @param additional_data [Hash] Any additional data attributes
   # @return [Hash] Data attributes hash for link_to
   #
@@ -34,8 +34,8 @@ module ModalHelper
   #
   # @param id [String] Modal DOM ID (required, must be unique on page)
   # @param default_size [String] Default Bootstrap modal size class
-  # @param frame_id [String] Turbo frame ID (default: 'modal')
-  # @param backdrop [String] Bootstrap backdrop option ('static' or true/false)
+  # @param frame_id [String] Turbo frame ID (default: "modal")
+  # @param backdrop [String] Bootstrap backdrop option ("static" or true/false)
   # @param keyboard [Boolean] Allow keyboard ESC to close modal
   # @param centered [Boolean] Vertically center the modal
   # @return [Hash] Configuration hash for modal partial

@@ -5,7 +5,7 @@
 echo "🔍 Running RuboCop auto-correction before push..."
 
 # Run RuboCop with auto-correction for all files
-bundle exec rubocop -A
+bundle exec rubocop -a
 
 # Check the exit status
 RUBOCOP_EXIT_CODE=$?

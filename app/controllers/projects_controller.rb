@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[show edit update destroy]
+  before_action :set_project, only: %i[show edit update destroy confirm_delete]
 
   def index
     authorize Project
@@ -70,6 +70,8 @@ class ProjectsController < ApplicationController
     )
     redirect_to projects_path, notice: "Project was successfully deleted."
   end
+
+  def confirm_delete; end
 
   private
 

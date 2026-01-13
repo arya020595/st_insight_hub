@@ -1,0 +1,145 @@
+#projects {
+  .projects_page {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+  }
+
+  .projects_page h1 {
+    background-color: #155e1a;
+    color: #ffffff;
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    font-weight: 900;
+    margin-bottom: 30px;
+  }
+
+  .add-button {
+    background-color: #155e1a;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    float: right;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    border: 0;
+  }
+
+  .card-body {
+    margin-top: -10px;
+    padding: 2px;
+  }
+
+  .add-button:hover {
+    background-color: #1f7a2e;
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .table thead.header-row th a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+  }
+
+  .header-row th {
+    padding: 15px 10px;
+    text-decoration: none;
+    color: #ffffff !important;
+  }
+
+  .table thead tr.header-row th {
+    background-color: #155e1a;
+    color: #ffffff;
+  }
+
+  th .filter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #projects-table-body tr td,
+  #projects-table-body tr th {
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: middle;
+  }
+
+  .btn.filter-btn {
+    background-color: #007b44;
+    color: #ffffff;
+  }
+
+  .btn.reset-btn {
+    background-color: #0d6efd;
+    color: #ffffff;
+    width: 90%;
+  }
+
+  .btn.reset-btn a {
+    font-weight: normal;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .action-btn i {
+    font-size: 18px;
+  }
+
+  /* Icon Colors */
+  .action-btn.info i {
+    color: #0d6efd; /* Blue */
+  }
+
+  .action-btn.warning i {
+    color: #ffc107; /* Yellow */
+  }
+
+  .action-btn.danger i {
+    color: #dc3545; /* Red */
+  }
+
+  /* Hover Effect */
+  .action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Normal page links */
+  .pagination .page-link {
+    color: #155e1a;
+    background-color: #e0f2e9;
+    border-color: #155e1a;
+  }
+
+  /* Hover state */
+  .pagination .page-link:hover {
+    color: #ffffff;
+    background-color: #155e1a;
+    border-color: #155e1a;
+  }
+
+  /* Active page */
+  .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #155e1a;
+    border-color: #155e1a;
+  }
+
+  /* Disabled page */
+  .pagination .page-item.disabled .page-link {
+    color: #999999;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+}

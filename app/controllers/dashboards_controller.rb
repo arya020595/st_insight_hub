@@ -2,7 +2,7 @@
 
 class DashboardsController < ApplicationController
   before_action :set_project
-  before_action :set_dashboard, only: %i[edit update destroy]
+  before_action :set_dashboard, only: %i[edit update destroy confirm_delete]
 
   def new
     authorize @project, :update?
@@ -63,6 +63,10 @@ class DashboardsController < ApplicationController
       data_before: data_before
     )
     redirect_to @project, notice: "Dashboard was successfully deleted."
+  end
+
+  def confirm_delete
+    authorize @project, :destroy?
   end
 
   private

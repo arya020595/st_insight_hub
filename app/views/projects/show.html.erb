@@ -1,0 +1,92 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="projectModalLabel">
+      <strong>View Project Details</strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Project Basic Info -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted">Project Name:</dt>
+              <dd class="col-sm-8 fw-semibold"><%= @project.name %></dd>
+              <dt class="col-sm-4 text-muted">Project Code:</dt>
+              <dd class="col-sm-8"><code><%= @project.code %></code></dd>
+              <dt class="col-sm-4 text-muted">Description:</dt>
+              <dd class="col-sm-8">
+                <%= @project.description.presence || '<span class="text-muted">No description</span>'.html_safe %>
+              </dd>
+              <dt class="col-sm-4 text-muted">Status:</dt>
+              <dd class="col-sm-8">
+                <span class="badge bg-<%= status_badge_class(@project.status) %>">
+                  <%= @project.status.titleize %>
+                </span>
+              </dd>
+              <dt class="col-sm-4 text-muted">Dashboards Count:</dt>
+              <dd class="col-sm-8"><span class="badge bg-info"><%= @project.dashboards_count %></span></dd>
+              <dt class="col-sm-4 text-muted">Created At:</dt>
+              <dd class="col-sm-8"><%= @project.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+              <dt class="col-sm-4 text-muted">Updated At:</dt>
+              <dd class="col-sm-8"><%= @project.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Dashboards Section -->
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label fw-semibold mb-0">
+          Dashboards (<%= @dashboards.count %>)
+        </label>
+        <% if policy(@project).update? %>
+          <%= link_to new_project_dashboard_path(@project), class: "btn btn-sm btn-primary" do %>
+            <i class="bi bi-plus-circle me-1"></i>Add Dashboard
+          <% end %>
+        <% end %>
+      </div>
+      <div class="border rounded p-3" style="max-height: 350px; overflow-y: auto;">
+        <% if @dashboards.any? %>
+          <table class="table table-sm table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @dashboards.each do |dashboard| %>
+                <tr>
+                  <td><%= dashboard.name %></td>
+                  <td class="text-center">
+                    <span class="badge bg-secondary"><%= dashboard.embed_type.titleize %></span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-<%= status_badge_class(dashboard.status) %>">
+                      <%= dashboard.status.titleize %>
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <% if policy(@project).update? %>
+                      <%= link_to edit_project_dashboard_path(@project, dashboard), class: "btn btn-sm btn-outline-warning", title: "Edit" do %>
+                        <i class="bi bi-pencil"></i>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="text-center text-muted mb-0">No dashboards in this project yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,5 @@
+<%= render 'shared/confirm_delete',
+  item_name: @dashboard.name,
+  item_type: 'Dashboard',
+  delete_path: project_dashboard_path(@project, @dashboard),
+  message: "Are you sure you want to delete dashboard <strong>\"#{@dashboard.name}\"</strong>? This dashboard will be permanently removed from project: #{@project.name}." %>

@@ -1,0 +1,67 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="dashboardModalLabel">
+      <strong><%= @dashboard.new_record? ? "Add Dashboard to #{@project.name}" : 'Edit Dashboard' %></strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <%= form_with model: [@project, @dashboard], local: true, html: { class: 'dashboard-form' } do |f| %>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <%= f.label :name, 'Dashboard Name *', class: 'form-label' %>
+          <%= f.text_field :name, class: "form-control #{'is-invalid' if @dashboard.errors[:name].any?}", placeholder: 'Enter dashboard name', required: true %>
+          <% if @dashboard.errors[:name].any? %>
+            <div class="invalid-feedback"><%= @dashboard.errors[:name].first %></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <%= f.label :embed_url, 'Embed URL *', class: 'form-label' %>
+          <%= f.url_field :embed_url, class: "form-control #{'is-invalid' if @dashboard.errors[:embed_url].any?}", placeholder: 'https://app.powerbi.com/...', required: true %>
+          <% if @dashboard.errors[:embed_url].any? %>
+            <div class="invalid-feedback"><%= @dashboard.errors[:embed_url].first %></div>
+          <% end %>
+          <div class="form-text">Power BI embed URL or iframe source URL</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :embed_type, 'Type *', class: 'form-label' %>
+          <div class="mt-2">
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :embed_type, 'iframe', class: 'form-check-input', id: 'embed_type_iframe' %>
+              <%= f.label :embed_type, 'Iframe', class: 'form-check-label', for: 'embed_type_iframe' %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :embed_type, 'embed_url', class: 'form-check-input', id: 'embed_type_embed_url' %>
+              <%= f.label :embed_type, 'Embed URL', class: 'form-check-label', for: 'embed_type_embed_url' %>
+            </div>
+          </div>
+          <% if @dashboard.errors[:embed_type].any? %>
+            <div class="text-danger small"><%= @dashboard.errors[:embed_type].first %></div>
+          <% end %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :status, 'Status *', class: 'form-label' %>
+          <%= f.select :status, options_for_select([['Active', 'active'], ['Inactive', 'inactive']], @dashboard.status || 'active'), {}, class: "form-select #{'is-invalid' if @dashboard.errors[:status].any?}", required: true %>
+          <% if @dashboard.errors[:status].any? %>
+            <div class="invalid-feedback"><%= @dashboard.errors[:status].first %></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :position, 'Display Order', class: 'form-label' %>
+          <%= f.number_field :position, class: 'form-control', min: 0, placeholder: '0' %>
+          <div class="form-text">Lower numbers appear first</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <%= f.submit @dashboard.new_record? ? 'Create Dashboard' : 'Update Dashboard', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% end %>

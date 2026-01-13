@@ -1,0 +1,5 @@
+<%= render 'shared/confirm_delete',
+  item_name: @project.name,
+  item_type: 'Project',
+  delete_path: project_path(@project),
+  message: "Are you sure you want to delete project <strong>\"#{@project.name}\"</strong>? This will also delete all #{@project.dashboards_count} dashboard(s) associated with this project." %>

@@ -1,0 +1,48 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="projectModalLabel">
+      <strong><%= @project.new_record? ? 'Create New Project' : 'Edit Project' %></strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <%= form_with model: @project, local: true, html: { class: 'project-form' } do |f| %>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :name, 'Project Name *', class: 'form-label' %>
+          <%= f.text_field :name, class: "form-control #{'is-invalid' if @project.errors[:name].any?}", placeholder: 'Enter project name', required: true %>
+          <% if @project.errors[:name].any? %>
+            <div class="invalid-feedback"><%= @project.errors[:name].first %></div>
+          <% end %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :code, 'Project Code *', class: 'form-label' %>
+          <%= f.text_field :code, class: "form-control #{'is-invalid' if @project.errors[:code].any?}", placeholder: 'e.g., PROJ_001', required: true %>
+          <% if @project.errors[:code].any? %>
+            <div class="invalid-feedback"><%= @project.errors[:code].first %></div>
+          <% end %>
+          <div class="form-text">Unique identifier for this project</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <%= f.label :description, 'Description', class: 'form-label' %>
+          <%= f.text_area :description, class: 'form-control', rows: 3, placeholder: 'Optional description...' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :status, 'Status *', class: 'form-label' %>
+          <%= f.select :status, options_for_select([['Active', 'active'], ['Inactive', 'inactive']], @project.status || 'active'), {}, class: "form-select #{'is-invalid' if @project.errors[:status].any?}", required: true %>
+          <% if @project.errors[:status].any? %>
+            <div class="invalid-feedback"><%= @project.errors[:status].first %></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <%= f.submit @project.new_record? ? 'Create Project' : 'Update Project', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% end %>

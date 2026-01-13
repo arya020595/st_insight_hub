@@ -67,15 +67,15 @@ class ApplicationController < ActionController::Base
     redirect_to redirect_path
   end
 
-  # Validate that the referrer is from the same host to prevent open redirect attacks
+  # Validate that the referrer is from the same host and scheme to prevent open redirect attacks
   def safe_referrer?
     return false unless request.referrer.present?
 
     referrer_uri = URI.parse(request.referrer)
     request_uri = URI.parse(request.url)
 
-    # Only allow redirects to the same host
-    referrer_uri.host == request_uri.host
+    # Only allow redirects to the same host and scheme (e.g., prevent HTTPS → HTTP downgrades)
+    referrer_uri.host == request_uri.host && referrer_uri.scheme == request_uri.scheme
   rescue URI::InvalidURIError
     false
   end

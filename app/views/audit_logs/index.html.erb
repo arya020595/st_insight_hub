@@ -3,8 +3,6 @@
   <div class="card shadow-sm">
     <div class="audit_logs_page">
       <h1 class="mb-5">Audit Logs</h1>
-      <div class="d-flex justify-content-end">
-      </div>
       <div class="card-body">
         <%= search_form_for @q, url: audit_logs_path, html: { id: 'audit-log-search-form', data: { controller: "search-form", action: "submit->search-form#resetPage" } } do |f| %>
           <div class="table-responsive">

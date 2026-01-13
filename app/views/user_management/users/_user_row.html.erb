@@ -1,0 +1,30 @@
+<tr id="<%= dom_id(user) %>">
+  <td class="text-center">
+    <div class="action-buttons">
+      <% if record_policy(user, UserManagement::UserPolicy).show? %>
+        <%= link_to user_management_user_path(user), class: "action-btn info", title: "View Details", **modal_link_data(size: 'modal-lg') do %>
+          <i class="bi bi-info-circle-fill"></i>
+        <% end %>
+      <% end %>
+      <% if record_policy(user, UserManagement::UserPolicy).edit? %>
+        <%= link_to edit_user_management_user_path(user), class: "action-btn warning", title: "Edit", **modal_link_data(size: 'modal-lg') do %>
+          <i class="bi bi-pencil-fill"></i>
+        <% end %>
+      <% end %>
+      <% if record_policy(user, UserManagement::UserPolicy).confirm_delete? %>
+        <%= link_to confirm_delete_user_management_user_path(user), class: "action-btn danger", title: "Delete", **modal_link_data(size: 'modal-md') do %>
+          <i class="bi bi-trash-fill"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+  <td class="text-center"><%= user.id %></td>
+  <td><%= user.name %></td>
+  <td><%= user.email %></td>
+  <td><%= user.role&.name || 'N/A' %></td>
+  <td class="text-center">
+    <%= user.current_sign_in_at&.strftime("%b %d, %Y %H:%M") || '<span class="text-muted">Never</span>'.html_safe %>
+  </td>
+  <td class="text-center"><%= user.created_at.strftime("%b %d, %Y %H:%M") if user.created_at %></td>
+  <td class="text-center"><%= user.updated_at.strftime("%b %d, %Y %H:%M") if user.updated_at %></td>
+</tr>

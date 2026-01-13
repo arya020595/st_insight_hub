@@ -36,6 +36,10 @@ class ApplicationPolicy
     user.has_permission?(build_permission_code("destroy"))
   end
 
+  def confirm_delete?
+    destroy?
+  end
+
   def restore?
     destroy?
   end

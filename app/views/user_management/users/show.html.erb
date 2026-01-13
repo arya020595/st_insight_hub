@@ -1,0 +1,74 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="userModalLabel">
+      <strong> View User Details </strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted">
+                Name:
+              </dt>
+              <dd class="col-sm-8 fw-semibold">
+                <%= @user.name %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Email:
+              </dt>
+              <dd class="col-sm-8">
+                <%= @user.email %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Role:
+              </dt>
+              <dd class="col-sm-8">
+                <% if @user.role %>
+                  <span class="text-primary fw-bold"><%= @user.role.name %></span>
+                <% else %>
+                  <span class="text-muted">No role assigned</span>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Status:
+              </dt>
+              <dd class="col-sm-8">
+                <% if @user.discarded? %>
+                  <span class="text-danger fw-bold">Discarded</span>
+                <% else %>
+                  <span class="text-success fw-bold">Active</span>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Last Sign In:
+              </dt>
+              <dd class="col-sm-8">
+                <% if @user.current_sign_in_at %>
+                  <%= @user.current_sign_in_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <% else %>
+                  <%= tag.span "Never signed in", class: "text-muted" %>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Created At:
+              </dt>
+              <dd class="col-sm-8">
+                <%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+              </dd>
+              <dt class="col-sm-4 text-muted">
+                Updated At:
+              </dt>
+              <dd class="col-sm-8">
+                <%= @user.updated_at.strftime("%B %d, %Y at %I:%M %p") %>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

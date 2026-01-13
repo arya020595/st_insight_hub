@@ -5,7 +5,7 @@
 module ModalHelper
   # Valid Bootstrap modal sizes
   MODAL_SIZES = %w[modal-sm modal-md modal-lg modal-xl modal-fullscreen].freeze
-  DEFAULT_MODAL_SIZE = 'modal-lg'
+  DEFAULT_MODAL_SIZE = "modal-lg"
 
   # Generates data attributes for a link that opens a modal
   # This centralizes the modal trigger configuration in one place (DRY)
@@ -18,7 +18,7 @@ module ModalHelper
   # Example usage:
   #   <%= link_to "Edit", edit_path(record), class: "btn", **modal_link_data(size: "modal-xl") %>
   #   # Generates: data-turbo-frame="modal" data-modal-size="modal-xl"
-  def modal_link_data(size: DEFAULT_MODAL_SIZE, frame: 'modal', **additional_data)
+  def modal_link_data(size: DEFAULT_MODAL_SIZE, frame: "modal", **additional_data)
     validated_size = MODAL_SIZES.include?(size) ? size : DEFAULT_MODAL_SIZE
 
     {
@@ -46,8 +46,8 @@ module ModalHelper
   #         default_size: "modal-lg",
   #         centered: true
   #       ) %>
-  def modal_config(id:, default_size: DEFAULT_MODAL_SIZE, frame_id: 'modal',
-                   backdrop: 'static', keyboard: false, centered: true)
+  def modal_config(id:, default_size: DEFAULT_MODAL_SIZE, frame_id: "modal",
+                   backdrop: "static", keyboard: false, centered: true)
     validated_size = MODAL_SIZES.include?(default_size) ? default_size : DEFAULT_MODAL_SIZE
 
     {

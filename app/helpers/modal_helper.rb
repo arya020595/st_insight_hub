@@ -5,20 +5,20 @@
 module ModalHelper
   # Valid Bootstrap modal sizes
   MODAL_SIZES = %w[modal-sm modal-md modal-lg modal-xl modal-fullscreen].freeze
-  DEFAULT_MODAL_SIZE = 'modal-lg'
+  DEFAULT_MODAL_SIZE = "modal-lg"
 
   # Generates data attributes for a link that opens a modal
   # This centralizes the modal trigger configuration in one place (DRY)
   #
   # @param size [String] Bootstrap modal size class (modal-sm, modal-md, modal-lg, modal-xl, modal-fullscreen)
-  # @param frame [String] Turbo frame ID to target (default: 'modal')
+  # @param frame [String] Turbo frame ID to target (default: "modal")
   # @param additional_data [Hash] Any additional data attributes
   # @return [Hash] Data attributes hash for link_to
   #
   # Example usage:
   #   <%= link_to "Edit", edit_path(record), class: "btn", **modal_link_data(size: "modal-xl") %>
   #   # Generates: data-turbo-frame="modal" data-modal-size="modal-xl"
-  def modal_link_data(size: DEFAULT_MODAL_SIZE, frame: 'modal', **additional_data)
+  def modal_link_data(size: DEFAULT_MODAL_SIZE, frame: "modal", **additional_data)
     validated_size = MODAL_SIZES.include?(size) ? size : DEFAULT_MODAL_SIZE
 
     {
@@ -34,8 +34,8 @@ module ModalHelper
   #
   # @param id [String] Modal DOM ID (required, must be unique on page)
   # @param default_size [String] Default Bootstrap modal size class
-  # @param frame_id [String] Turbo frame ID (default: 'modal')
-  # @param backdrop [String] Bootstrap backdrop option ('static' or true/false)
+  # @param frame_id [String] Turbo frame ID (default: "modal")
+  # @param backdrop [String] Bootstrap backdrop option ("static" or true/false)
   # @param keyboard [Boolean] Allow keyboard ESC to close modal
   # @param centered [Boolean] Vertically center the modal
   # @return [Hash] Configuration hash for modal partial
@@ -46,8 +46,8 @@ module ModalHelper
   #         default_size: "modal-lg",
   #         centered: true
   #       ) %>
-  def modal_config(id:, default_size: DEFAULT_MODAL_SIZE, frame_id: 'modal',
-                   backdrop: 'static', keyboard: false, centered: true)
+  def modal_config(id:, default_size: DEFAULT_MODAL_SIZE, frame_id: "modal",
+                   backdrop: "static", keyboard: false, centered: true)
     validated_size = MODAL_SIZES.include?(default_size) ? default_size : DEFAULT_MODAL_SIZE
 
     {

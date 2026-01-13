@@ -1,0 +1,86 @@
+<%= form_with(model: [:user_management, role]) do |form| %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="roleModalLabel">
+      <strong><%= role.persisted? ? 'Edit User Role' : 'Add User Role' %></strong>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <% if role.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6 class="alert-heading text-uppercase">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <%= pluralize(role.errors.count, "error").upcase %> Prohibited This Role From Being Saved:
+        </h6>
+        <ul class="mb-0 mt-2">
+          <% role.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <!-- ROLE NAME -->
+    <div class="mb-3">
+      <%= form.label :name, "Role Name", class: "form-label fw-semibold" %>
+      <%= form.text_field :name, class: "form-control", placeholder: "Enter role name", required: true %>
+    </div>
+    <!-- ROLE DESCRIPTION -->
+    <div class="mb-3">
+      <%= form.label :description, "Description", class: "form-label fw-semibold" %>
+      <%= form.text_area :description, rows: 3, class: "form-control", placeholder: "Enter role description" %>
+    </div>
+    <!-- PERMISSIONS -->
+    <div class="mb-3">
+      <%= form.label :permission_ids, "Permissions (Select the permissions for this role)", class: "form-label fw-semibold" %>
+      <div class="border rounded p-3" style="max-height: 450px; overflow-y: auto;">
+        <table class="table table-borderless mb-0">
+          <tbody>
+            <% section_order = ["Dashboard", "BI Dashboard", "Dashboard Management", "User Management", "Audit Logs"] %>
+            <% section_counter = 0 %>
+            <% section_order.each do |section_name| %>
+              <% section_permissions = @permissions.select { |p| p.section == section_name } %>
+              <% next if section_permissions.empty? %>
+              <% section_counter += 1 %>
+              <!-- SECTION HEADER -->
+              <tr>
+                <td colspan="2" style="font-size: 1.1rem; background-color: #28a745; color: white; font-weight: bold;">
+                  <%= "#{section_counter}. #{section_name.upcase}" %>
+                </td>
+              </tr>
+              <% module_counter = 0 %>
+              <% section_permissions.group_by(&:resource).sort.each do |resource, perms| %>
+                <% module_counter += 1 %>
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                  <!-- Module Name -->
+                  <td style="width: 250px; font-weight: 600; vertical-align: top;">
+                    <%= "#{section_counter}.#{module_counter} #{resource.split('.').last.upcase}" %>
+                  </td>
+                  <!-- Permission Checkboxes -->
+                  <td>
+                    <div class="d-flex flex-wrap">
+                      <% perms.sort_by(&:name).each do |perm| %>
+                        <div class="form-check me-3 mb-2">
+                          <%= form.check_box :permission_ids,
+                                { multiple: true, class: "form-check-input", id: "perm_#{perm.id}", checked: role.permission_ids.include?(perm.id) },
+                                perm.id, nil %>
+                          <label class="form-check-label text-black" for="perm_<%= perm.id %>">
+                            <%= perm.name.upcase %>
+                          </label>
+                        </div>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <%= button_tag type: :submit, class: "btn btn-success" do %>
+      <i class="bi bi-save-fill text-white me-1"></i>Save
+    <% end %>
+  </div>
+<% end %>

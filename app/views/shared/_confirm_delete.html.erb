@@ -1,0 +1,42 @@
+<%#
+  Shared Confirm Delete Modal Content
+  ====================================
+  A reusable confirmation dialog for delete actions
+  Follows Bootstrap modal structure without fixed width constraints
+
+  Required local variables:
+    item_name:    [String] Name/identifier of item being deleted
+    delete_path:  [String] The path for the delete action
+    form_id:      [String] Optional form ID (default: 'deleteConfirmForm')
+    item_type:    [String] Optional type of item (e.g., "Category", "Block")
+    message:      [String] Optional custom message
+
+  Usage:
+    <%= render "shared/confirm_delete",
+               item_name: @category.name,
+               item_type: "Category",
+               delete_path: master_data_category_path(@category) %>
+%>
+<%
+  form_id ||= "deleteConfirmForm"
+  item_type ||= "item"
+  message ||= "Are you sure you want to delete #{item_type.downcase} <strong>\"#{item_name}\"</strong>?"
+%>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header border-0">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body text-center py-4">
+    <i class="bi bi-exclamation-circle text-danger" style="font-size: 4rem;"></i>
+    <h5 class="mt-3 mb-3">Delete <%= item_type %></h5>
+    <p id="deleteConfirmMessage">
+      <%== message %>
+    </p>
+  </div>
+  <div class="modal-footer border-0 justify-content-center">
+    <%= form_with url: delete_path, method: :delete, id: form_id, data: { turbo_frame: "_top" }, class: "d-inline" do %>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <%= button_tag "Yes! Delete", class: "btn btn-danger ms-2" %>
+    <% end %>
+  </div>
+<% end %>

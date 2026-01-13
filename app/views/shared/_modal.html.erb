@@ -1,0 +1,62 @@
+<%#
+  Shared Modal Component
+  ======================
+  A reusable, SOLID modal component that follows:
+  - Single Responsibility: Only handles modal container structure
+  - Open/Closed: Easy to extend via local variables without modifying the partial
+  - Dependency Inversion: Content is injected via turbo_frame_tag
+
+  Required local variables:
+    modal_id:      [String] Unique DOM ID for the modal
+    default_size:  [String] Bootstrap modal size class (modal-sm, modal-lg, modal-xl)
+    frame_id:      [String] Turbo frame ID (default: 'modal')
+
+  Optional local variables:
+    backdrop:      [String]  'static' or true/false (default: 'static')
+    keyboard:      [Boolean] Allow ESC key to close (default: false)
+    centered:      [Boolean] Vertically center modal (default: true)
+    aria_label:    [String]  Aria label for accessibility
+
+  Usage Example:
+    render "shared/modal", **modal_config(id: "workOrderModal", default_size: "modal-lg")
+
+  Or manually:
+    render "shared/modal", modal_id: "myModal", default_size: "modal-xl", frame_id: "modal"
+%>
+<%
+  # Set defaults for optional variables
+  backdrop ||= "static"
+  keyboard = false if keyboard.nil?
+  centered = true if centered.nil?
+  aria_label ||= "#{modal_id}Label"
+
+  # Build modal dialog classes
+  dialog_classes = ["modal-dialog"]
+  dialog_classes << "modal-dialog-centered" if centered
+  dialog_classes << default_size
+%>
+<!-- Reusable Modal Container -->
+<div class="modal fade"
+     id="<%= modal_id %>"
+     tabindex="-1"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="<%= aria_label %>"
+     aria-hidden="true"
+     data-bs-backdrop="<%= backdrop %>"
+     data-bs-keyboard="<%= keyboard %>"
+     data-controller="modal"
+     data-modal-frame-id-value="<%= frame_id %>">
+  <div class="<%= dialog_classes.join(' ') %>">
+    <div class="modal-content">
+      <%= turbo_frame_tag frame_id,
+                          data: {
+                            turbo_action: "advance",
+                            action: "turbo:frame-load->modal#show"
+                          } do %>
+        <!-- Content will be dynamically loaded here via Turbo Frame -->
+        <!-- The modal size can be overridden by links using data-modal-size attribute -->
+      <% end %>
+    </div>
+  </div>
+</div>

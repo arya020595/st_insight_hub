@@ -67,6 +67,9 @@ gem "audited", "~> 5.8"
 # Strong Migrations to help write safe database migrations
 gem "strong_migrations"
 
+# Soft delete for models
+gem "discard", "~> 1.3"
+
 # Bootstrap 5 framework integration
 gem "bootstrap", "~> 5.3", ">= 5.3.5"
 

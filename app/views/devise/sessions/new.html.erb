@@ -1,0 +1,38 @@
+<div id="login-page">
+  <div class="login-wrapper">
+    <div class="login-container">
+      <div class="brand-section">
+        <i class="bi bi-bar-chart-fill brand-icon"></i>
+        <h1 class="brand-title">ST Insight Hub</h1>
+        <p class="brand-subtitle">Business Intelligence Dashboard</p>
+      </div>
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="field">
+          <%= f.label :email %><br />
+          <%= f.email_field :email, autofocus: true, placeholder: "Enter your email address", autocomplete: "email", class: "custom-input" %>
+        </div>
+        <div class="field">
+          <%= f.label :password %><br />
+          <%= f.password_field :password, placeholder: "Enter your password", autocomplete: "current-password", class: "custom-input" %>
+        </div>
+        <% if devise_mapping.rememberable? %>
+          <div class="field remember-field">
+            <%= f.check_box :remember_me, class: "form-check-input" %>
+            <%= f.label :remember_me, class: "form-check-label" %>
+          </div>
+        <% end %>
+        <%= render "layouts/flash" %>
+        <div class="actions">
+          <%= f.submit "Log in" %>
+        </div>
+      <% end %>
+      <div class="auth-links">
+        <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+          <%= link_to "Forgot your password?", new_password_path(resource_name) %>
+        <% end %>
+      </div>
+      <p class="powered-by">Powered By ST Datablu</p>
+    </div>
+    <div class="login-background"></div>
+  </div>
+</div>

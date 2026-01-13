@@ -1,0 +1,15 @@
+<%# Breadcrumb navigation component %>
+<%# Usage: render 'shared/breadcrumb', items: [{ title: 'Home', path: root_path }, { title: 'Users' }] %>
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <% items.each_with_index do |item, index| %>
+      <% if index == items.length - 1 %>
+        <li class="breadcrumb-item active" aria-current="page"><%= item[:title] %></li>
+      <% else %>
+        <li class="breadcrumb-item">
+          <%= link_to item[:title], item[:path] %>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+</nav>

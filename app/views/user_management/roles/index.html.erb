@@ -1,0 +1,78 @@
+<div id="url-manager"></div>
+<div id="roles" class="container-fluid px-4 py-4 roles-list" data-controller="multi-sort">
+  <div class="card shadow-sm">
+    <div class="roles_page">
+      <h1 class="mb-0">User Management - Roles</h1>
+      <div class="d-flex justify-content-end">
+        <% if record_policy(Role.new, UserManagement::RolePolicy).new? %>
+          <%= link_to new_user_management_role_path, class: "add-button btn btn-primary btn-sm", **modal_link_data(size: 'modal-xl') do %>
+            <i class="bi bi-plus-circle-fill text-white me-1"></i>Add Role
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body">
+      <%= search_form_for @q, url: user_management_roles_path, html: { id: 'role-search-form', data: { controller: "search-form", action: "submit->search-form#resetPage" } } do |f| %>
+        <div class="table-responsive">
+          <table class="table table-hover table-sm mb-0">
+            <thead class="header-row">
+              <tr class="header-row">
+                <th></th>
+                <th class="text-center">
+                  <%= sort_link(@q, :id, 'ID') %>
+                </th>
+                <th class="text-center">
+                  <%= sort_link(@q, :name, 'Name') %>
+                </th>
+                <th class="text-center">
+                  <%= sort_link(@q, :created_at, 'Created At') %>
+                </th>
+                <th class="text-center">
+                  <%= sort_link(@q, :updated_at, 'Updated At') %>
+                </th>
+              </tr>
+              <tr>
+                <th class="text-center">
+                  <div class="filter-buttons justify-content-center">
+                    <%= link_to 'Reset', user_management_roles_path, class: 'btn reset-btn', style: 'font-weight: normal; width: 120px;' %>
+                  </div>
+                </th>
+                <th class="text-center">
+                  <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1, data: { action: "input->search-form#autoSubmit" }, aria: { label: 'Filter by ID' } %>
+                </th>
+                <th>
+                  <%= f.search_field :name_cont, class: 'form-control form-control-sm', placeholder: 'Search Name..', data: { action: "input->search-form#autoSubmit" }, aria: { label: 'Search by role name' } %>
+                </th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="roles-table-body">
+              <% if @roles.any? %>
+                <%= render partial: 'role_row', collection: @roles, as: :role %>
+              <% else %>
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">
+                    No roles found.
+                    <% if record_policy(Role.new, UserManagement::RolePolicy).new? %>
+                      <%= link_to 'Add a new role', new_user_management_role_path, class: 'text-decoration-none' %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="text-muted small">
+          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> roles
+        </div>
+        <div>
+          <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'modal' %>

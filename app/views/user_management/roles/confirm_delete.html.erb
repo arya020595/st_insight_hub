@@ -1,0 +1,5 @@
+<%= render "shared/confirm_delete",
+           item_name: @role.name,
+           item_type: "Role",
+           delete_path: user_management_role_path(@role),
+           form_id: "deleteRoleForm" %>

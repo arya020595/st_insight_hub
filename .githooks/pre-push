@@ -1,0 +1,23 @@
+#!/bin/bash
+# Pre-push hook to run RuboCop auto-correction
+# This ensures code is properly formatted before pushing
+
+echo "🔍 Running RuboCop auto-correction before push..."
+
+# Run RuboCop with auto-correction for all files
+bundle exec rubocop -A
+
+# Check the exit status
+RUBOCOP_EXIT_CODE=$?
+
+if [ $RUBOCOP_EXIT_CODE -ne 0 ]; then
+  echo "❌ RuboCop found issues that couldn't be auto-corrected."
+  echo "Please fix the remaining issues manually before pushing."
+  echo ""
+  echo "To see all issues, run: bundle exec rubocop"
+  echo "To skip this hook, use: git push --no-verify"
+  exit 1
+fi
+
+echo "✅ RuboCop auto-correction complete! Proceeding with push..."
+exit 0

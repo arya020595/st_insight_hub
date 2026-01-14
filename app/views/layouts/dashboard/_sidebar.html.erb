@@ -1,4 +1,4 @@
-<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end" style="width: 280px; min-height: calc(100vh - 56px);">
+<div id="sidebar" data-controller="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end" style="width: 280px; min-height: calc(100vh - 56px); transition: all 0.3s ease;">
   <ul id="sidebarAccordion" class="nav nav-pills flex-column mb-auto">
     <!-- Dashboard -->
     <% if can_view_menu?('dashboard.index') %>

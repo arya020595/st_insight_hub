@@ -28,7 +28,7 @@
               <dd class="col-sm-8"><code><%= @project.code %></code></dd>
               <dt class="col-sm-4 text-muted">Description:</dt>
               <dd class="col-sm-8">
-                <%= @project.description.presence || '<span class="text-muted">No description</span>'.html_safe %>
+                <%= @project.description.presence || content_tag(:span, 'No description', class: 'text-muted') %>
               </dd>
               <dt class="col-sm-4 text-muted">Status:</dt>
               <dd class="col-sm-8">

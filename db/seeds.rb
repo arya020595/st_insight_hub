@@ -150,7 +150,7 @@ project_configs = [
     description: 'Sales performance and revenue analytics dashboards',
     icon: 'bi-graph-up',
     status: 'active',
-    assigned_users: [admin_company_a],
+    assigned_users: [ admin_company_a ],
     dashboards: [
       { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active' },
       { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active' }
@@ -162,7 +162,7 @@ project_configs = [
     description: 'Marketing campaign performance dashboards',
     icon: 'bi-megaphone',
     status: 'active',
-    assigned_users: [admin_company_a, admin_company_b],
+    assigned_users: [ admin_company_a, admin_company_b ],
     dashboards: [
       { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' },
       { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active' }
@@ -174,7 +174,7 @@ project_configs = [
     description: 'Operational metrics and KPIs',
     icon: 'bi-gear',
     status: 'active',
-    assigned_users: [admin_company_b],
+    assigned_users: [ admin_company_b ],
     dashboards: [
       { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active' }
     ]
@@ -185,7 +185,7 @@ project_configs = [
     description: 'Customer behavior and satisfaction analytics',
     icon: 'bi-people',
     status: 'active',
-    assigned_users: [admin_company_c],
+    assigned_users: [ admin_company_c ],
     dashboards: [
       { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active' },
       { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active' }
@@ -197,7 +197,7 @@ project_configs = [
     description: 'Financial performance and budget tracking',
     icon: 'bi-currency-dollar',
     status: 'active',
-    assigned_users: [admin_company_c],
+    assigned_users: [ admin_company_c ],
     dashboards: [
       { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active' }
     ]

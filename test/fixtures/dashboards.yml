@@ -1,0 +1,42 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+active_dashboard:
+  project: active_project
+  name: Active Dashboard
+  embed_url: https://example.com/dashboard/active
+  embed_type: iframe
+  status: active
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_dashboard:
+  project: active_project
+  name: Inactive Dashboard
+  embed_url: https://example.com/dashboard/inactive
+  embed_type: iframe
+  status: inactive
+  position: 2
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+discarded_dashboard:
+  project: active_project
+  name: Discarded Dashboard
+  embed_url: https://example.com/dashboard/discarded
+  embed_type: iframe
+  status: active
+  position: 3
+  discarded_at: <%= Time.current - 1.day %>
+  created_at: <%= Time.current - 2.days %>
+  updated_at: <%= Time.current - 1.day %>
+
+dashboard_of_inactive_project:
+  project: inactive_project
+  name: Dashboard of Inactive Project
+  embed_url: https://example.com/dashboard/inactive_project
+  embed_type: iframe
+  status: active
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Admin user assigned to active_project
+admin_active_project:
+  project: active_project
+  user: admin
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Viewer user assigned to active_project
+viewer_active_project:
+  project: active_project
+  user: viewer
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   belongs_to :role, optional: true
   has_many :audit_logs, dependent: :nullify
+  has_many :project_users, dependent: :destroy
+  has_many :projects, through: :project_users
 
   validates :name, presence: true
 

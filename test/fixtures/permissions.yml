@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+bi_dashboard_index:
+  name: View BI Dashboards
+  code: bi_dashboards.index
+  resource: bi_dashboards
+  section: bi_dashboards
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+audit_logs_index:
+  name: View Audit Logs
+  code: audit_logs.index
+  resource: audit_logs
+  section: audit_logs
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+audit_logs_show:
+  name: Show Audit Log
+  code: audit_logs.show
+  resource: audit_logs
+  section: audit_logs
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+dashboard_index:
+  name: View Dashboard
+  code: dashboard.index
+  resource: dashboard
+  section: dashboard
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

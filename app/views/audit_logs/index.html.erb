@@ -49,9 +49,9 @@
                       data: { action: "input->search-form#instantSubmit" } } %>
                   </th>
                   <th>
-                    <% module_name_options = Rails.cache.fetch('audit_log_module_name_options') do %>
-                      <% AuditLog.distinct.pluck(:module_name).compact.sort.map { |m| [m, m] } %>
-                    <% end %>
+                    <% module_name_options = Rails.cache.fetch("audit_log_module_name_options", expires_in: 5.minutes) do
+                         AuditLog.distinct.pluck(:module_name).compact.sort.map { |m| [m.titleize, m] }
+                       end %>
                     <%= f.select :module_name_eq,
                       options_for_select(module_name_options, f.object.module_name_eq),
                       { include_blank: 'All Modules..' },

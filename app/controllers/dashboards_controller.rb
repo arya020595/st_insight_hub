@@ -2,7 +2,7 @@
 
 class DashboardsController < ApplicationController
   before_action :set_project
-  before_action :set_dashboard, only: %i[edit update destroy]
+  before_action :set_dashboard, only: %i[edit update destroy confirm_delete]
 
   def new
     authorize @project, :update?
@@ -21,7 +21,12 @@ class DashboardsController < ApplicationController
         summary: "Created dashboard: #{@dashboard.name} in project: #{@project.name}",
         data_after: @dashboard.attributes
       )
-      redirect_to @project, notice: "Dashboard was successfully created."
+      @dashboards = @project.dashboards.kept.ordered
+      flash.now[:notice] = "Dashboard was successfully created."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @project, notice: "Dashboard was successfully created." }
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -44,7 +49,12 @@ class DashboardsController < ApplicationController
         data_before: data_before,
         data_after: @dashboard.attributes
       )
-      redirect_to @project, notice: "Dashboard was successfully updated."
+      @dashboards = @project.dashboards.kept.ordered
+      flash.now[:notice] = "Dashboard was successfully updated."
+      respond_to do |format|
+        format.turbo_stream { render :create }
+        format.html { redirect_to @project, notice: "Dashboard was successfully updated." }
+      end
     else
       render :edit, status: :unprocessable_entity
     end
@@ -62,7 +72,17 @@ class DashboardsController < ApplicationController
       summary: "Deleted dashboard: #{@dashboard.name}",
       data_before: data_before
     )
-    redirect_to @project, notice: "Dashboard was successfully deleted."
+
+    @dashboards = @project.dashboards.kept.ordered
+    flash.now[:notice] = "Dashboard was successfully deleted."
+    respond_to do |format|
+      format.turbo_stream { render :create }
+      format.html { redirect_to @project, notice: "Dashboard was successfully deleted." }
+    end
+  end
+
+  def confirm_delete
+    authorize @project, :destroy?
   end
 
   private

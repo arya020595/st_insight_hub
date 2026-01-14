@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="h3">
+        <i class="bi bi-bar-chart-line-fill me-2"></i>
+        BI Dashboards
+      </h1>
+      <p class="text-muted">Select a dashboard from the sidebar to view</p>
+    </div>
+  </div>
+  <% if @projects.any? %>
+    <div class="row">
+      <% @projects.each do |project| %>
+        <% project_dashboards = project.dashboards.kept.active.ordered %>
+        <% next if project_dashboards.empty? %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header bg-white">
+              <h5 class="card-title mb-0">
+                <i class="<%= project.icon.presence || 'bi bi-folder' %> me-2"></i>
+                <%= project.name %>
+              </h5>
+            </div>
+            <div class="card-body">
+              <% if project.description.present? %>
+                <p class="text-muted small"><%= project.description %></p>
+              <% end %>
+              <ul class="list-group list-group-flush">
+                <% project_dashboards.each do |dashboard| %>
+                  <li class="list-group-item px-0">
+                    <%= link_to bi_dashboard_path(dashboard), class: "text-decoration-none" do %>
+                      <i class="bi bi-graph-up me-2"></i> <%= dashboard.name %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          No dashboards available. Please contact an administrator to set up dashboard modules.
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

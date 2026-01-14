@@ -1,11 +1,11 @@
-#audit-logs {
-  .audit_logs_page {
+#projects {
+  .projects_page {
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
   }
 
-  .audit_logs_page h1 {
+  .projects_page h1 {
     background-color: #155e1a;
     color: #ffffff;
     padding: 20px;
@@ -15,9 +15,28 @@
     margin-bottom: 30px;
   }
 
-  .audit_logs_page .card-body {
+  .add-button {
+    background-color: #155e1a;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    float: right;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    border: 0;
+  }
+
+  .card-body {
     margin-top: -10px;
     padding: 2px;
+  }
+
+  .add-button:hover {
+    background-color: #1f7a2e;
+    text-decoration: none;
+    color: #ffffff;
   }
 
   .table thead.header-row th a {
@@ -42,8 +61,8 @@
     gap: 8px;
   }
 
-  #audit-logs-table-body tr td,
-  #audit-logs-table-body tr th {
+  #projects-table-body tr td,
+  #projects-table-body tr th {
     padding: 12px 8px;
     text-align: center;
     font-size: 16px;
@@ -58,9 +77,7 @@
   .btn.reset-btn {
     background-color: #0d6efd;
     color: #ffffff;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-    white-space: nowrap;
+    width: 90%;
   }
 
   .btn.reset-btn a {

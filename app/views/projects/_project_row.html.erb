@@ -1,0 +1,34 @@
+<tr id="<%= dom_id(project) %>">
+  <td class="text-center">
+    <div class="action-buttons">
+      <% if policy(project).show? %>
+        <%= link_to project_path(project), class: "action-btn info", title: "View Details", **modal_link_data(size: 'modal-xl') do %>
+          <i class="bi bi-info-circle-fill"></i>
+        <% end %>
+      <% end %>
+      <% if policy(project).edit? %>
+        <%= link_to edit_project_path(project), class: "action-btn warning", title: "Edit", **modal_link_data(size: 'modal-lg') do %>
+          <i class="bi bi-pencil-fill"></i>
+        <% end %>
+      <% end %>
+      <% if policy(project).destroy? %>
+        <%= link_to confirm_delete_project_path(project), class: "action-btn danger", title: "Delete", **modal_link_data(size: 'modal-md') do %>
+          <i class="bi bi-trash-fill"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+  <td class="text-center"><%= project.id %></td>
+  <td><%= project.name %></td>
+  <td><code><%= project.code %></code></td>
+  <td class="text-center">
+    <span class="badge bg-info"><%= project.dashboards_count %></span>
+  </td>
+  <td class="text-center">
+    <span class="badge bg-<%= status_badge_class(project.status) %>">
+      <%= project.status.titleize %>
+    </span>
+  </td>
+  <td class="text-center"><%= project.created_at.strftime("%b %d, %Y %H:%M") if project.created_at %></td>
+  <td class="text-center"><%= project.updated_at.strftime("%b %d, %Y %H:%M") if project.updated_at %></td>
+</tr>

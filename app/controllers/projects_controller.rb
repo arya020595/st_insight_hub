@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[show edit update destroy]
+  before_action :set_project, only: %i[show edit update destroy confirm_delete]
 
   def index
     authorize Project
@@ -31,7 +31,7 @@ class ProjectsController < ApplicationController
         summary: "Created project: #{@project.name}",
         data_after: @project.attributes
       )
-      redirect_to @project, notice: "Project was successfully created."
+      redirect_to projects_path, notice: "Project was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -51,7 +51,7 @@ class ProjectsController < ApplicationController
         data_before: data_before,
         data_after: @project.attributes
       )
-      redirect_to @project, notice: "Project was successfully updated."
+      redirect_to projects_path, notice: "Project was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -71,6 +71,8 @@ class ProjectsController < ApplicationController
     redirect_to projects_path, notice: "Project was successfully deleted."
   end
 
+  def confirm_delete; end
+
   private
 
   def set_project
@@ -79,6 +81,6 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:name, :code, :description, :status)
+    params.require(:project).permit(:name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position)
   end
 end

@@ -29,7 +29,16 @@
              href="#" role="button"
              aria-expanded="<%= project_menu_active %>"
              aria-controls="projectCollapse<%= project.id %>">
-            <i class="<%= project.icon.presence || 'bi bi-folder' %> me-2"></i> <%= project.name %>
+            <% raw_icon = project.icon.to_s.strip %>
+            <% safe_icon =
+                 if raw_icon.match?(/\Abi-[\w-]+\z/)
+                   raw_icon
+                 elsif raw_icon.match?(/\Abi\s+bi-[\w-]+\z/)
+                   raw_icon.split.last
+                 else
+                   'bi-folder'
+                 end %>
+            <i class="bi <%= safe_icon %> me-2"></i> <%= project.name %>
             <i class="bi bi-chevron-right float-end collapse-chevron"></i>
           </a>
           <div class="collapse <%= 'show' if project_menu_active %>" id="projectCollapse<%= project.id %>" data-bs-parent="#sidebarAccordion">

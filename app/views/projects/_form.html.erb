@@ -38,10 +38,30 @@
             <div class="invalid-feedback"><%= @project.errors[:status].first %></div>
           <% end %>
         </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :icon, 'Sidebar Icon', class: 'form-label' %>
+          <%= f.text_field :icon, class: "form-control", placeholder: 'e.g., bi-folder, bi-graph-up', value: @project.icon || 'bi-folder' %>
+          <div class="form-text">Bootstrap Icons class name (e.g., bi-folder, bi-graph-up)</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :sidebar_position, 'Sidebar Position', class: 'form-label' %>
+          <%= f.number_field :sidebar_position, class: "form-control", min: 0, value: @project.sidebar_position || 0 %>
+          <div class="form-text">Lower number appears first in sidebar</div>
+        </div>
+        <div class="col-md-6 mb-3 d-flex align-items-center">
+          <div class="form-check mt-4">
+            <%= f.check_box :show_in_sidebar, class: "form-check-input", checked: @project.show_in_sidebar.nil? ? true : @project.show_in_sidebar %>
+            <%= f.label :show_in_sidebar, 'Show in Sidebar', class: 'form-check-label' %>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <i class="bi bi-arrow-left me-1"></i> Back
+      </button>
       <%= f.submit @project.new_record? ? 'Create Project' : 'Update Project', class: 'btn btn-primary' %>
     </div>
   <% end %>

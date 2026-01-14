@@ -5,7 +5,7 @@
     </h5>
     <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-  <%= form_with model: [@project, @dashboard], local: true, html: { class: 'dashboard-form' } do |f| %>
+  <%= form_with model: [@project, @dashboard], html: { class: 'dashboard-form' } do |f| %>
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12 mb-3">
@@ -60,7 +60,9 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <%= link_to project_path(@project), class: "btn btn-secondary" do %>
+        <i class="bi bi-arrow-left me-1"></i> Back
+      <% end %>
       <%= f.submit @dashboard.new_record? ? 'Create Dashboard' : 'Update Dashboard', class: 'btn btn-primary' %>
     </div>
   <% end %>

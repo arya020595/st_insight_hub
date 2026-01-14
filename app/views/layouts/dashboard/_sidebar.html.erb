@@ -8,14 +8,6 @@
         <% end %>
       </li>
     <% end %>
-    <!-- BI Dashboard -->
-    <% if can_view_menu?('bi_dashboards.index') %>
-      <li class="nav-item">
-        <%= link_to bi_dashboards_path, class: "nav-link #{active_controller?('bi_dashboards') ? 'active' : 'link-dark'}" do %>
-          <i class="bi bi-bar-chart-line-fill me-2"></i> BI Dashboards
-        <% end %>
-      </li>
-    <% end %>
     <!-- BI Dashboard Management -->
     <% if can_view_menu?('bi_dashboards.projects.index') %>
       <li class="nav-item">
@@ -23,6 +15,35 @@
           <i class="bi bi-kanban-fill me-2"></i> Dashboard Management
         <% end %>
       </li>
+    <% end %>
+    <!-- Dynamic BI Dashboard Modules (Projects) -->
+    <% if can_view_menu?('bi_dashboards.index') %>
+      <% sidebar_projects.each do |project| %>
+        <% project_dashboards = project.dashboards.kept.active.ordered %>
+        <% next if project_dashboards.empty? %>
+        <% project_menu_active = params[:controller] == 'bi_dashboards' && @project&.id == project.id %>
+        <li class="nav-item">
+          <a class="nav-link <%= project_menu_active ? 'active' : 'link-dark' %>"
+             data-bs-toggle="collapse"
+             data-bs-target="#projectCollapse<%= project.id %>"
+             href="#" role="button"
+             aria-expanded="<%= project_menu_active %>"
+             aria-controls="projectCollapse<%= project.id %>">
+            <i class="<%= project.icon.presence || 'bi bi-folder' %> me-2"></i> <%= project.name %>
+            <i class="bi bi-chevron-right float-end collapse-chevron"></i>
+          </a>
+          <div class="collapse <%= 'show' if project_menu_active %>" id="projectCollapse<%= project.id %>" data-bs-parent="#sidebarAccordion">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-4">
+              <% project_dashboards.each do |dashboard| %>
+                <% dashboard_active = params[:controller] == 'bi_dashboards' && params[:action] == 'show' && params[:id].to_s == dashboard.id.to_s %>
+                <li>
+                  <%= link_to dashboard.name, bi_dashboard_path(dashboard), class: "nav-link #{dashboard_active ? 'active' : 'link-dark'}" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </li>
+      <% end %>
     <% end %>
     <!-- User Management -->
     <% has_user_management_access = can_view_menu?('user_management.users.index') || can_view_menu?('user_management.roles.index') %>

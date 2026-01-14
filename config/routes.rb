@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   # BI Dashboard Display (view dashboards)
-  resources :bi_dashboards, only: [ :index ]
+  resources :bi_dashboards, only: [ :index, :show ]
 
   # Projects and Dashboards Management
   resources :projects, concerns: :restorable do

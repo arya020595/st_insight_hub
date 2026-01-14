@@ -83,4 +83,11 @@ module ApplicationHelper
       datetime.to_s
     end
   end
+
+  # Returns projects visible in sidebar with their active dashboards
+  # Used by sidebar partial to render dynamic menu items
+  # @return [ActiveRecord::Relation] projects with dashboards eager loaded
+  def sidebar_projects
+    @sidebar_projects ||= Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
+  end
 end

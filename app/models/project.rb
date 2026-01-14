@@ -11,10 +11,12 @@ class Project < ApplicationRecord
 
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }
+  scope :visible_in_sidebar, -> { where(show_in_sidebar: true) }
+  scope :sidebar_ordered, -> { order(sidebar_position: :asc, name: :asc) }
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id name code description status created_at updated_at]
+    %w[id name code description status icon show_in_sidebar sidebar_position created_at updated_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)

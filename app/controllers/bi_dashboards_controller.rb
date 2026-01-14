@@ -12,5 +12,7 @@ class BiDashboardsController < ApplicationController
 
     @dashboard = Dashboard.kept.find(params[:id])
     @project = @dashboard.project
+
+    raise ActiveRecord::RecordNotFound unless @project.active? && @project.show_in_sidebar?
   end
 end

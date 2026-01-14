@@ -6,7 +6,7 @@ class Dashboard < ApplicationRecord
   belongs_to :project
 
   validates :name, presence: true
-  validates :embed_url, presence: true
+  validates :embed_url, presence: true, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid HTTP or HTTPS URL" }
   validates :embed_type, presence: true, inclusion: { in: %w[iframe embed_url] }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
 

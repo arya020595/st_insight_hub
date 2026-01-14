@@ -52,7 +52,7 @@
         </div>
         <div class="col-md-6 mb-3 d-flex align-items-center">
           <div class="form-check mt-4">
-            <%= f.check_box :show_in_sidebar, class: "form-check-input", checked: @project.show_in_sidebar.nil? ? true : @project.show_in_sidebar %>
+            <%= f.check_box :show_in_sidebar, class: "form-check-input", checked: @project.show_in_sidebar != false %>
             <%= f.label :show_in_sidebar, 'Show in Sidebar', class: 'form-check-label' %>
           </div>
         </div>

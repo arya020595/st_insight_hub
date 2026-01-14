@@ -4,6 +4,8 @@ class Project < ApplicationRecord
   include Discard::Model
 
   has_many :dashboards, dependent: :destroy
+  has_many :project_users, dependent: :destroy
+  has_many :users, through: :project_users
 
   validates :name, presence: true
   validates :code, presence: true, uniqueness: true

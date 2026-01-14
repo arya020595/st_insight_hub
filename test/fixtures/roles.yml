@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+superadmin_role:
+  name: Superadmin
+  description: Full access to all features
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin_role:
+  name: Admin
+  description: Administrative access
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+viewer_role:
+  name: Viewer
+  description: View only access
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+no_access_role:
+  name: No Access
+  description: No permissions
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

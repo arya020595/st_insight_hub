@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_14_022057) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_14_084904) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,6 +63,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_022057) do
     t.index ["code"], name: "index_permissions_on_code", unique: true
     t.index ["discarded_at"], name: "index_permissions_on_discarded_at"
     t.index ["resource"], name: "index_permissions_on_resource"
+  end
+
+  create_table "project_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "project_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["project_id", "user_id"], name: "index_project_users_on_project_id_and_user_id", unique: true
+    t.index ["project_id"], name: "index_project_users_on_project_id"
+    t.index ["user_id"], name: "index_project_users_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -127,6 +137,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_022057) do
 
   add_foreign_key "audit_logs", "users"
   add_foreign_key "dashboards", "projects"
+  add_foreign_key "project_users", "projects"
+  add_foreign_key "project_users", "users"
   add_foreign_key "roles_permissions", "permissions"
   add_foreign_key "roles_permissions", "roles"
   add_foreign_key "users", "roles"

@@ -16,8 +16,8 @@
         <% end %>
       </li>
     <% end %>
-    <!-- Dynamic BI Dashboard Modules (Projects) -->
-    <% if can_view_menu?('bi_dashboards.index') %>
+    <!-- Dynamic BI Dashboard Modules (Projects) - Hidden for Superadmin -->
+    <% if can_view_menu?('bi_dashboards.index') && !current_user.superadmin? %>
       <% sidebar_projects.each do |project| %>
         <% project_dashboards = project.dashboards.kept.active.ordered %>
         <% next if project_dashboards.empty? %>

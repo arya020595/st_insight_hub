@@ -57,6 +57,31 @@
           </div>
         </div>
       </div>
+      <% if current_user.superadmin? %>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <%= f.label :user_ids, 'Assign to Users (Admin)', class: 'form-label' %>
+            <%= f.select :user_ids,
+                options_from_collection_for_select(
+                  User.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name),
+                  :id,
+                  :name,
+                  @project.user_ids
+                ),
+                { include_blank: false },
+                {
+                  multiple: true,
+                  class: "form-select #{'is-invalid' if @project.errors[:user_ids].any?}",
+                  size: 5
+                }
+            %>
+            <% if @project.errors[:user_ids].any? %>
+              <div class="invalid-feedback"><%= @project.errors[:user_ids].first %></div>
+            <% end %>
+            <div class="form-text">Select admin users who can access this project and its dashboards (hold Ctrl/Cmd to select multiple)</div>
+          </div>
+        </div>
+      <% end %>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

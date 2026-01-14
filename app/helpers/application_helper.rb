@@ -91,6 +91,9 @@ module ApplicationHelper
   # via +includes(:dashboards)+ to avoid N+1 queries when iterating over projects and
   # accessing their dashboards.
   #
+  # For non-superadmin users, only projects assigned to them via project_users are returned.
+  # Superadmin users bypass this restriction (but they don't see the BI Dashboard menu anyway).
+  #
   # NOTE: This method only eager loads dashboards for the base scope defined here. If you
   # chain additional scopes on the returned relation in views or partials (for example
   # +sidebar_projects.kept.active.ordered+), Rails will build new relations and may issue
@@ -106,7 +109,16 @@ module ApplicationHelper
   #
   # @return [ActiveRecord::Relation] projects visible in the sidebar with dashboards eager loaded
   def sidebar_projects
-    @sidebar_projects ||= Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
+    @sidebar_projects ||= begin
+      base_scope = Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
+
+      # Non-superadmin users only see projects assigned to them
+      if current_user && !current_user.superadmin?
+        base_scope.joins(:project_users).where(project_users: { user_id: current_user.id })
+      else
+        base_scope
+      end
+    end
   end
 
   # Returns a safe URL by validating the scheme

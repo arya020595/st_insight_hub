@@ -24,6 +24,10 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
 
     if @project.save
+      # Auto-assign current user to project (for Admin users)
+      # Superadmin manages assignments via the form
+      @project.users << current_user unless current_user.superadmin? || @project.users.include?(current_user)
+
       log_audit(
         action: "create",
         module_name: "projects",

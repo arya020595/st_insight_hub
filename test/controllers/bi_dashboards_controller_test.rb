@@ -78,7 +78,7 @@ class BiDashboardsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show is accessible with proper permissions for active dashboard" do
-    sign_in @viewer_user
+    sign_in @admin_user  # Admin owns the active_project via fixture
 
     get bi_dashboard_path(@active_dashboard)
     assert_response :success
@@ -183,7 +183,7 @@ class BiDashboardsControllerTest < ActionDispatch::IntegrationTest
   # ============================================================================
 
   test "user with cached permissions can access show" do
-    sign_in @viewer_user
+    sign_in @admin_user  # Admin owns the active_project via fixture
 
     # First request to cache permissions
     get bi_dashboard_path(@active_dashboard)

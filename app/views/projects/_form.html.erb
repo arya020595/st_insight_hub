@@ -60,25 +60,25 @@
       <% if current_user.superadmin? %>
         <div class="row">
           <div class="col-md-12 mb-3">
-            <%= f.label :user_ids, 'Assign to Users (Admin)', class: 'form-label' %>
-            <%= f.select :user_ids,
+            <%= f.label :created_by_id, 'Owner (Admin)', class: 'form-label' %>
+            <span class="text-danger">*</span>
+            <%= f.select :created_by_id,
                 options_from_collection_for_select(
                   User.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name),
                   :id,
                   :name,
-                  @project.user_ids
+                  @project.created_by_id
                 ),
-                { include_blank: false },
+                { include_blank: '-- Select Owner --' },
                 {
-                  multiple: true,
-                  class: "form-select #{'is-invalid' if @project.errors[:user_ids].any?}",
-                  size: 5
+                  class: "form-select #{'is-invalid' if @project.errors[:created_by].any?}",
+                  required: true
                 }
             %>
-            <% if @project.errors[:user_ids].any? %>
-              <div class="invalid-feedback"><%= @project.errors[:user_ids].first %></div>
+            <% if @project.errors[:created_by].any? %>
+              <div class="invalid-feedback"><%= @project.errors[:created_by].first %></div>
             <% end %>
-            <div class="form-text">Select admin users who can access this project and its dashboards (hold Ctrl/Cmd to select multiple)</div>
+            <div class="form-text">Select the admin user who owns this project. Project code must be unique per owner.</div>
           </div>
         </div>
       <% end %>

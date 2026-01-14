@@ -20,7 +20,9 @@
       <%= render "layouts/dashboard/sidebar" %>
       <!-- Main Content -->
       <main class="flex-grow-1 p-4 bg-light">
-        <%= render "layouts/flash" %>
+        <div id="flash-messages">
+          <%= render "layouts/flash" %>
+        </div>
         <%= yield %>
       </main>
     </div>

@@ -30,15 +30,15 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def user_owns_project?
-    record.users.exists?(id: user.id)
+    record.created_by_id == user.id
   end
 
   class Scope < ApplicationPolicy::Scope
     private
 
     def apply_role_based_scope
-      # Admin can only see projects they are assigned to
-      scope.joins(:project_users).where(project_users: { user_id: user.id })
+      # Admin can only see projects they own (created_by)
+      scope.where(created_by_id: user.id)
     end
 
     def permission_resource

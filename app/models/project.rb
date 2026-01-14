@@ -3,12 +3,13 @@
 class Project < ApplicationRecord
   include Discard::Model
 
+  # Relationships
+  belongs_to :created_by, class_name: "User", optional: true
   has_many :dashboards, dependent: :destroy
-  has_many :project_users, dependent: :destroy
-  has_many :users, through: :project_users
 
+  # Validations
   validates :name, presence: true
-  validates :code, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: { scope: :created_by_id, conditions: -> { kept }, message: "has already been taken" }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :icon, format: { with: /\Abi-[\w-]+\z/, allow_blank: true, message: "must be a valid Bootstrap Icons class (e.g., bi-folder, bi-graph-up)" }
 

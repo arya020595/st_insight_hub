@@ -10,8 +10,8 @@ class BiDashboardPolicy < ApplicationPolicy
     return true if user.superadmin?
     return false unless user.has_permission?(build_permission_code("index"))
 
-    # Non-superadmin users can only access dashboards from their assigned projects
-    record.project.users.exists?(user.id)
+    # Non-superadmin users can only access dashboards from projects they own
+    record.project.created_by_id == user.id
   end
 
   private
@@ -27,9 +27,9 @@ class BiDashboardPolicy < ApplicationPolicy
       "bi_dashboards"
     end
 
-    # Non-superadmin users only see projects assigned to them
+    # Non-superadmin users only see projects they own
     def apply_role_based_scope
-      scope.joins(:project_users).where(project_users: { user_id: user.id })
+      scope.where(created_by_id: user.id)
     end
   end
 end

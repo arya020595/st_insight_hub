@@ -84,9 +84,27 @@ module ApplicationHelper
     end
   end
 
-  # Returns projects visible in sidebar with their active dashboards
-  # Used by sidebar partial to render dynamic menu items
-  # @return [ActiveRecord::Relation] projects with dashboards eager loaded
+  # Returns projects visible in the sidebar with their dashboards eager loaded.
+  #
+  # This result is memoized in the instance variable +@sidebar_projects+ and is therefore
+  # cached for the duration of the current request. The base relation includes dashboards
+  # via +includes(:dashboards)+ to avoid N+1 queries when iterating over projects and
+  # accessing their dashboards.
+  #
+  # NOTE: This method only eager loads dashboards for the base scope defined here. If you
+  # chain additional scopes on the returned relation in views or partials (for example
+  # +sidebar_projects.kept.active.ordered+), Rails will build new relations and may issue
+  # additional queries. In particular, further filtering or ordering does not add new
+  # eager-loading associations and can reintroduce N+1 queries if dashboards or other
+  # associations are accessed without explicit +includes+.
+  #
+  # Recommended usage:
+  # - Prefer iterating directly over +sidebar_projects+ in views when possible.
+  # - If you need specific filtered subsets used in multiple places, consider extracting
+  #   additional helper methods or model scopes that compose the required filters together
+  #   with the appropriate +includes+, instead of chaining ad-hoc scopes in the view.
+  #
+  # @return [ActiveRecord::Relation] projects visible in the sidebar with dashboards eager loaded
   def sidebar_projects
     @sidebar_projects ||= Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
   end

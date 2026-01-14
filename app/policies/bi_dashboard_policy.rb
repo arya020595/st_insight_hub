@@ -11,7 +11,7 @@ class BiDashboardPolicy < ApplicationPolicy
     return false unless user.has_permission?(build_permission_code("index"))
 
     # Non-superadmin users can only access dashboards from their assigned projects
-    record.project.users.exists?(user.id)
+    record.project.users.exists?(id: user.id)
   end
 
   private

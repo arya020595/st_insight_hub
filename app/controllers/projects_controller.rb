@@ -31,7 +31,7 @@ class ProjectsController < ApplicationController
         summary: "Created project: #{@project.name}",
         data_after: @project.attributes
       )
-      redirect_to @project, notice: "Project was successfully created."
+      redirect_to projects_path, notice: "Project was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -51,7 +51,7 @@ class ProjectsController < ApplicationController
         data_before: data_before,
         data_after: @project.attributes
       )
-      redirect_to @project, notice: "Project was successfully updated."
+      redirect_to projects_path, notice: "Project was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

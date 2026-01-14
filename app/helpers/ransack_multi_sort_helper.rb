@@ -9,7 +9,7 @@
 #   <%== pagy_bootstrap_nav(@pagy) %>
 module RansackMultiSortHelper
   # Default per-page options for pagination selector
-  DEFAULT_PER_PAGE_OPTIONS = [10, 25, 50, 100].freeze
+  DEFAULT_PER_PAGE_OPTIONS = [ 10, 25, 50, 100 ].freeze
 
   # Renders a per-page dropdown that preserves search params
   #

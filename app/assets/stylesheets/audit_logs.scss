@@ -58,7 +58,9 @@
   .btn.reset-btn {
     background-color: #0d6efd;
     color: #ffffff;
-    width: 90%;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
   }
 
   .btn.reset-btn a {

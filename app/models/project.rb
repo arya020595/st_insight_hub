@@ -8,6 +8,7 @@ class Project < ApplicationRecord
   validates :name, presence: true
   validates :code, presence: true, uniqueness: true
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
+  validates :icon, format: { with: /\Abi-[\w-]+\z/, allow_blank: true, message: "must be a valid Bootstrap Icons class (e.g., bi-folder, bi-graph-up)" }
 
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }

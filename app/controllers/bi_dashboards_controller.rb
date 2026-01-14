@@ -13,6 +13,9 @@ class BiDashboardsController < ApplicationController
     @dashboard = Dashboard.kept.find(params[:id])
     @project = @dashboard.project
 
+    # Eager load users if superadmin to display assigned admins
+    @project = Project.includes(:users).find(@project.id) if current_user.superadmin?
+
     # Check project is active and visible in sidebar
     raise ActiveRecord::RecordNotFound unless @project.active? && @project.show_in_sidebar?
 

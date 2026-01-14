@@ -24,19 +24,27 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body p-0">
           <% if @dashboard.embed_type == 'iframe' %>
-            <iframe
-              src="<%= sanitize(@dashboard.embed_url, tags: []) %>"
-              width="100%"
-              height="100%"
-              style="min-height: calc(100vh - 220px); border: none;"
-              allowfullscreen
-              loading="lazy"
-              sandbox="allow-scripts allow-same-origin allow-forms">
-            </iframe>
+            <% if safe_url(@dashboard.embed_url) %>
+              <iframe
+                src="<%= safe_url(@dashboard.embed_url) %>"
+                width="100%"
+                height="100%"
+                style="min-height: calc(100vh - 220px); border: none;"
+                allowfullscreen
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin allow-forms">
+              </iframe>
+            <% else %>
+              <div class="alert alert-danger">Invalid embed URL</div>
+            <% end %>
           <% else %>
             <div class="p-4 text-center">
               <p class="text-muted">Embed URL:</p>
-              <%= link_to sanitize(@dashboard.embed_url, tags: []), sanitize(@dashboard.embed_url, tags: []), target: "_blank", rel: "noopener noreferrer", class: "btn btn-primary" %>
+              <% if safe_url(@dashboard.embed_url) %>
+                <%= link_to @dashboard.embed_url, safe_url(@dashboard.embed_url), target: "_blank", rel: "noopener noreferrer", class: "btn btn-primary" %>
+              <% else %>
+                <div class="alert alert-danger">Invalid embed URL</div>
+              <% end %>
             </div>
           <% end %>
         </div>

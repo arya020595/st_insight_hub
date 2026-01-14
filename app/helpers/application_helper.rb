@@ -90,4 +90,17 @@ module ApplicationHelper
   def sidebar_projects
     @sidebar_projects ||= Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
   end
+
+  # Returns a safe URL by validating the scheme
+  # Only allows http and https protocols to prevent javascript: or data: URLs
+  # @param url [String] URL to validate
+  # @return [String, nil] Safe URL or nil if invalid
+  def safe_url(url)
+    return nil if url.blank?
+
+    uri = URI.parse(url)
+    %w[http https].include?(uri.scheme) ? url : nil
+  rescue URI::InvalidURIError
+    nil
+  end
 end

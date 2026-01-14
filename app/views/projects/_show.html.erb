@@ -83,11 +83,18 @@
                     </span>
                   </td>
                   <td class="text-center">
-                    <% if policy(@project).update? %>
-                      <%= link_to edit_project_dashboard_path(@project, dashboard), class: "btn btn-sm btn-outline-warning", title: "Edit" do %>
-                        <i class="bi bi-pencil"></i>
+                    <div class="d-flex gap-1 justify-content-center">
+                      <% if policy(@project).update? %>
+                        <%= link_to edit_project_dashboard_path(@project, dashboard), class: "btn btn-sm btn-outline-warning", title: "Edit" do %>
+                          <i class="bi bi-pencil"></i>
+                        <% end %>
                       <% end %>
-                    <% end %>
+                      <% if policy(@project).destroy? %>
+                        <%= link_to confirm_delete_project_dashboard_path(@project, dashboard), class: "btn btn-sm btn-outline-danger", title: "Delete", **modal_link_data do %>
+                          <i class="bi bi-trash"></i>
+                        <% end %>
+                      <% end %>
+                    </div>
                   </td>
                 </tr>
               <% end %>

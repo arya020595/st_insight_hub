@@ -72,7 +72,13 @@ class DashboardsController < ApplicationController
       summary: "Deleted dashboard: #{@dashboard.name}",
       data_before: data_before
     )
-    redirect_to @project, notice: "Dashboard was successfully deleted."
+
+    @dashboards = @project.dashboards.kept.ordered
+    flash.now[:notice] = "Dashboard was successfully deleted."
+    respond_to do |format|
+      format.turbo_stream { render :create }
+      format.html { redirect_to @project, notice: "Dashboard was successfully deleted." }
+    end
   end
 
   def confirm_delete

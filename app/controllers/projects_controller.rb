@@ -81,7 +81,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    permitted = [:name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position]
+    permitted = [ :name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position ]
     # Only superadmin can assign users to projects
     permitted << { user_ids: [] } if current_user.superadmin?
     params.require(:project).permit(permitted)

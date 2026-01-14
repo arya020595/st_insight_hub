@@ -8,6 +8,6 @@ class CreateProjectUsers < ActiveRecord::Migration[8.1]
     end
 
     # Ensure unique combination of project and user
-    add_index :project_users, [:project_id, :user_id], unique: true
+    add_index :project_users, [ :project_id, :user_id ], unique: true
   end
 end

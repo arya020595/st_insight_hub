@@ -216,11 +216,12 @@ project_configs = [
 ]
 
 project_configs.each do |config|
-  project = Project.find_or_create_by!(code: config[:code], created_by: config[:owner]) do |p|
+  project = Project.find_or_create_by!(code: config[:code], created_by_id: config[:owner].id) do |p|
     p.name = config[:name]
     p.description = config[:description]
     p.icon = config[:icon]
     p.status = config[:status]
+    p.created_by = config[:owner]
   end
 
   config[:dashboards].each_with_index do |dash_config, index|

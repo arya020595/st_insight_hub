@@ -11,7 +11,7 @@ class AddPartialUniqueIndexToProjectsCode < ActiveRecord::Migration[8.1]
 
   def down
     # Remove the partial index
-    remove_index :projects, name: "index_projects_on_code_where_not_discarded", if_exists: true, algorithm: :concurrently
+    remove_index :projects, name: "index_projects_on_code_where_not_discarded", if_exists: true
 
     # Restore the original unique index
     add_index :projects, :code, unique: true, algorithm: :concurrently

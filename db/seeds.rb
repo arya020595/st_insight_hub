@@ -221,7 +221,6 @@ project_configs.each do |config|
     p.description = config[:description]
     p.icon = config[:icon]
     p.status = config[:status]
-    p.created_by = config[:owner]
   end
 
   config[:dashboards].each_with_index do |dash_config, index|

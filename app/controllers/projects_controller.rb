@@ -108,7 +108,7 @@ class ProjectsController < ApplicationController
   private
 
   def set_project
-    @project = Project.kept.includes(:created_by).find(params[:id])
+    @project = Project.kept.includes(:created_by, :dashboards).find(params[:id])
     authorize @project
   end
 

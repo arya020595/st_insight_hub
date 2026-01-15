@@ -150,7 +150,7 @@ project_configs = [
     description: 'Sales performance and revenue analytics dashboards',
     icon: 'bi-graph-up',
     status: 'active',
-    assigned_users: [ admin_company_a ],
+    owner: admin_company_a,
     dashboards: [
       { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active' },
       { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active' }
@@ -162,10 +162,21 @@ project_configs = [
     description: 'Marketing campaign performance dashboards',
     icon: 'bi-megaphone',
     status: 'active',
-    assigned_users: [ admin_company_a, admin_company_b ],
+    owner: admin_company_a,
     dashboards: [
       { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' },
       { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active' }
+    ]
+  },
+  {
+    name: 'Marketing Insights B',
+    code: 'MARKETING_INSIGHTS_B',
+    description: 'Marketing campaign performance dashboards for Company B',
+    icon: 'bi-megaphone',
+    status: 'active',
+    owner: admin_company_b,
+    dashboards: [
+      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns-b', embed_type: 'iframe', status: 'active' }
     ]
   },
   {
@@ -174,7 +185,7 @@ project_configs = [
     description: 'Operational metrics and KPIs',
     icon: 'bi-gear',
     status: 'active',
-    assigned_users: [ admin_company_b ],
+    owner: admin_company_b,
     dashboards: [
       { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active' }
     ]
@@ -185,7 +196,7 @@ project_configs = [
     description: 'Customer behavior and satisfaction analytics',
     icon: 'bi-people',
     status: 'active',
-    assigned_users: [ admin_company_c ],
+    owner: admin_company_c,
     dashboards: [
       { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active' },
       { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active' }
@@ -197,7 +208,7 @@ project_configs = [
     description: 'Financial performance and budget tracking',
     icon: 'bi-currency-dollar',
     status: 'active',
-    assigned_users: [ admin_company_c ],
+    owner: admin_company_c,
     dashboards: [
       { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active' }
     ]
@@ -205,16 +216,12 @@ project_configs = [
 ]
 
 project_configs.each do |config|
-  project = Project.find_or_create_by!(code: config[:code]) do |p|
+  project = Project.find_or_create_by!(code: config[:code], created_by_id: config[:owner].id) do |p|
     p.name = config[:name]
     p.description = config[:description]
     p.icon = config[:icon]
     p.status = config[:status]
-  end
-
-  # Assign users to project
-  config[:assigned_users].each do |user|
-    ProjectUser.find_or_create_by!(project: project, user: user)
+    p.created_by = config[:owner]
   end
 
   config[:dashboards].each_with_index do |dash_config, index|
@@ -228,7 +235,6 @@ project_configs.each do |config|
 end
 
 puts "✓ Created #{Project.count} projects with #{Dashboard.count} dashboards"
-puts "✓ Created #{ProjectUser.count} project-user assignments"
 
 # ============================================================================
 # FINALIZATION
@@ -239,17 +245,16 @@ puts "\n📋 Summary:"
 puts '─' * 80
 puts "\n👔 Roles: #{Role.count}"
 puts "   - Superadmin: Full system access (development team)"
-puts "   - Admin: Client company access (scoped to assigned projects)"
+puts "   - Admin: Client company access (scoped to owned projects)"
 puts "\n👤 Users: #{User.count}"
 puts "   - 1 Superadmin"
 puts "   - #{User.joins(:role).where(roles: { name: 'Admin' }).count} Admin users (representing companies)"
 puts "\n📊 Projects: #{Project.count} with #{Dashboard.count} dashboards"
-puts "\n🔗 Project Assignments:"
+puts "\n🔗 Project Owners:"
 
-Project.includes(:users).each do |project|
-  assigned = project.users.pluck(:name).join(', ')
-  assigned = 'None' if assigned.blank?
-  puts "   - #{project.name}: #{assigned}"
+Project.includes(:created_by).each do |project|
+  owner = project.created_by&.name || 'No owner'
+  puts "   - #{project.name}: #{owner}"
 end
 
 puts "\n" + '─' * 80

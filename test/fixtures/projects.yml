@@ -8,6 +8,7 @@ active_project:
   icon: bi-folder
   show_in_sidebar: true
   sidebar_position: 1
+  created_by: admin
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
@@ -19,6 +20,7 @@ inactive_project:
   icon: bi-folder-x
   show_in_sidebar: false
   sidebar_position: 2
+  created_by: admin
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
@@ -30,6 +32,7 @@ discarded_project:
   icon: bi-trash
   show_in_sidebar: true
   sidebar_position: 3
+  created_by: admin
   discarded_at: <%= Time.current - 1.day %>
   created_at: <%= Time.current - 2.days %>
   updated_at: <%= Time.current - 1.day %>

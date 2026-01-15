@@ -93,7 +93,9 @@ admin_permissions = Permission.where(code: [
                                        'bi_dashboards.projects.show',
                                        'bi_dashboards.projects.create',
                                        'bi_dashboards.projects.update',
-                                       'bi_dashboards.projects.destroy'
+                                       'bi_dashboards.projects.destroy',
+                                       'audit_logs.index',
+                                       'audit_logs.show'
                                      ])
 admin.permissions = admin_permissions
 

@@ -78,6 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
     t.string "status", default: "active", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
+    t.index ["created_by_id", "code"], name: "index_projects_on_created_by_id_and_code", unique: true
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["status"], name: "index_projects_on_status"
   end

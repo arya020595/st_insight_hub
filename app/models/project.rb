@@ -10,7 +10,7 @@ class Project < ApplicationRecord
   # Validations
   validates :name, presence: true
   # Ensure project code is unique per creator among non-discarded (kept) records
-  validates :code, presence: true, uniqueness: { scope: :created_by_id, conditions: -> { kept }, message: "has already been taken" }
+  validates :code, presence: true, uniqueness: { scope: :created_by_id, conditions: -> { kept } }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :icon, format: { with: /\Abi-[\w-]+\z/, allow_blank: true, message: "must be a valid Bootstrap Icons class (e.g., bi-folder, bi-graph-up)" }
 

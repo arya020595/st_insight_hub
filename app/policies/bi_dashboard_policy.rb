@@ -27,9 +27,19 @@ class BiDashboardPolicy < ApplicationPolicy
       "bi_dashboards"
     end
 
-    # Non-superadmin users only see projects they own
+    # Non-superadmin users only see projects they own or dashboards from projects they own
     def apply_role_based_scope
-      scope.where(created_by_id: user.id)
+      case scope.model_name.name
+      when "Project"
+        # Filter projects by owner
+        scope.where(created_by_id: user.id)
+      when "Dashboard"
+        # Filter dashboards by project owner
+        scope.joins(:project).where(projects: { created_by_id: user.id })
+      else
+        # Fallback: return empty relation for unsupported models
+        scope.none
+      end
     end
   end
 end

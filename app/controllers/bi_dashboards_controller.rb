@@ -4,18 +4,19 @@ class BiDashboardsController < ApplicationController
   def index
     authorize :bi_dashboard, :index?
 
-    @projects = Project.kept.active.includes(:dashboards)
-    @selected_project = if params[:project_id].present?
-                          Project.kept.find_by(id: params[:project_id])
-    else
-                          @projects.first
-    end
+    @projects = policy_scope(Project, policy_scope_class: BiDashboardPolicy::Scope)
+                  .kept.active.visible_in_sidebar.sidebar_ordered
+                  .includes(:dashboards)
+  end
 
-    @dashboards = @selected_project&.dashboards&.kept&.active&.ordered || []
-    @selected_dashboard = if params[:dashboard_id].present?
-                            @dashboards.find_by(id: params[:dashboard_id])
-    else
-                            @dashboards.first
-    end
+  def show
+    @dashboard = Dashboard.kept.includes(project: :created_by).find(params[:id])
+    @project = @dashboard.project
+
+    # Check project is active and visible in sidebar
+    raise ActiveRecord::RecordNotFound unless @project.active? && @project.show_in_sidebar?
+
+    # Use policy to check if user can access this dashboard
+    authorize @dashboard, :show?, policy_class: BiDashboardPolicy
   end
 end

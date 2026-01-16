@@ -1,0 +1,38 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+active_project:
+  name: Active Project
+  code: PROJ_001
+  description: This is an active project
+  status: active
+  icon: bi-folder
+  show_in_sidebar: true
+  sidebar_position: 1
+  created_by: admin
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+inactive_project:
+  name: Inactive Project
+  code: PROJ_002
+  description: This is an inactive project
+  status: inactive
+  icon: bi-folder-x
+  show_in_sidebar: false
+  sidebar_position: 2
+  created_by: admin
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+discarded_project:
+  name: Discarded Project
+  code: PROJ_003
+  description: This is a discarded project
+  status: active
+  icon: bi-trash
+  show_in_sidebar: true
+  sidebar_position: 3
+  created_by: admin
+  discarded_at: <%= Time.current - 1.day %>
+  created_at: <%= Time.current - 2.days %>
+  updated_at: <%= Time.current - 1.day %>

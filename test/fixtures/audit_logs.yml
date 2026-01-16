@@ -1,0 +1,64 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Audit logs created by admin user
+admin_created_project:
+  action: create
+  module_name: projects
+  auditable_type: Project
+  auditable_id: 1
+  user: admin
+  user_name: Admin User
+  summary: Created project by admin
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 2.days %>
+  updated_at: <%= Time.current - 2.days %>
+
+admin_updated_dashboard:
+  action: update
+  module_name: dashboards
+  auditable_type: Dashboard
+  auditable_id: 1
+  user: admin
+  user_name: Admin User
+  summary: Updated dashboard by admin
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 1.day %>
+  updated_at: <%= Time.current - 1.day %>
+
+# Audit logs created by viewer user
+viewer_viewed_dashboard:
+  action: view
+  module_name: bi_dashboards
+  auditable_type: Dashboard
+  auditable_id: 1
+  user: viewer
+  user_name: Viewer User
+  summary: Viewed dashboard by viewer
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 1.hour %>
+  updated_at: <%= Time.current - 1.hour %>
+
+viewer_created_something:
+  action: create
+  module_name: projects
+  auditable_type: Project
+  auditable_id: 2
+  user: viewer
+  user_name: Viewer User
+  summary: Created something by viewer
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Audit logs created by superadmin user
+superadmin_created_user:
+  action: create
+  module_name: user_management
+  auditable_type: User
+  auditable_id: 1
+  user: superadmin
+  user_name: Super Admin User
+  summary: Created user by superadmin
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 3.days %>
+  updated_at: <%= Time.current - 3.days %>

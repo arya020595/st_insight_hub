@@ -10,6 +10,7 @@ class User < ApplicationRecord
 
   belongs_to :role, optional: true
   has_many :audit_logs, dependent: :nullify
+  has_many :owned_projects, class_name: "Project", foreign_key: :created_by_id, dependent: :nullify
 
   validates :name, presence: true
 

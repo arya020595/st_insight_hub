@@ -1,0 +1,51 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Admin role permissions
+admin_bi_dashboard:
+  role: admin_role
+  permission: bi_dashboard_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin_audit_logs_index:
+  role: admin_role
+  permission: audit_logs_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin_audit_logs_show:
+  role: admin_role
+  permission: audit_logs_show
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin_dashboard:
+  role: admin_role
+  permission: dashboard_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Viewer role permissions
+viewer_bi_dashboard:
+  role: viewer_role
+  permission: bi_dashboard_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+viewer_audit_logs_index:
+  role: viewer_role
+  permission: audit_logs_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+viewer_audit_logs_show:
+  role: viewer_role
+  permission: audit_logs_show
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+viewer_dashboard:
+  role: viewer_role
+  permission: dashboard_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

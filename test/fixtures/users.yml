@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+superadmin:
+  email: superadmin@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  name: Super Admin User
+  role: superadmin_role
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+admin:
+  email: admin@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  name: Admin User
+  role: admin_role
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+viewer:
+  email: viewer@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  name: Viewer User
+  role: viewer_role
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+no_permission:
+  email: noperm@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  name: No Permission User
+  role: no_access_role
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

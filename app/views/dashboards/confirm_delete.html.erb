@@ -1,0 +1,25 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header border-0 d-flex justify-content-end">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body text-center py-5">
+    <div class="mb-4">
+      <i class="bi bi-exclamation-circle text-danger d-block" style="font-size: 5rem; line-height: 1;"></i>
+    </div>
+    <h4 class="mb-4 fw-bold">Delete Dashboard</h4>
+    <p class="text-muted mb-0 px-4">
+      Are you sure you want to delete dashboard <strong class="text-dark">"<%= @dashboard.name %>"</strong>?
+      <br>
+      <br>
+      This dashboard will be permanently removed from project: <strong class="text-dark"><%= @project.name %></strong>.
+    </p>
+  </div>
+  <div class="modal-footer border-0 d-flex justify-content-center gap-2 pb-4">
+    <%= link_to project_path(@project), class: "btn btn-secondary px-4" do %>
+      <i class="bi bi-arrow-left me-2"></i>Cancel
+    <% end %>
+    <%= button_to project_dashboard_path(@project, @dashboard), method: :delete, class: "btn btn-danger px-4", form: { data: { turbo_frame: "modal" } } do %>
+      <i class="bi bi-trash me-2"></i>Yes, Delete
+    <% end %>
+  </div>
+<% end %>

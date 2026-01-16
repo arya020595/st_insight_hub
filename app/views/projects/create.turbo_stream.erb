@@ -1,0 +1,41 @@
+<%= turbo_stream.replace "sidebar" do %>
+  <%= render "layouts/dashboard/sidebar" %>
+<% end %>
+<%= turbo_stream.replace "projects-table-body" do %>
+  <% if @projects.any? %>
+    <%= render partial: 'project_row', collection: @projects, as: :project %>
+  <% else %>
+    <tr>
+      <td colspan="8" class="text-center text-muted py-4">
+        No projects found.
+        <% if policy(Project.new).new? %>
+          <%= link_to 'Add a new project', new_project_path, class: 'text-decoration-none' %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "layouts/flash", notice: "Project was successfully created." %>
+<% end %>
+<%= turbo_stream.append_all "body" do %>
+  <script data-turbo-temporary>
+    // Close all Bootstrap modals
+    document.querySelectorAll('.modal.show').forEach(function(modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    });
+
+    // Remove any remaining backdrop
+    setTimeout(function() {
+      document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+        backdrop.remove();
+      });
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    }, 100);
+  </script>
+<% end %>

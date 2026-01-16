@@ -75,47 +75,27 @@ puts "✓ Created #{Permission.count} permissions"
 puts "\n👔 Creating roles..."
 puts '─' * 80
 
-# Superadmin role (all permissions)
+# Superadmin role (all permissions) - Development team
 superadmin = Role.find_or_create_by!(name: 'Superadmin') do |role|
-  role.description = 'Full system access - bypasses all permission checks'
+  role.description = 'Full system access - bypasses all permission checks. For development team only.'
 end
 # Note: Superadmin bypasses permission checks, but assign all for visibility
 superadmin.permissions = Permission.all
 
-# Admin role (all except role management)
+# Admin role - Client users (each admin represents a company)
 admin = Role.find_or_create_by!(name: 'Admin') do |role|
-  role.description = 'Administrative access - can manage users and dashboards'
+  role.description = 'Client company access - can only see assigned projects and dashboards'
 end
-admin_permissions = Permission.where.not(code: [
-                                            'user_management.roles.create',
-                                            'user_management.roles.update',
-                                            'user_management.roles.destroy'
-                                          ])
+admin_permissions = Permission.where(code: [
+                                       'dashboard.index',
+                                       'bi_dashboards.index',
+                                       'bi_dashboards.projects.index',
+                                       'bi_dashboards.projects.show',
+                                       'bi_dashboards.projects.create',
+                                       'bi_dashboards.projects.update',
+                                       'bi_dashboards.projects.destroy'
+                                     ])
 admin.permissions = admin_permissions
-
-# Operator role (dashboard management only)
-operator = Role.find_or_create_by!(name: 'Operator') do |role|
-  role.description = 'Dashboard operator - can manage BI dashboards'
-end
-operator_permissions = Permission.where(code: [
-                                           'dashboard.index',
-                                           'bi_dashboards.index',
-                                           'bi_dashboards.projects.index',
-                                           'bi_dashboards.projects.show',
-                                           'bi_dashboards.projects.create',
-                                           'bi_dashboards.projects.update'
-                                         ])
-operator.permissions = operator_permissions
-
-# Viewer role (read-only access)
-viewer = Role.find_or_create_by!(name: 'Viewer') do |role|
-  role.description = 'Read-only access to dashboards'
-end
-viewer_permissions = Permission.where(code: [
-                                        'dashboard.index',
-                                        'bi_dashboards.index'
-                                      ])
-viewer.permissions = viewer_permissions
 
 puts "✓ Created #{Role.count} roles"
 
@@ -125,44 +105,34 @@ puts "✓ Created #{Role.count} roles"
 puts "\n👤 Creating users..."
 puts '─' * 80
 
-user_configs = [
-  {
-    email: 'superadmin@example.com',
-    name: 'Super Admin',
-    password: 'password123',
-    password_confirmation: 'password123',
-    role: superadmin
-  },
-  {
-    email: 'admin@example.com',
-    name: 'Admin User',
-    password: 'password123',
-    password_confirmation: 'password123',
-    role: admin
-  },
-  {
-    email: 'operator@example.com',
-    name: 'Operator User',
-    password: 'password123',
-    password_confirmation: 'password123',
-    role: operator
-  },
-  {
-    email: 'viewer@example.com',
-    name: 'Viewer User',
-    password: 'password123',
-    password_confirmation: 'password123',
-    role: viewer
-  }
-]
+# Superadmin - Development team
+superadmin_user = User.find_or_create_by!(email: 'superadmin@example.com') do |user|
+  user.name = 'Super Admin'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = superadmin
+end
 
-user_configs.each do |config|
-  User.find_or_create_by!(email: config[:email]) do |user|
-    user.name = config[:name]
-    user.password = config[:password]
-    user.password_confirmation = config[:password_confirmation]
-    user.role = config[:role]
-  end
+# Admin users - Each represents a company/client
+admin_company_a = User.find_or_create_by!(email: 'admin.company.a@example.com') do |user|
+  user.name = 'Company A Admin'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = admin
+end
+
+admin_company_b = User.find_or_create_by!(email: 'admin.company.b@example.com') do |user|
+  user.name = 'Company B Admin'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = admin
+end
+
+admin_company_c = User.find_or_create_by!(email: 'admin.company.c@example.com') do |user|
+  user.name = 'Company C Admin'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = admin
 end
 
 puts "✓ Created #{User.count} users"
@@ -178,7 +148,9 @@ project_configs = [
     name: 'Sales Analytics',
     code: 'SALES_ANALYTICS',
     description: 'Sales performance and revenue analytics dashboards',
+    icon: 'bi-graph-up',
     status: 'active',
+    owner: admin_company_a,
     dashboards: [
       { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active' },
       { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active' }
@@ -188,24 +160,66 @@ project_configs = [
     name: 'Marketing Insights',
     code: 'MARKETING_INSIGHTS',
     description: 'Marketing campaign performance dashboards',
+    icon: 'bi-megaphone',
     status: 'active',
+    owner: admin_company_a,
     dashboards: [
-      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' }
+      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' },
+      { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active' }
+    ]
+  },
+  {
+    name: 'Marketing Insights B',
+    code: 'MARKETING_INSIGHTS_B',
+    description: 'Marketing campaign performance dashboards for Company B',
+    icon: 'bi-megaphone',
+    status: 'active',
+    owner: admin_company_b,
+    dashboards: [
+      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns-b', embed_type: 'iframe', status: 'active' }
     ]
   },
   {
     name: 'Operations Dashboard',
     code: 'OPERATIONS',
     description: 'Operational metrics and KPIs',
-    status: 'inactive',
-    dashboards: []
+    icon: 'bi-gear',
+    status: 'active',
+    owner: admin_company_b,
+    dashboards: [
+      { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active' }
+    ]
+  },
+  {
+    name: 'Customer Insights',
+    code: 'CUSTOMER_INSIGHTS',
+    description: 'Customer behavior and satisfaction analytics',
+    icon: 'bi-people',
+    status: 'active',
+    owner: admin_company_c,
+    dashboards: [
+      { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active' },
+      { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active' }
+    ]
+  },
+  {
+    name: 'Financial Reports',
+    code: 'FINANCIAL_REPORTS',
+    description: 'Financial performance and budget tracking',
+    icon: 'bi-currency-dollar',
+    status: 'active',
+    owner: admin_company_c,
+    dashboards: [
+      { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active' }
+    ]
   }
 ]
 
 project_configs.each do |config|
-  project = Project.find_or_create_by!(code: config[:code]) do |p|
+  project = Project.find_or_create_by!(code: config[:code], created_by_id: config[:owner].id) do |p|
     p.name = config[:name]
     p.description = config[:description]
+    p.icon = config[:icon]
     p.status = config[:status]
   end
 
@@ -226,20 +240,38 @@ puts "✓ Created #{Project.count} projects with #{Dashboard.count} dashboards"
 # ============================================================================
 puts "\n🎉 Seeding completed successfully!"
 puts '─' * 80
-puts "\nDefault credentials:"
+puts "\n📋 Summary:"
+puts '─' * 80
+puts "\n👔 Roles: #{Role.count}"
+puts "   - Superadmin: Full system access (development team)"
+puts "   - Admin: Client company access (scoped to owned projects)"
+puts "\n👤 Users: #{User.count}"
+puts "   - 1 Superadmin"
+puts "   - #{User.joins(:role).where(roles: { name: 'Admin' }).count} Admin users (representing companies)"
+puts "\n📊 Projects: #{Project.count} with #{Dashboard.count} dashboards"
+puts "\n🔗 Project Owners:"
+
+Project.includes(:created_by).each do |project|
+  owner = project.created_by&.name || 'No owner'
+  puts "   - #{project.name}: #{owner}"
+end
+
+puts "\n" + '─' * 80
+puts "\n🔐 Default credentials:"
+puts '─' * 80
+puts "\n  SUPERADMIN (Development Team - Full Access):"
 puts '  📧 Email: superadmin@example.com'
 puts '  🔑 Password: password123'
-puts '  👔 Role: Superadmin (full access)'
 puts ''
-puts '  📧 Email: admin@example.com'
+puts '  ADMIN - COMPANY A (Sales Analytics, Marketing Insights):'
+puts '  📧 Email: admin.company.a@example.com'
 puts '  🔑 Password: password123'
-puts '  👔 Role: Admin'
 puts ''
-puts '  📧 Email: operator@example.com'
+puts '  ADMIN - COMPANY B (Marketing Insights, Operations Dashboard):'
+puts '  📧 Email: admin.company.b@example.com'
 puts '  🔑 Password: password123'
-puts '  👔 Role: Operator'
 puts ''
-puts '  📧 Email: viewer@example.com'
+puts '  ADMIN - COMPANY C (Customer Insights, Financial Reports):'
+puts '  📧 Email: admin.company.c@example.com'
 puts '  🔑 Password: password123'
-puts '  👔 Role: Viewer (read-only)'
 puts '─' * 80

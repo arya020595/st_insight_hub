@@ -20,11 +20,18 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
 
   # BI Dashboard Display (view dashboards)
-  resources :bi_dashboards, only: [ :index ]
+  resources :bi_dashboards, only: [ :index, :show ]
 
   # Projects and Dashboards Management
   resources :projects, concerns: :restorable do
-    resources :dashboards, except: %i[index show], concerns: :restorable
+    member do
+      get :confirm_delete
+    end
+    resources :dashboards, except: %i[index show], concerns: :restorable do
+      member do
+        get :confirm_delete
+      end
+    end
   end
 
   # User Management Namespace

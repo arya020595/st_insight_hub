@@ -1,0 +1,12 @@
+<%= turbo_stream.replace "sidebar" do %>
+  <%= render "layouts/dashboard/sidebar" %>
+<% end %>
+<%= turbo_stream.replace "modal" do %>
+  <%= render "projects/show" %>
+<% end %>
+<%# Update the browser URL to the projects index path %>
+<%= turbo_stream.append_all "body" do %>
+  <script data-turbo-temporary>
+    window.history.replaceState({}, '', '<%= projects_path %>');
+  </script>
+<% end %>

@@ -1,18 +1,10 @@
-<div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end" style="width: 280px; min-height: calc(100vh - 56px);">
+<div id="sidebar" data-controller="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-white border-end" style="width: 280px; min-height: calc(100vh - 56px); transition: all 0.3s ease;">
   <ul id="sidebarAccordion" class="nav nav-pills flex-column mb-auto">
     <!-- Dashboard -->
     <% if can_view_menu?('dashboard.index') %>
       <li class="nav-item">
         <%= link_to dashboard_path, class: "nav-link #{active_nav_item?(dashboard_path) ? 'active' : 'link-dark'}" do %>
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
-        <% end %>
-      </li>
-    <% end %>
-    <!-- BI Dashboard -->
-    <% if can_view_menu?('bi_dashboards.index') %>
-      <li class="nav-item">
-        <%= link_to bi_dashboards_path, class: "nav-link #{active_controller?('bi_dashboards') ? 'active' : 'link-dark'}" do %>
-          <i class="bi bi-bar-chart-line-fill me-2"></i> BI Dashboards
         <% end %>
       </li>
     <% end %>
@@ -23,6 +15,44 @@
           <i class="bi bi-kanban-fill me-2"></i> Dashboard Management
         <% end %>
       </li>
+    <% end %>
+    <!-- Dynamic BI Dashboard Modules (Projects) - Hidden for Superadmin -->
+    <% if can_view_menu?('bi_dashboards.index') && !current_user.superadmin? %>
+      <% sidebar_projects.each do |project| %>
+        <% project_dashboards = project.dashboards.kept.active.ordered %>
+        <% next if project_dashboards.empty? %>
+        <% project_menu_active = params[:controller] == 'bi_dashboards' && @project&.id == project.id %>
+        <li class="nav-item">
+          <a class="nav-link <%= project_menu_active ? 'active' : 'link-dark' %>"
+             data-bs-toggle="collapse"
+             data-bs-target="#projectCollapse<%= project.id %>"
+             href="#" role="button"
+             aria-expanded="<%= project_menu_active %>"
+             aria-controls="projectCollapse<%= project.id %>">
+            <% raw_icon = project.icon.to_s.strip %>
+            <% safe_icon =
+                 if raw_icon.match?(/\Abi-[\w-]+\z/)
+                   raw_icon
+                 elsif raw_icon.match?(/\Abi\s+bi-[\w-]+\z/)
+                   raw_icon.split.last
+                 else
+                   'bi-folder'
+                 end %>
+            <i class="bi <%= safe_icon %> me-2"></i> <%= project.name %>
+            <i class="bi bi-chevron-right float-end collapse-chevron"></i>
+          </a>
+          <div class="collapse <%= 'show' if project_menu_active %>" id="projectCollapse<%= project.id %>" data-bs-parent="#sidebarAccordion">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-4">
+              <% project_dashboards.each do |dashboard| %>
+                <% dashboard_active = params[:controller] == 'bi_dashboards' && params[:action] == 'show' && params[:id].to_s == dashboard.id.to_s %>
+                <li>
+                  <%= link_to dashboard.name, bi_dashboard_path(dashboard), class: "nav-link #{dashboard_active ? 'active' : 'link-dark'}" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </li>
+      <% end %>
     <% end %>
     <!-- User Management -->
     <% has_user_management_access = can_view_menu?('user_management.users.index') || can_view_menu?('user_management.roles.index') %>

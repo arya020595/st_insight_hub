@@ -135,9 +135,22 @@ export default class extends Controller {
    * Handle form submission
    * Close modal on successful submission (200/201)
    * Keep modal open on validation errors (422) to show error messages
+   * Keep modal open if response is turbo_stream (will replace content)
    */
   formSubmitted(event) {
-    const { success } = event.detail;
+    const { success, fetchResponse } = event.detail;
+
+    // Check if the response is a turbo_stream (we want to keep modal open)
+    const contentType =
+      fetchResponse?.response?.headers?.get("Content-Type") || "";
+    const isTurboStream = contentType.includes("turbo-stream");
+
+    // If it's a turbo_stream response, don't close the modal
+    // The turbo_stream will replace the modal content
+    if (isTurboStream) {
+      return;
+    }
+
     // If validation failed (422), keep modal open to show errors
     if (success) {
       this.modal.hide();

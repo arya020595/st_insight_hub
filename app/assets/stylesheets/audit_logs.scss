@@ -6,7 +6,7 @@
   }
 
   .audit_logs_page h1 {
-    background-color: #155e1a;
+    background-color: #0d6efd;
     color: #ffffff;
     padding: 20px;
     font-size: 20px;
@@ -32,7 +32,7 @@
   }
 
   .table thead tr.header-row th {
-    background-color: #155e1a;
+    background-color: #0d6efd;
     color: #ffffff;
   }
 
@@ -51,7 +51,7 @@
   }
 
   .btn.filter-btn {
-    background-color: #007b44;
+    background-color: #0d6efd;
     color: #ffffff;
   }
 
@@ -100,23 +100,23 @@
 
   /* Normal page links */
   .pagination .page-link {
-    color: #155e1a;
-    background-color: #e0f2e9;
-    border-color: #155e1a;
+    color: #0d6efd;
+    background-color: #e7f1ff;
+    border-color: #0d6efd;
   }
 
   /* Hover state */
   .pagination .page-link:hover {
     color: #ffffff;
-    background-color: #155e1a;
-    border-color: #155e1a;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
   }
 
   /* Active page */
   .pagination .page-item.active .page-link {
     color: #ffffff;
-    background-color: #155e1a;
-    border-color: #155e1a;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
   }
 
   /* Disabled page */

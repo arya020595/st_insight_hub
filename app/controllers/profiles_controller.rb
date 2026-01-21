@@ -14,22 +14,14 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user
 
-    # Check if user is trying to update password
-    if params.dig(:user, :password).present?
-      # Devise requires current password for security when updating password
-      if @user.update_with_password(profile_params_with_password)
-        bypass_sign_in(@user) # Keep user signed in after password change
-        redirect_to profile_path, notice: "Profile and password updated successfully."
-      else
-        render :edit, status: :unprocessable_entity
-      end
+    password_changed = params[:user][:password].present?
+
+    if @user.update_with_password(profile_params_with_password)
+      bypass_sign_in(@user) if password_changed # Keep user signed in after password change
+      notice_message = password_changed ? "Profile and password updated successfully." : "Profile updated successfully."
+      redirect_to profile_path, notice: notice_message
     else
-      # Update without password
-      if @user.update_without_password(profile_params_without_password)
-        redirect_to profile_path, notice: "Profile updated successfully."
-      else
-        render :edit, status: :unprocessable_entity
-      end
+      render :edit, status: :unprocessable_entity
     end
   end
 

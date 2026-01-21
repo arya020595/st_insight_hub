@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   # Dashboard
   get "dashboard", to: "dashboard#index"
 
+  # User Profile
+  resource :profile, only: [ :show, :edit, :update ]
+
   # BI Dashboard Display (view dashboards)
   resources :bi_dashboards, only: [ :index, :show ]
 

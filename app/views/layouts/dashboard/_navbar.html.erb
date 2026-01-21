@@ -25,6 +25,12 @@
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
+              <%= link_to profile_path, class: "dropdown-item" do %>
+                <i class="bi bi-person me-2"></i> My Profile
+              <% end %>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
               <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item" do %>
                 <i class="bi bi-box-arrow-right me-2"></i> Logout
               <% end %>

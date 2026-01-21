@@ -1,0 +1,338 @@
+<div class="container-fluid px-4 py-4">
+  <div class="row">
+    <div class="col-lg-10 col-xl-8 mx-auto">
+      <!-- Page Header with Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Profile", profile_path %></li>
+          <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+        </ol>
+      </nav>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2 mb-1 fw-bold">
+            <i class="bi bi-pencil-square me-2 text-primary"></i>Edit Profile
+          </h1>
+          <p class="text-muted mb-0">Update your personal information and security settings</p>
+        </div>
+        <%= link_to profile_path, class: "btn btn-outline-secondary" do %>
+          <i class="bi bi-arrow-left me-2"></i>Back
+        <% end %>
+      </div>
+      <%= form_with(model: @user, url: profile_path, method: :patch, local: true, class: "profile-edit-form") do |f| %>
+        <!-- Error Messages -->
+        <% if @user.errors.any? %>
+          <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-exclamation-triangle-fill fs-4 me-3 flex-shrink-0"></i>
+              <div class="flex-grow-1">
+                <h5 class="alert-heading mb-2">
+                  <%= pluralize(@user.errors.count, "error") %> prevented your profile from being saved:
+                </h5>
+                <ul class="mb-0 ps-3">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% end %>
+        <div class="row g-4">
+          <!-- Left Column - Main Form -->
+          <div class="col-lg-8">
+            <!-- Basic Information Card -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 d-flex align-items-center">
+                  <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 me-3">
+                    <i class="bi bi-person-badge-fill"></i>
+                  </div>
+                  <span>Basic Information</span>
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="row g-4">
+                  <!-- Name Field -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <%= f.text_field :name, class: "form-control", placeholder: "Full Name", required: true %>
+                      <%= f.label :name do %>
+                        <i class="bi bi-person me-1"></i>Full Name <span class="text-danger">*</span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <!-- Email Field -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <%= f.email_field :email, class: "form-control", placeholder: "Email Address", required: true %>
+                      <%= f.label :email do %>
+                        <i class="bi bi-envelope me-1"></i>Email Address <span class="text-danger">*</span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <!-- Role Display (Read-only) -->
+                  <div class="col-12">
+                    <div class="info-box">
+                      <label class="form-label fw-semibold mb-2">
+                        <i class="bi bi-shield-check text-primary me-2"></i>Current Role
+                      </label>
+                      <div class="d-flex align-items-center justify-content-between">
+                        <span class="badge bg-primary-subtle text-primary px-3 py-2 fs-6">
+                          <%= @user.role&.name || 'No Role Assigned' %>
+                        </span>
+                        <small class="text-muted">
+                          <i class="bi bi-info-circle me-1"></i>Contact administrator to change your role
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Security Settings Card -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 d-flex align-items-center">
+                  <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-3 me-3">
+                    <i class="bi bi-key-fill"></i>
+                  </div>
+                  <span>Security Settings</span>
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="alert alert-info border-0 bg-info bg-opacity-10 mb-4">
+                  <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle-fill text-info me-2 mt-1"></i>
+                    <small>Leave password fields blank if you don't want to change your password. You must provide your current password to make any changes.</small>
+                  </div>
+                </div>
+                <div class="row g-4">
+                  <!-- Current Password -->
+                  <div class="col-12">
+                    <div class="form-floating">
+                      <%= f.password_field :current_password, class: "form-control", placeholder: "Current Password", autocomplete: "current-password" %>
+                      <%= f.label :current_password do %>
+                        <i class="bi bi-shield-lock me-1"></i>Current Password
+                      <% end %>
+                      <div class="form-text">
+                        <i class="bi bi-exclamation-circle me-1"></i>Required to confirm any profile changes
+                      </div>
+                    </div>
+                  </div>
+                  <!-- New Password -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <%= f.password_field :password, class: "form-control", placeholder: "New Password", autocomplete: "new-password" %>
+                      <%= f.label :password do %>
+                        <i class="bi bi-lock me-1"></i>New Password
+                      <% end %>
+                      <div class="form-text">
+                        Minimum <%= @user.class.validators_on(:password).find{|v| v.is_a?(ActiveModel::Validations::LengthValidator)}&.options&.dig(:minimum) || 6 %> characters
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Confirm Password -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Confirm Password", autocomplete: "new-password" %>
+                      <%= f.label :password_confirmation do %>
+                        <i class="bi bi-lock-fill me-1"></i>Confirm New Password
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Right Column - Info & Actions -->
+          <div class="col-lg-4">
+            <!-- Account Summary Card -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="bi bi-info-circle text-primary me-2"></i>Account Summary
+                </h6>
+              </div>
+              <div class="card-body p-3">
+                <div class="account-info-item">
+                  <i class="bi bi-calendar-check text-muted"></i>
+                  <div>
+                    <small class="text-muted d-block">Member Since</small>
+                    <strong><%= @user.created_at.strftime("%b %d, %Y") %></strong>
+                  </div>
+                </div>
+                <div class="account-info-item">
+                  <i class="bi bi-clock-history text-muted"></i>
+                  <div>
+                    <small class="text-muted d-block">Last Sign In</small>
+                    <strong><%= @user.last_sign_in_at ? @user.last_sign_in_at.strftime("%b %d, %Y") : 'Never' %></strong>
+                  </div>
+                </div>
+                <div class="account-info-item">
+                  <i class="bi bi-graph-up text-muted"></i>
+                  <div>
+                    <small class="text-muted d-block">Total Sign Ins</small>
+                    <strong><%= @user.sign_in_count || 0 %> times</strong>
+                  </div>
+                </div>
+                <% if @user.current_sign_in_ip.present? %>
+                  <div class="account-info-item">
+                    <i class="bi bi-globe text-muted"></i>
+                    <div>
+                      <small class="text-muted d-block">Current IP</small>
+                      <code class="small"><%= @user.current_sign_in_ip %></code>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <!-- Security Tips Card -->
+            <div class="card border-0 bg-success bg-opacity-10 mb-4">
+              <div class="card-body p-3">
+                <h6 class="mb-2 text-success">
+                  <i class="bi bi-shield-check me-1"></i>Security Tips
+                </h6>
+                <ul class="small text-muted mb-0 ps-3">
+                  <li class="mb-1">Use a strong, unique password</li>
+                  <li class="mb-1">Include numbers and symbols</li>
+                  <li class="mb-1">Avoid common words or phrases</li>
+                  <li>Change password regularly</li>
+                </ul>
+              </div>
+            </div>
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2">
+              <%= f.submit "Save Changes", class: "btn btn-primary btn-lg shadow-sm" do %>
+                <i class="bi bi-check-circle-fill me-2"></i>Save Changes
+              <% end %>
+              <%= link_to profile_path, class: "btn btn-outline-secondary" do %>
+                <i class="bi bi-x-circle me-2"></i>Cancel
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<style>
+  /* Icon Box */
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+
+  /* Form Floating Enhancements */
+  .form-floating > .form-control:focus ~ label,
+  .form-floating > .form-control:not(:placeholder-shown) ~ label {
+    opacity: 0.85;
+  }
+
+  .form-floating > label i {
+    font-size: 0.875rem;
+  }
+
+  /* Info Box */
+  .info-box {
+    padding: 1.25rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    border: 1px solid #e9ecef;
+  }
+
+  /* Account Info Items */
+  .account-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .account-info-item:last-child {
+    border-bottom: none;
+  }
+
+  .account-info-item i {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+  }
+
+  .account-info-item > div {
+    flex: 1;
+  }
+
+  /* Card Hover Effects */
+  .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Button Enhancements */
+  .btn {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* Form Text */
+  .form-text {
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Code Elements */
+  code {
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    background: #e9ecef;
+    font-size: 0.8125rem;
+  }
+
+  /* Alert Enhancements */
+  .alert {
+    border-radius: 0.75rem;
+  }
+
+  .alert ul {
+    margin-bottom: 0;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    background: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    font-size: 1.25rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 991.98px) {
+    .d-flex.justify-content-between {
+      flex-direction: column !important;
+      gap: 1rem;
+    }
+
+    .d-flex.justify-content-between > * {
+      width: 100%;
+    }
+  }
+</style>

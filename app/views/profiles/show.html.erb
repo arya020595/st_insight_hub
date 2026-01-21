@@ -1,0 +1,373 @@
+<div class="container-fluid px-4 py-4">
+  <div class="row">
+    <div class="col-lg-10 col-xl-8 mx-auto">
+      <!-- Page Header with Gradient -->
+      <div class="profile-header-card mb-4">
+        <div class="profile-header-bg"></div>
+        <div class="profile-header-content">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex align-items-center gap-4">
+              <!-- Avatar with status indicator -->
+              <div class="avatar-wrapper position-relative">
+                <div class="avatar-circle bg-gradient-primary d-inline-flex align-items-center justify-content-center rounded-circle shadow-lg">
+                  <i class="bi bi-person-fill text-white" style="font-size: 3.5rem;"></i>
+                </div>
+                <span class="avatar-status position-absolute bg-success border border-3 border-white rounded-circle"></span>
+              </div>
+              <!-- User Info -->
+              <div class="text-white">
+                <h1 class="h2 mb-1 fw-bold"><%= @user.name %></h1>
+                <p class="mb-2 opacity-90">
+                  <i class="bi bi-envelope-fill me-2"></i><%= @user.email %>
+                </p>
+                <span class="badge bg-white bg-opacity-25 text-white px-3 py-2">
+                  <i class="bi bi-shield-check me-1"></i>
+                  <%= @user.role&.name || 'No Role Assigned' %>
+                </span>
+              </div>
+            </div>
+            <%= link_to edit_profile_path, class: "btn btn-light shadow-sm" do %>
+              <i class="bi bi-pencil-fill me-2"></i>Edit Profile
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="row g-4">
+        <!-- Left Column - Main Info -->
+        <div class="col-lg-8">
+          <!-- Personal Information Card -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+              <h5 class="card-title mb-4 d-flex align-items-center">
+                <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 me-3">
+                  <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <span>Personal Information</span>
+              </h5>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-person text-primary me-2"></i>Full Name
+                    </div>
+                    <div class="info-value"><%= @user.name %></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-envelope text-primary me-2"></i>Email Address
+                    </div>
+                    <div class="info-value"><%= @user.email %></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-shield-check text-primary me-2"></i>Role
+                    </div>
+                    <div class="info-value">
+                      <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                        <%= @user.role&.name || 'No Role Assigned' %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-calendar-check text-primary me-2"></i>Member Since
+                    </div>
+                    <div class="info-value"><%= @user.created_at.strftime("%B %d, %Y") %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Activity Information Card -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+              <h5 class="card-title mb-4 d-flex align-items-center">
+                <div class="icon-box bg-success bg-opacity-10 text-success rounded-3 me-3">
+                  <i class="bi bi-activity"></i>
+                </div>
+                <span>Account Activity</span>
+              </h5>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-clock-history text-success me-2"></i>Last Sign In
+                    </div>
+                    <div class="info-value">
+                      <%= @user.last_sign_in_at ? @user.last_sign_in_at.strftime("%B %d, %Y") : 'Never' %>
+                      <% if @user.last_sign_in_at %>
+                        <small class="text-muted d-block"><%= @user.last_sign_in_at.strftime("%I:%M %p") %></small>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <i class="bi bi-graph-up text-success me-2"></i>Sign In Count
+                    </div>
+                    <div class="info-value">
+                      <span class="badge bg-success-subtle text-success fs-6 px-3 py-2">
+                        <%= @user.sign_in_count || 0 %> times
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <% if @user.current_sign_in_ip.present? %>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">
+                        <i class="bi bi-globe text-success me-2"></i>Current Sign In IP
+                      </div>
+                      <div class="info-value">
+                        <code class="text-success"><%= @user.current_sign_in_ip %></code>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+                <% if @user.last_sign_in_ip.present? %>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">
+                        <i class="bi bi-geo-alt text-success me-2"></i>Last Sign In IP
+                      </div>
+                      <div class="info-value">
+                        <code class="text-muted"><%= @user.last_sign_in_ip %></code>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right Column - Stats Cards -->
+        <div class="col-lg-4">
+          <!-- Quick Stats -->
+          <div class="card border-0 shadow-sm mb-4 stat-card stat-card-primary">
+            <div class="card-body p-4 text-center">
+              <div class="stat-icon mx-auto mb-3">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <h6 class="text-muted mb-2">Account Age</h6>
+              <h3 class="mb-0 fw-bold">
+                <%= ((Time.current - @user.created_at) / 1.day).to_i %> days
+              </h3>
+            </div>
+          </div>
+          <div class="card border-0 shadow-sm mb-4 stat-card stat-card-success">
+            <div class="card-body p-4 text-center">
+              <div class="stat-icon mx-auto mb-3">
+                <i class="bi bi-graph-up-arrow"></i>
+              </div>
+              <h6 class="text-muted mb-2">Total Sign Ins</h6>
+              <h3 class="mb-0 fw-bold"><%= @user.sign_in_count || 0 %></h3>
+            </div>
+          </div>
+          <div class="card border-0 shadow-sm stat-card stat-card-info">
+            <div class="card-body p-4 text-center">
+              <div class="stat-icon mx-auto mb-3">
+                <i class="bi bi-shield-fill-check"></i>
+              </div>
+              <h6 class="text-muted mb-2">Account Status</h6>
+              <h5 class="mb-0">
+                <span class="badge bg-success px-3 py-2">
+                  <i class="bi bi-check-circle-fill me-1"></i>Active
+                </span>
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  /* Profile Header with Gradient Background */
+  .profile-header-card {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    opacity: 1;
+  }
+
+  .profile-header-content {
+    position: relative;
+    padding: 2.5rem;
+    z-index: 1;
+  }
+
+  /* Avatar Styles */
+  .avatar-wrapper {
+    position: relative;
+  }
+
+  .avatar-circle {
+    width: 110px;
+    height: 110px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .avatar-circle:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(13, 110, 253, 0.3) !important;
+  }
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  }
+
+  .avatar-status {
+    width: 20px;
+    height: 20px;
+    bottom: 8px;
+    right: 8px;
+  }
+
+  /* Icon Box */
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  /* Info Items */
+  .info-item {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .info-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  }
+
+  .info-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #212529;
+    word-break: break-word;
+  }
+
+  /* Stat Cards */
+  .stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid transparent;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .stat-card-primary {
+    border-left-color: #0d6efd;
+  }
+
+  .stat-card-success {
+    border-left-color: #198754;
+  }
+
+  .stat-card-info {
+    border-left-color: #0dcaf0;
+  }
+
+  .stat-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.2);
+  }
+
+  .stat-card-success .stat-icon {
+    background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    box-shadow: 0 0.5rem 1rem rgba(25, 135, 84, 0.2);
+  }
+
+  .stat-card-info .stat-icon {
+    background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
+    box-shadow: 0 0.5rem 1rem rgba(13, 202, 240, 0.2);
+  }
+
+  /* Card Animations */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Badge Enhancements */
+  .badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* Code Styling */
+  code {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    background: #f8f9fa;
+    font-size: 0.875rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 991.98px) {
+    .profile-header-content {
+      padding: 2rem;
+    }
+
+    .profile-header-content .d-flex {
+      flex-direction: column !important;
+      gap: 1.5rem !important;
+    }
+
+    .avatar-circle {
+      width: 90px;
+      height: 90px;
+    }
+
+    .avatar-circle i {
+      font-size: 2.5rem !important;
+    }
+  }
+</style>

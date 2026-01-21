@@ -15,7 +15,7 @@ class ProfilesController < ApplicationController
     @user = current_user
 
     # Check if user is trying to update password
-    if params[:user][:password].present?
+    if params.dig(:user, :password).present?
       # Devise requires current password for security when updating password
       if @user.update_with_password(profile_params_with_password)
         bypass_sign_in(@user) # Keep user signed in after password change

@@ -121,15 +121,15 @@
                       </div>
                     </div>
                   </div>
-                  <%# Helper to determine minimum password length in one place %>
-                  <% def password_minimum_length(user)
-                       length_validator = user.class.validators_on(:password).find { |v| v.is_a?(ActiveModel::Validations::LengthValidator) }
-                       length_validator&.options&.dig(:minimum) || 6
-                     end %>
                   <!-- New Password -->
                   <div class="col-md-6">
                     <div class="form-floating">
-                        Minimum <%= password_minimum_length(@user) %> characters
+                      <%= f.password_field :password, class: "form-control", placeholder: "New Password", autocomplete: "new-password" %>
+                      <%= f.label :password do %>
+                        <i class="bi bi-lock me-1"></i>New Password
+                      <% end %>
+                      <div class="form-text">
+                        Minimum <%= @user.class.validators_on(:password).find{|v| v.is_a?(ActiveModel::Validations::LengthValidator)}&.options&.dig(:minimum) || 6 %> characters
                       </div>
                     </div>
                   </div>

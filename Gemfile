@@ -113,7 +113,7 @@ group :development do
   # gem "spring"
 
   # Code completion and inline documentation for Ruby/Rails [https://solargraph.org]
-  gem "solargraph", "~> 0.58.1", require: false
+  gem "solargraph", "~> 0.58.2", require: false
 
   # HTML formatter for Ruby/Rails code [https://github.com/threedaymonk/htmlbeautifier]
   gem "htmlbeautifier", require: false

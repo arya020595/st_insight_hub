@@ -71,7 +71,7 @@ gem "strong_migrations"
 gem "discard", "~> 1.3"
 
 # Bootstrap 5 framework integration
-gem "bootstrap", "~> 5.3", ">= 5.3.5"
+gem "bootstrap", "~> 5.3"
 
 # Sass compiler for CSS preprocessing (required for Bootstrap SCSS)
 gem "sassc-rails"

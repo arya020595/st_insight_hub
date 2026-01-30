@@ -16,31 +16,50 @@ import { Turbo } from "@hotwired/turbo-rails";
  *   <%= f.text_field :name, data: { action: "input->search-form#autoSubmit" } %>
  *   <%= f.select :status, options, data: { action: "change->search-form#instantSubmit" } %>
  * <% end %>
+ *
+ * @example With custom debounce delay
+ * <%= search_form_for @q, html: { data: { controller: "search-form", search_form_debounce_delay_value: 400 } } do |f| %>
  */
 export default class extends Controller {
+  // Stimulus values
+  static values = {
+    debounceDelay: { type: Number, default: 300 },
+  };
+
   // Constants
-  static DEBOUNCE_DELAY = 600;
   static STORAGE_KEY = "searchFormFocusedInput";
   static PAGE_PARAM = "page";
   static FOCUSABLE_INPUT_TYPES = ["INPUT", "TEXTAREA", "SELECT"];
 
   /**
-   * Lifecycle: Initialize controller and restore focus state
+   * Lifecycle: Initialize controller and set up Turbo event listeners
    */
   connect() {
+    // Use Turbo events to ensure DOM is fully rendered before restoring focus
+    this.boundRestoreFocus = this.restoreFocusState.bind(this);
+    document.addEventListener("turbo:load", this.boundRestoreFocus);
+    document.addEventListener("turbo:render", this.boundRestoreFocus);
+
+    // Also attempt immediate restoration for non-Turbo page loads
     this.restoreFocusState();
   }
 
   /**
-   * Lifecycle: Cleanup resources when controller is disconnected
+   * Lifecycle: Cleanup resources and event listeners when controller is disconnected
    */
   disconnect() {
     this.clearDebounceTimeout();
+
+    // Remove Turbo event listeners
+    if (this.boundRestoreFocus) {
+      document.removeEventListener("turbo:load", this.boundRestoreFocus);
+      document.removeEventListener("turbo:render", this.boundRestoreFocus);
+    }
   }
 
   /**
    * Debounced auto-submit for text search inputs
-   * Waits for user to stop typing before submitting (600ms delay)
+   * Waits for user to stop typing before submitting (default 300ms, configurable)
    * Use this ONLY for search text fields to prevent excessive submissions
    *
    * @param {Event} event - Input event
@@ -51,7 +70,7 @@ export default class extends Controller {
     this.clearDebounceTimeout();
     this.timeout = setTimeout(() => {
       this.submitForm();
-    }, this.constructor.DEBOUNCE_DELAY);
+    }, this.debounceDelayValue);
   }
 
   /**
@@ -176,6 +195,7 @@ export default class extends Controller {
 
   /**
    * Restore focus to previously focused input after page load
+   * Uses requestAnimationFrame to ensure DOM is fully rendered
    * @private
    */
   restoreFocusState() {
@@ -184,8 +204,11 @@ export default class extends Controller {
     );
 
     if (focusedInputName) {
-      this.focusInputByName(focusedInputName);
-      sessionStorage.removeItem(this.constructor.STORAGE_KEY);
+      // Delay focus restoration to ensure DOM is ready
+      requestAnimationFrame(() => {
+        this.focusInputByName(focusedInputName);
+        sessionStorage.removeItem(this.constructor.STORAGE_KEY);
+      });
     }
   }
 
@@ -246,11 +269,12 @@ export default class extends Controller {
 
   /**
    * Navigate to URL using Turbo for smooth, refresh-free experience
+   * Uses "advance" action to allow browser back button to return to previous search states
    *
    * @param {URL} url - Target URL
    * @private
    */
   navigateToUrl(url) {
-    Turbo.visit(url.toString(), { action: "replace" });
+    Turbo.visit(url.toString(), { action: "advance" });
   }
 }

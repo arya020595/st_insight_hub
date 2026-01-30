@@ -133,4 +133,13 @@ module ApplicationHelper
   rescue URI::InvalidURIError
     nil
   end
+
+  # Returns the minimum password length requirement for a given model
+  # @param model [ActiveRecord::Base, Class] the model instance or class to check
+  # @return [Integer] minimum password length (defaults to 6 if not found)
+  def minimum_password_length(model = User)
+    klass = model.is_a?(Class) ? model : model.class
+    length_validator = klass.validators_on(:password).find { |v| v.is_a?(ActiveModel::Validations::LengthValidator) }
+    length_validator&.options&.dig(:minimum) || 6
+  end
 end

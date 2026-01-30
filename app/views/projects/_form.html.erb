@@ -5,7 +5,7 @@
     </h5>
     <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-  <%= form_with model: @project, html: { class: 'project-form' }, data: { turbo_frame: "_top" } do |f| %>
+  <%= form_with model: @project, html: { class: 'project-form' }, data: { turbo_frame: "_top", controller: "project-form" } do |f| %>
     <div class="modal-body">
       <div class="row">
         <div class="col-md-6 mb-3">
@@ -77,7 +77,6 @@
                   class: "form-select #{'is-invalid' if @project.errors[:company].any?}",
                   required: true,
                   data: {
-                    controller: "project-form",
                     project_form_target: "companySelect",
                     action: "change->project-form#loadUsers"
                   }

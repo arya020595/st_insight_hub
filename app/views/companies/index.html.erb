@@ -53,7 +53,7 @@
                   <th>
                     <%= f.select :status_eq,
                       options_for_select([['Active', 'active'], ['Inactive', 'inactive']], f.object.status_eq),
-                      { include_blank: 'All Statues..' },
+                      { include_blank: 'All Statuses..' },
                       { class: 'form-select form-select-sm',
                       data: { action: "input->search-form#instantSubmit" } } %>
                   </th>

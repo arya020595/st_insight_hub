@@ -71,7 +71,7 @@ gem "strong_migrations"
 gem "discard", "~> 1.3"
 
 # Bootstrap 5 framework integration
-gem "bootstrap", "~> 5.3", ">= 5.3.5"
+gem "bootstrap", "~> 5.3"
 
 # Sass compiler for CSS preprocessing (required for Bootstrap SCSS)
 gem "sassc-rails"
@@ -87,7 +87,7 @@ group :development, :test do
   gem "bundler-audit", require: false
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem "brakeman", "~> 8.0", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
@@ -113,7 +113,7 @@ group :development do
   # gem "spring"
 
   # Code completion and inline documentation for Ruby/Rails [https://solargraph.org]
-  gem "solargraph", "~> 0.58.1", require: false
+  gem "solargraph", "~> 0.58.2", require: false
 
   # HTML formatter for Ruby/Rails code [https://github.com/threedaymonk/htmlbeautifier]
   gem "htmlbeautifier", require: false

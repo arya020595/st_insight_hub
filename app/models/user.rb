@@ -19,7 +19,7 @@ class User < ApplicationRecord
   # Clear cached permissions when role changes
   after_save :clear_permission_cache, if: :saved_change_to_role_id?
   # Clear project assignments when company changes
-  before_save :clear_projects_on_company_change, if: :company_id_changed?
+  before_save :clear_projects_on_company_change, if: :will_save_change_to_company_id?
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)

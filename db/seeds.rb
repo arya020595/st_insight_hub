@@ -27,44 +27,52 @@ puts "\n🔐 Creating permissions..."
 puts '─' * 80
 
 permission_definitions = [
-  # Dashboard
-  { code: 'dashboard.index', name: 'View Dashboard', resource: 'dashboard', section: 'Dashboard' },
+  # ============================================================================
+  # 1. DASHBOARD - Main dashboard page (dashboard_controller.rb)
+  # ============================================================================
+  { code: 'dashboard.index', name: 'View', resource: 'dashboard', section: 'Dashboard' },
 
-  # BI Dashboards
-  { code: 'bi_dashboards.index', name: 'View BI Dashboards', resource: 'bi_dashboards', section: 'BI Dashboards' },
-  { code: 'bi_dashboards.show', name: 'View BI Dashboard Details', resource: 'bi_dashboards', section: 'BI Dashboards' },
+  # ============================================================================
+  # 2. PROJECT MANAGEMENT - Projects and BI Dashboards (projects_controller.rb, bi_dashboards_controller.rb)
+  # ============================================================================
+  # Projects
+  { code: 'projects.index', name: 'List', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.show', name: 'View', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.create', name: 'Create', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.update', name: 'Update', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.destroy', name: 'Delete', resource: 'projects', section: 'Project Management' },
 
-  # Project Management
-  { code: 'projects.index', name: 'View Projects', resource: 'projects', section: 'Project Management' },
-  { code: 'projects.show', name: 'View Project Details', resource: 'projects', section: 'Project Management' },
-  { code: 'projects.create', name: 'Create Project', resource: 'projects', section: 'Project Management' },
-  { code: 'projects.update', name: 'Update Project', resource: 'projects', section: 'Project Management' },
-  { code: 'projects.destroy', name: 'Delete Project', resource: 'projects', section: 'Project Management' },
+  # Dashboards (nested within projects)
+  { code: 'dashboards.create', name: 'Create', resource: 'dashboards', section: 'Project Management' },
+  { code: 'dashboards.update', name: 'Update', resource: 'dashboards', section: 'Project Management' },
+  { code: 'dashboards.destroy', name: 'Delete', resource: 'dashboards', section: 'Project Management' },
 
-  # Company Management
-  { code: 'company_management.companies.index', name: 'View Companies', resource: 'company_management.companies', section: 'Company Management' },
-  { code: 'company_management.companies.show', name: 'View Company Details', resource: 'company_management.companies', section: 'Company Management' },
-  { code: 'company_management.companies.create', name: 'Create Company', resource: 'company_management.companies', section: 'Company Management' },
-  { code: 'company_management.companies.update', name: 'Update Company', resource: 'company_management.companies', section: 'Company Management' },
-  { code: 'company_management.companies.destroy', name: 'Delete Company', resource: 'company_management.companies', section: 'Company Management' },
+  # BI Dashboards (viewing embedded dashboards in sidebar)
+  { code: 'bi_dashboards.index', name: 'List', resource: 'bi_dashboards', section: 'Project Management' },
+  { code: 'bi_dashboards.show', name: 'View', resource: 'bi_dashboards', section: 'Project Management' },
 
-  # User Management - Users
-  { code: 'user_management.users.index', name: 'View Users', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.show', name: 'View User Details', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.create', name: 'Create User', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.update', name: 'Update User', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.destroy', name: 'Delete User', resource: 'user_management.users', section: 'User Management' },
+  # ============================================================================
+  # 3. USER MANAGEMENT - Users and Roles (user_management/users_controller.rb, user_management/roles_controller.rb)
+  # ============================================================================
+  # Users
+  { code: 'user_management.users.index', name: 'List', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.show', name: 'View', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.create', name: 'Create', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.update', name: 'Update', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.destroy', name: 'Delete', resource: 'user_management.users', section: 'User Management' },
 
-  # User Management - Roles
-  { code: 'user_management.roles.index', name: 'View Roles', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.show', name: 'View Role Details', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.create', name: 'Create Role', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.update', name: 'Update Role', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.destroy', name: 'Delete Role', resource: 'user_management.roles', section: 'User Management' },
+  # Roles
+  { code: 'user_management.roles.index', name: 'List', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.show', name: 'View', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.create', name: 'Create', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.update', name: 'Update', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.destroy', name: 'Delete', resource: 'user_management.roles', section: 'User Management' },
 
-  # Audit Logs
-  { code: 'audit_logs.index', name: 'View Audit Logs', resource: 'audit_logs', section: 'Audit Logs' },
-  { code: 'audit_logs.show', name: 'View Audit Log Details', resource: 'audit_logs', section: 'Audit Logs' }
+  # ============================================================================
+  # 4. AUDIT LOGS - Activity tracking (audit_logs_controller.rb)
+  # ============================================================================
+  { code: 'audit_logs.index', name: 'List', resource: 'audit_logs', section: 'Audit Logs' },
+  { code: 'audit_logs.show', name: 'View', resource: 'audit_logs', section: 'Audit Logs' }
 ]
 
 permission_definitions.each do |attrs|
@@ -94,12 +102,15 @@ superadmin.permissions = Permission.all
 client = Role.find_or_create_by!(name: 'Client') do |role|
   role.description = 'Client company users - read-only access to assigned projects and dashboards'
 end
+# Client only has List and View permissions
 client_permissions = Permission.where(code: [
                                        'dashboard.index',
+                                       'projects.index',
+                                       'projects.show',
                                        'bi_dashboards.index',
                                        'bi_dashboards.show',
-                                       'projects.index',
-                                       'projects.show'
+                                       'audit_logs.index',
+                                       'audit_logs.show'
                                      ])
 client.permissions = client_permissions
 

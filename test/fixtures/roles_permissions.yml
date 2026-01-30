@@ -3,29 +3,19 @@
 # ============================================================================
 # ROLE-PERMISSION ASSIGNMENTS
 # - Superadmin bypasses permission checks (no explicit permissions needed)
-# - Client role: dashboard.index, bi_dashboards.index/show, projects.index/show
-#                + audit_logs.index/show (can only see their own logs)
+# - Client role: List and View only (index/show for all sections)
 # ============================================================================
 
-# Client role permissions - read-only access to dashboards and assigned projects
+# Client role permissions - read-only (List and View)
+
+# Dashboard
 client_dashboard:
   role: client_role
   permission: dashboard_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-client_bi_dashboard:
-  role: client_role
-  permission: bi_dashboard_index
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-client_bi_dashboards_show:
-  role: client_role
-  permission: bi_dashboards_show
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
+# Project Management - Projects
 client_projects_index:
   role: client_role
   permission: projects_index
@@ -38,7 +28,20 @@ client_projects_show:
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-# Client can view their own audit logs
+# Project Management - BI Dashboards
+client_bi_dashboards_index:
+  role: client_role
+  permission: bi_dashboards_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+client_bi_dashboards_show:
+  role: client_role
+  permission: bi_dashboards_show
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Audit Logs
 client_audit_logs_index:
   role: client_role
   permission: audit_logs_index

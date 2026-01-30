@@ -35,10 +35,8 @@
       <div class="border rounded p-3" style="max-height: 450px; overflow-y: auto;">
         <table class="table table-borderless mb-0">
           <tbody>
-            <% section_order = ["Dashboard", "BI Dashboard", "Dashboard Management", "User Management", "Audit Logs"] %>
             <% section_counter = 0 %>
-            <% section_order.each do |section_name| %>
-              <% section_permissions = @permissions.select { |p| p.section == section_name } %>
+            <% @permissions.group_by(&:section).each do |section_name, section_permissions| %>
               <% next if section_permissions.empty? %>
               <% section_counter += 1 %>
               <!-- SECTION HEADER -->

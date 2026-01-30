@@ -63,25 +63,51 @@
       <% if current_user.superadmin? %>
         <div class="row">
           <div class="col-md-12 mb-3">
-            <%= f.label :created_by_id, 'Owner (Admin)', class: 'form-label' %>
+            <%= f.label :company_id, 'Company', class: 'form-label' %>
             <span class="text-danger">*</span>
-            <%= f.select :created_by_id,
+            <%= f.select :company_id,
                 options_from_collection_for_select(
-                  User.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name),
+                  Company.kept.active.order(:name),
                   :id,
                   :name,
-                  @project.created_by_id
+                  @project.company_id
                 ),
-                { include_blank: '-- Select Owner --' },
+                { include_blank: '-- Select Company --' },
                 {
-                  class: "form-select #{'is-invalid' if @project.errors[:created_by].any?}",
-                  required: true
+                  class: "form-select #{'is-invalid' if @project.errors[:company].any?}",
+                  required: true,
+                  data: {
+                    controller: "project-form",
+                    project_form_target: "companySelect",
+                    action: "change->project-form#loadUsers"
+                  }
                 }
             %>
-            <% if @project.errors[:created_by].any? %>
-              <div class="invalid-feedback"><%= @project.errors[:created_by].first %></div>
+            <% if @project.errors[:company].any? %>
+              <div class="invalid-feedback"><%= @project.errors[:company].first %></div>
             <% end %>
-            <div class="form-text">Select the admin user who owns this project. Project code must be unique per owner.</div>
+            <div class="form-text">Select the company for this project. Project code must be unique per company.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <%= f.label :user_ids, 'Assign Users (Client)', class: 'form-label' %>
+            <%= f.select :user_ids,
+                options_for_select(
+                  @project.company.present? ? @project.company.users.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name).pluck(:name, :id) : [],
+                  @project.user_ids
+                ),
+                {},
+                {
+                  class: "form-select",
+                  multiple: true,
+                  size: 5,
+                  data: {
+                    project_form_target: "usersSelect"
+                  }
+                }
+            %>
+            <div class="form-text">Hold Ctrl/Cmd to select multiple users. Users are filtered based on selected company.</div>
           </div>
         </div>
       <% end %>

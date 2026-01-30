@@ -107,7 +107,7 @@ module UserManagement
     end
 
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role_id)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role_id, :company_id)
     end
   end
 end

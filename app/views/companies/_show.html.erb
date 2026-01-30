@@ -1,0 +1,119 @@
+<%= turbo_frame_tag "modal", data: { turbo_action: "advance", action: "turbo:frame-load->modal#show" } do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="companyModalLabel">
+      <strong>View Company Details</strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Flash Messages -->
+    <div id="flash-messages">
+      <% if flash[:notice] %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="bi bi-check-circle me-2"></i>
+          <%= flash[:notice] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <%= flash[:alert] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+    </div>
+    <!-- Company Basic Info -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted">Company Name:</dt>
+              <dd class="col-sm-8 fw-semibold"><%= @company.name %></dd>
+              <dt class="col-sm-4 text-muted">Company Code:</dt>
+              <dd class="col-sm-8"><code><%= @company.code %></code></dd>
+              <dt class="col-sm-4 text-muted">Description:</dt>
+              <dd class="col-sm-8">
+                <%= @company.description.presence || content_tag(:span, 'No description', class: 'text-muted') %>
+              </dd>
+              <dt class="col-sm-4 text-muted">Status:</dt>
+              <dd class="col-sm-8">
+                <% if @company.active? %>
+                  <span class="badge bg-success">Active</span>
+                <% else %>
+                  <span class="badge bg-secondary">Inactive</span>
+                <% end %>
+              </dd>
+              <dt class="col-sm-4 text-muted">Total Users:</dt>
+              <dd class="col-sm-8"><span class="badge bg-primary"><%= @company.users_count %></span></dd>
+              <dt class="col-sm-4 text-muted">Total Projects:</dt>
+              <dd class="col-sm-8"><span class="badge bg-info"><%= @company.projects_count %></span></dd>
+              <dt class="col-sm-4 text-muted">Created At:</dt>
+              <dd class="col-sm-8"><%= @company.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+              <dt class="col-sm-4 text-muted">Updated At:</dt>
+              <dd class="col-sm-8"><%= @company.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Assigned Users Section -->
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label fw-semibold mb-0">
+          Assigned Users (<%= @users.count %>)
+        </label>
+        <% if policy(@company).update? %>
+          <%= link_to assign_users_company_path(@company), class: "btn btn-sm btn-primary", **modal_link_data(size: 'modal-xl') do %>
+            <i class="bi bi-person-plus-fill me-1"></i>Assign Users
+          <% end %>
+        <% end %>
+      </div>
+      <div class="border rounded p-3" style="max-height: 350px; overflow-y: auto;">
+        <% if @users.any? %>
+          <table class="table table-sm table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th class="text-center">Role</th>
+                <th class="text-center">Last Sign In</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @users.each do |user| %>
+                <tr>
+                  <td><%= user.name %></td>
+                  <td><%= user.email %></td>
+                  <td class="text-center">
+                    <span class="badge bg-secondary"><%= user.role&.name %></span>
+                  </td>
+                  <td class="text-center">
+                    <% if user.last_sign_in_at.present? %>
+                      <%= time_ago_in_words(user.last_sign_in_at) %> ago
+                    <% else %>
+                      <span class="text-muted">Never</span>
+                    <% end %>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex gap-1 justify-content-center">
+                      <% if policy(@company).update? %>
+                        <%= button_to remove_user_company_path(@company, user_id: user.id), method: :delete, class: "btn btn-sm btn-outline-danger", title: "Remove from company", form: { data: { turbo_confirm: "Are you sure you want to remove #{user.name} from this company?" } } do %>
+                          <i class="bi bi-x-circle"></i>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="text-center text-muted mb-0">No users assigned to this company yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

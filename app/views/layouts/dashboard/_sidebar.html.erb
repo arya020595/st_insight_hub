@@ -54,10 +54,18 @@
         </li>
       <% end %>
     <% end %>
+    <!-- Company Management -->
+    <% if can_view_menu?('company_management.companies.index') %>
+      <li class="nav-item">
+        <%= link_to companies_path, class: "nav-link #{active_controller?('companies') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-building me-2"></i> Company Management
+        <% end %>
+      </li>
+    <% end %>
     <!-- User Management -->
     <% has_user_management_access = can_view_menu?('user_management.users.index') || can_view_menu?('user_management.roles.index') %>
     <% if has_user_management_access %>
-      <% user_management_active = active_controller?('user_management') %>
+      <% user_management_active = active_controller?('user_management/users') || active_controller?('user_management/roles') %>
       <li class="nav-item">
         <a class="nav-link <%= user_management_active ? 'active' : 'link-dark' %>"
            data-bs-toggle="collapse"

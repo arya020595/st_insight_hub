@@ -1,0 +1,48 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title" id="companyModalLabel">
+      <strong><%= @company.new_record? ? 'Create New Company' : 'Edit Company' %></strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <%= form_with model: @company, html: { class: 'company-form' }, data: { turbo_frame: "_top" } do |f| %>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :name, 'Company Name *', class: 'form-label' %>
+          <%= f.text_field :name, class: "form-control #{'is-invalid' if @company.errors[:name].any?}", placeholder: 'Enter company name', required: true %>
+          <% if @company.errors[:name].any? %>
+            <div class="invalid-feedback"><%= @company.errors[:name].first %></div>
+          <% end %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :code, 'Company Code *', class: 'form-label' %>
+          <%= f.text_field :code, class: "form-control #{'is-invalid' if @company.errors[:code].any?}", placeholder: 'e.g., COMP_001', required: true %>
+          <% if @company.errors[:code].any? %>
+            <div class="invalid-feedback"><%= @company.errors[:code].first %></div>
+          <% end %>
+          <div class="form-text">Unique identifier for this company</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :status, 'Status *', class: 'form-label' %>
+          <%= f.select :status, options_for_select([['Active', 'active'], ['Inactive', 'inactive']], @company.status || 'active'), {}, class: "form-select #{'is-invalid' if @company.errors[:status].any?}" %>
+          <% if @company.errors[:status].any? %>
+            <div class="invalid-feedback"><%= @company.errors[:status].first %></div>
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <%= f.label :description, 'Description', class: 'form-label' %>
+          <%= f.text_area :description, class: 'form-control', rows: 3, placeholder: 'Optional description...' %>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <%= f.submit @company.new_record? ? 'Create Company' : 'Update Company', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% end %>

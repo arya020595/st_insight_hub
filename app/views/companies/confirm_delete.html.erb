@@ -1,0 +1,5 @@
+<%= render 'shared/confirm_delete',
+  item_name: @company.name,
+  item_type: 'Company',
+  delete_path: company_path(@company),
+  message: "Are you sure you want to delete company <strong>\"#{h(@company.name)}\"</strong>?#{@company.projects_count > 0 ? " This company has #{@company.projects_count} project(s). Please reassign or delete them first." : ""}" %>

@@ -34,7 +34,12 @@
     </div>
     <div class="mb-3">
       <%= form.label :role_id, "Role", class: "form-label fw-semibold" %>
-      <%= form.collection_select :role_id, Role.kept, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true } %>
+      <%= form.collection_select :role_id, Role.kept, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true, data: { action: "change->user-form#toggleCompanyField" } } %>
+    </div>
+    <div class="mb-3" data-user-form-target="companyField">
+      <%= form.label :company_id, "Company", class: "form-label fw-semibold" %>
+      <%= form.collection_select :company_id, Company.kept.active.order(:name), :id, :name, { include_blank: "Select Company" }, { class: "form-select" } %>
+      <small class="form-text text-muted">Required for Client role users</small>
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">

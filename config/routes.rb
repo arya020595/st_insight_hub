@@ -27,6 +27,9 @@ Rails.application.routes.draw do
 
   # Projects and Dashboards Management
   resources :projects, concerns: :restorable do
+    collection do
+      get :company_users
+    end
     member do
       get :confirm_delete
     end
@@ -34,6 +37,16 @@ Rails.application.routes.draw do
       member do
         get :confirm_delete
       end
+    end
+  end
+
+  # Company Management
+  resources :companies, concerns: :restorable do
+    member do
+      get :confirm_delete
+      get :assign_users
+      patch :update_users
+      delete :remove_user
     end
   end
 

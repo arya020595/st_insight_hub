@@ -9,21 +9,25 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
 
   belongs_to :role, optional: true
+  belongs_to :company, optional: true
   has_many :audit_logs, dependent: :nullify
-  has_many :owned_projects, class_name: "Project", foreign_key: :created_by_id, dependent: :nullify
+  has_and_belongs_to_many :projects, join_table: :projects_users
 
   validates :name, presence: true
+  validate :company_required_for_client_role
 
   # Clear cached permissions when role changes
   after_save :clear_permission_cache, if: :saved_change_to_role_id?
+  # Clear project assignments when company changes
+  before_save :clear_projects_on_company_change, if: :company_id_changed?
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id email name role_id created_at updated_at current_sign_in_at last_sign_in_at sign_in_count]
+    %w[id email name role_id company_id created_at updated_at current_sign_in_at last_sign_in_at sign_in_count]
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[role audit_logs]
+    %w[role company audit_logs projects]
   end
 
   # Check if user has a specific permission code
@@ -72,6 +76,20 @@ class User < ApplicationRecord
   end
 
   private
+
+  # Validate that Client role users must have a company
+  def company_required_for_client_role
+    return if role.blank?
+    return if superadmin?
+    return if company_id.present?
+
+    errors.add(:company_id, "must be selected for Client role") unless role.name == "Superadmin"
+  end
+
+  # Clear project assignments when company changes
+  def clear_projects_on_company_change
+    projects.clear if persisted?
+  end
 
   # Cache permission codes with role/permissions as cache key
   # Cache is automatically invalidated when role or its permissions change

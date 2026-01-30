@@ -1,0 +1,48 @@
+<tr>
+  <td class="text-center">
+    <% if policy(company).show? %>
+      <%= link_to company_path(company), class: "action-btn info", title: "View", **modal_link_data(size: 'modal-xl') do %>
+        <i class="bi bi-eye-fill"></i>
+      <% end %>
+    <% end %>
+    <% if policy(company).update? %>
+      <%= link_to edit_company_path(company), class: "action-btn warning", title: "Edit", **modal_link_data(size: 'modal-lg') do %>
+        <i class="bi bi-pencil-fill"></i>
+      <% end %>
+    <% end %>
+    <% if policy(company).destroy? %>
+      <%= link_to confirm_delete_company_path(company), class: "action-btn danger", title: "Delete", **modal_link_data(size: 'modal-md') do %>
+        <i class="bi bi-trash-fill"></i>
+      <% end %>
+    <% end %>
+  </td>
+  <td class="text-center">
+    <strong><%= company.name %></strong>
+    <% if company.description.present? %>
+      <br>
+      <small class="text-muted"><%= truncate(company.description, length: 50) %></small>
+    <% end %>
+  </td>
+  <td class="text-center">
+    <code style="color: #d63384;"><%= company.code %></code>
+  </td>
+  <td class="text-center">
+    <% if company.active? %>
+      <span class="badge bg-success">Active</span>
+    <% else %>
+      <span class="badge bg-secondary">Inactive</span>
+    <% end %>
+  </td>
+  <td class="text-center">
+    <span class="badge bg-primary" style="font-size: 14px;"><%= company.users_count %></span>
+  </td>
+  <td class="text-center">
+    <span class="badge bg-info" style="font-size: 14px;"><%= company.projects_count %></span>
+  </td>
+  <td class="text-center">
+    <%= l(company.created_at, format: :short) %>
+  </td>
+  <td class="text-center">
+    <%= l(company.updated_at, format: :short) %>
+  </td>
+</tr>

@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
     authorize Project
     @q = policy_scope(Project).kept.ransack(params[:q])
     @q.sorts = "created_at desc" if @q.sorts.empty?
-    @pagy, @projects = pagy(@q.result.includes(:dashboards))
+    @pagy, @projects = pagy(@q.result.includes(:company, :users))
   end
 
   def show
@@ -23,11 +23,6 @@ class ProjectsController < ApplicationController
     authorize Project
     @project = Project.new(project_params)
 
-    # Set created_by based on role:
-    # - Superadmin: Uses created_by_id from form
-    # - Admin: Uses current user (themselves)
-    @project.created_by = current_user unless current_user.superadmin?
-
     if @project.save
       log_audit(
         action: "create",
@@ -40,7 +35,7 @@ class ProjectsController < ApplicationController
       # Reload projects list for turbo stream
       @q = policy_scope(Project).kept.ransack(params[:q])
       @q.sorts = "created_at desc" if @q.sorts.empty?
-      @pagy, @projects = pagy(@q.result.includes(:dashboards))
+      @pagy, @projects = pagy(@q.result.includes(:company, :users))
 
       respond_to do |format|
         format.html { redirect_to projects_path, notice: "Project was successfully created." }
@@ -69,7 +64,7 @@ class ProjectsController < ApplicationController
       # Reload projects list for turbo stream
       @q = policy_scope(Project).kept.ransack(params[:q])
       @q.sorts = "created_at desc" if @q.sorts.empty?
-      @pagy, @projects = pagy(@q.result.includes(:dashboards))
+      @pagy, @projects = pagy(@q.result.includes(:company, :users))
 
       respond_to do |format|
         format.html { redirect_to projects_path, notice: "Project was successfully updated." }
@@ -95,7 +90,7 @@ class ProjectsController < ApplicationController
     # Reload projects list for turbo stream
     @q = policy_scope(Project).kept.ransack(params[:q])
     @q.sorts = "created_at desc" if @q.sorts.empty?
-    @pagy, @projects = pagy(@q.result.includes(:dashboards))
+    @pagy, @projects = pagy(@q.result.includes(:company, :users))
 
     respond_to do |format|
       format.html { redirect_to projects_path, notice: "Project was successfully deleted." }
@@ -105,17 +100,27 @@ class ProjectsController < ApplicationController
 
   def confirm_delete; end
 
+  # AJAX endpoint to get users for a specific company
+  def company_users
+    company = Company.find(params[:company_id])
+    users = company.users.kept
+                   .joins(:role)
+                   .where.not(roles: { name: "Superadmin" })
+                   .order(:name)
+                   .pluck(:id, :name, :email)
+
+    render json: users.map { |id, name, email| { id: id, name: name, email: email } }
+  end
+
   private
 
   def set_project
-    @project = Project.kept.includes(:created_by, :dashboards).find(params[:id])
+    @project = Project.kept.includes(:company, :users).find(params[:id])
     authorize @project
   end
 
   def project_params
-    permitted = [ :name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position ]
-    # Only superadmin can set owner
-    permitted << :created_by_id if current_user.superadmin?
+    permitted = [ :name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position, :company_id, user_ids: [] ]
     params.require(:project).permit(permitted)
   end
 end

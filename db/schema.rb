@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_30_015939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -34,6 +34,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
     t.index ["created_at"], name: "index_audit_logs_on_created_at"
     t.index ["module_name"], name: "index_audit_logs_on_module_name"
     t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "discarded_at"
+    t.string "name", null: false
+    t.string "status", default: "active", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_companies_on_code", unique: true
+    t.index ["discarded_at"], name: "index_companies_on_discarded_at"
   end
 
   create_table "dashboards", force: :cascade do |t|
@@ -67,8 +79,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
 
   create_table "projects", force: :cascade do |t|
     t.string "code", null: false
+    t.bigint "company_id", null: false
     t.datetime "created_at", null: false
-    t.bigint "created_by_id"
     t.text "description"
     t.datetime "discarded_at"
     t.string "icon", default: "bi-folder"
@@ -77,10 +89,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
     t.integer "sidebar_position", default: 0
     t.string "status", default: "active", null: false
     t.datetime "updated_at", null: false
-    t.index ["created_by_id"], name: "index_projects_on_created_by_id"
-    t.index ["created_by_id", "code"], name: "index_projects_on_created_by_id_and_code", unique: true
+    t.index ["company_id"], name: "index_projects_on_company_id"
     t.index ["discarded_at"], name: "index_projects_on_discarded_at"
     t.index ["status"], name: "index_projects_on_status"
+  end
+
+  create_table "projects_users", id: false, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "project_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["project_id", "user_id"], name: "index_projects_users_on_project_id_and_user_id", unique: true
+    t.index ["user_id", "project_id"], name: "index_projects_users_on_user_id_and_project_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -106,6 +126,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.bigint "company_id"
     t.datetime "created_at", null: false
     t.datetime "current_sign_in_at"
     t.string "current_sign_in_ip"
@@ -121,6 +142,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
     t.bigint "role_id"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -129,7 +151,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_14_103258) do
 
   add_foreign_key "audit_logs", "users"
   add_foreign_key "dashboards", "projects"
+  add_foreign_key "projects", "companies"
   add_foreign_key "roles_permissions", "permissions"
   add_foreign_key "roles_permissions", "roles"
+  add_foreign_key "users", "companies"
   add_foreign_key "users", "roles"
 end

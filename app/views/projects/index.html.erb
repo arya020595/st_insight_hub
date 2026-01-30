@@ -2,7 +2,7 @@
 <div id="projects" class="container-fluid px-4 py-4 projects-list" data-controller="multi-sort">
   <div class="card shadow-sm">
     <div class="projects_page">
-      <h1 class="mb-0">BI Dashboard Management - Projects</h1>
+      <h1>BI Dashboard Management - Projects</h1>
       <div class="d-flex justify-content-end">
         <% if policy(Project.new).new? %>
           <%= link_to new_project_path, class: "add-button btn btn-primary btn-sm", **modal_link_data(size: 'modal-lg') do %>

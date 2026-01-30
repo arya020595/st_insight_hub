@@ -32,13 +32,14 @@ permission_definitions = [
 
   # BI Dashboards
   { code: 'bi_dashboards.index', name: 'View BI Dashboards', resource: 'bi_dashboards', section: 'BI Dashboards' },
+  { code: 'bi_dashboards.show', name: 'View BI Dashboard Details', resource: 'bi_dashboards', section: 'BI Dashboards' },
 
-  # Projects (Dashboard Management)
-  { code: 'bi_dashboards.projects.index', name: 'View Projects', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.show', name: 'View Project Details', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.create', name: 'Create Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.update', name: 'Update Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.destroy', name: 'Delete Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
+  # Project Management
+  { code: 'projects.index', name: 'View Projects', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.show', name: 'View Project Details', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.create', name: 'Create Project', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.update', name: 'Update Project', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.destroy', name: 'Delete Project', resource: 'projects', section: 'Project Management' },
 
   # Company Management
   { code: 'company_management.companies.index', name: 'View Companies', resource: 'company_management.companies', section: 'Company Management' },
@@ -96,8 +97,9 @@ end
 client_permissions = Permission.where(code: [
                                        'dashboard.index',
                                        'bi_dashboards.index',
-                                       'bi_dashboards.projects.index',
-                                       'bi_dashboards.projects.show'
+                                       'bi_dashboards.show',
+                                       'projects.index',
+                                       'projects.show'
                                      ])
 client.permissions = client_permissions
 

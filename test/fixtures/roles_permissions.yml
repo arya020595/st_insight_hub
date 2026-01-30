@@ -3,7 +3,7 @@
 # ============================================================================
 # ROLE-PERMISSION ASSIGNMENTS
 # - Superadmin bypasses permission checks (no explicit permissions needed)
-# - Client role: dashboard.index, bi_dashboards.index, bi_dashboards.projects.index/show
+# - Client role: dashboard.index, bi_dashboards.index/show, projects.index/show
 #                + audit_logs.index/show (can only see their own logs)
 # ============================================================================
 
@@ -28,13 +28,13 @@ client_bi_dashboards_show:
 
 client_projects_index:
   role: client_role
-  permission: bi_dashboards_projects_index
+  permission: projects_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
 client_projects_show:
   role: client_role
-  permission: bi_dashboards_projects_show
+  permission: projects_show
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 

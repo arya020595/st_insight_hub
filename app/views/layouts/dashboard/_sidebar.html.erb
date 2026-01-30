@@ -8,11 +8,11 @@
         <% end %>
       </li>
     <% end %>
-    <!-- BI Dashboard Management -->
-    <% if can_view_menu?('bi_dashboards.projects.index') %>
+    <!-- Project Management -->
+    <% if can_view_menu?('projects.index') %>
       <li class="nav-item">
         <%= link_to projects_path, class: "nav-link #{active_controller?('projects') ? 'active' : 'link-dark'}" do %>
-          <i class="bi bi-kanban-fill me-2"></i> Dashboard Management
+          <i class="bi bi-kanban-fill me-2"></i> Project Management
         <% end %>
       </li>
     <% end %>

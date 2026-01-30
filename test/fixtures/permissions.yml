@@ -2,8 +2,8 @@
 
 # ============================================================================
 # PERMISSIONS - Based on Business Rules:
-# - Client users can access: dashboard.index, bi_dashboards.index,
-#   bi_dashboards.projects.index, bi_dashboards.projects.show
+# - Client users can access: dashboard.index, bi_dashboards.index/show,
+#   projects.index, projects.show
 # - Superadmin bypasses all permission checks
 # ============================================================================
 
@@ -33,20 +33,20 @@ bi_dashboards_show:
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-# Projects (Dashboard Management) - Read-only for clients
-bi_dashboards_projects_index:
+# Project Management
+projects_index:
   name: View Projects
-  code: bi_dashboards.projects.index
-  resource: bi_dashboards.projects
-  section: Dashboard Management
+  code: projects.index
+  resource: projects
+  section: Project Management
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-bi_dashboards_projects_show:
+projects_show:
   name: View Project Details
-  code: bi_dashboards.projects.show
-  resource: bi_dashboards.projects
-  section: Dashboard Management
+  code: projects.show
+  resource: projects
+  section: Project Management
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 

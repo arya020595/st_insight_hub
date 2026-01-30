@@ -11,7 +11,7 @@ class ProjectPolicy < ApplicationPolicy
   private
 
   def permission_resource
-    "bi_dashboards.projects"
+    "projects"
   end
 
   def user_assigned_to_project?
@@ -22,7 +22,7 @@ class ProjectPolicy < ApplicationPolicy
     private
 
     def permission_resource
-      "bi_dashboards.projects"
+      "projects"
     end
 
     def apply_role_based_scope

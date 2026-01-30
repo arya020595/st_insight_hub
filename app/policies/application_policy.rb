@@ -50,13 +50,13 @@ class ApplicationPolicy
   # @param action [String] The action (e.g., 'index', 'show', 'create', 'update', 'destroy')
   # @return [String] Full permission code (e.g., 'user_management.users.index')
   def build_permission_code(action)
-    "#{self.class.permission_resource}.#{action}"
+    "#{permission_resource}.#{action}"
   end
 
-  # Override this class method in subclasses to map to correct permission resource
+  # Override this method in subclasses to map to correct permission resource
   # @return [String] Format: "namespace.resource" (e.g., "user_management.users")
-  def self.permission_resource
-    raise NotImplementedError, "#{name} must implement .permission_resource"
+  def permission_resource
+    raise NotImplementedError, "#{self.class.name} must implement #permission_resource"
   end
 
   class Scope
@@ -87,12 +87,12 @@ class ApplicationPolicy
     end
 
     def build_permission_code(action)
-      "#{policy_class.permission_resource}.#{action}"
+      "#{permission_resource}.#{action}"
     end
 
-    # Get the policy class that this scope belongs to
-    def policy_class
-      self.class.name.deconstantize.constantize
+    # Override this in subclass Scopes
+    def permission_resource
+      raise NotImplementedError, "#{self.class.name} must implement #permission_resource"
     end
   end
 end

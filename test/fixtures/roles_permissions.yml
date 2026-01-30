@@ -20,6 +20,12 @@ client_bi_dashboard:
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
+client_bi_dashboards_show:
+  role: client_role
+  permission: bi_dashboards_show
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
 client_projects_index:
   role: client_role
   permission: bi_dashboards_projects_index

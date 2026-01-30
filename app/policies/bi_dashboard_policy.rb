@@ -6,11 +6,10 @@ class BiDashboardPolicy < ApplicationPolicy
 
   # Check if user can access a specific dashboard
   def show?
-    return true if user.superadmin?
-    return false unless user.has_permission?(build_permission_code("index"))
+    return false unless user.has_permission?(build_permission_code("show"))
 
-    # Client users can only access dashboards from projects they're assigned to
-    user.project_ids.include?(record.project_id)
+    # Superadmin sees all, others only see dashboards from assigned projects
+    user.superadmin? || user.project_ids.include?(record.project_id)
   end
 
   private

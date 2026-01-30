@@ -25,6 +25,14 @@ bi_dashboard_index:
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
+bi_dashboards_show:
+  name: View BI Dashboard Details
+  code: bi_dashboards.show
+  resource: bi_dashboards
+  section: BI Dashboards
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
 # Projects (Dashboard Management) - Read-only for clients
 bi_dashboards_projects_index:
   name: View Projects

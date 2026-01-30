@@ -105,32 +105,55 @@ class CompaniesController < ApplicationController
   end
 
   def update_users
-    user_ids = params[:company][:user_ids].reject(&:blank?)
+    user_ids = params[:company][:user_ids].reject(&:blank?).map(&:to_i)
+    current_user_ids = @company.user_ids
 
-    if @company.update(user_ids: user_ids)
+    # Find users being removed from this company
+    removed_user_ids = current_user_ids - user_ids
+    # Find users being added to this company
+    added_user_ids = user_ids - current_user_ids
+
+    ActiveRecord::Base.transaction do
+      # Remove users and clear their project assignments
+      if removed_user_ids.any?
+        User.where(id: removed_user_ids).find_each do |user|
+          user.update!(company_id: nil)
+        end
+      end
+
+      # Add users to this company (this will trigger their before_save callback)
+      if added_user_ids.any?
+        User.where(id: added_user_ids).find_each do |user|
+          user.update!(company: @company)
+        end
+      end
+
       log_audit(
         action: "update",
         module_name: "company_management",
         auditable: @company,
         summary: "Updated user assignments for company: #{@company.name}"
       )
+
       @users = @company.users.kept.includes(:role).order(:name)
       flash.now[:notice] = "Users assigned successfully."
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to company_path(@company), notice: "Users assigned successfully." }
       end
-    else
-      @assigned_users = @company.users.kept.order(:name)
-      @available_users = User.kept.where.not(id: @company.user_ids).order(:name)
-      render :assign_users, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    @assigned_users = @company.users.kept.order(:name)
+    @available_users = User.kept.where.not(id: @company.user_ids).order(:name)
+    flash.now[:alert] = "Failed to update users: #{e.message}"
+    render :assign_users, status: :unprocessable_entity
   end
 
   def remove_user
     user = User.find(params[:user_id])
 
-    if @company.users.delete(user)
+    # Update user's company to nil, which triggers callbacks and clears project assignments
+    if user.update(company_id: nil)
       log_audit(
         action: "update",
         module_name: "company_management",

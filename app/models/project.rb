@@ -4,7 +4,7 @@ class Project < ApplicationRecord
   include Discard::Model
 
   # Relationships
-  belongs_to :company
+  belongs_to :company, counter_cache: true
   has_many :dashboards, dependent: :destroy
   has_and_belongs_to_many :users, join_table: :projects_users
 
@@ -14,6 +14,10 @@ class Project < ApplicationRecord
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :icon, format: { with: /\Abi-[\w-]+\z/, allow_blank: true, message: "must be a valid Bootstrap Icons class (e.g., bi-folder, bi-graph-up)" }
   validate :users_belong_to_same_company
+
+  # Update counter cache when project is discarded/undiscarded
+  after_discard :decrement_company_projects_count
+  after_undiscard :increment_company_projects_count
 
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }
@@ -38,6 +42,16 @@ class Project < ApplicationRecord
   end
 
   private
+
+  # Decrement company projects_count when project is discarded
+  def decrement_company_projects_count
+    company&.decrement!(:projects_count)
+  end
+
+  # Increment company projects_count when project is undiscarded
+  def increment_company_projects_count
+    company&.increment!(:projects_count)
+  end
 
   # Validate that all assigned users belong to the project's company
   def users_belong_to_same_company

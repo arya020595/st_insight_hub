@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class BiDashboardPolicy < ApplicationPolicy
-  def index?
-    user.has_permission?("bi_dashboards.index")
-  end
+  # Inherit index? from ApplicationPolicy
+  # Automatically checks superadmin and permissions
 
   # Check if user can access a specific dashboard
   def show?

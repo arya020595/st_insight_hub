@@ -9,12 +9,16 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable
 
   belongs_to :role, optional: true
-  belongs_to :company, optional: true
+  belongs_to :company, optional: true, counter_cache: true
   has_many :audit_logs, dependent: :nullify
   has_and_belongs_to_many :projects, join_table: :projects_users
 
   validates :name, presence: true
   validate :company_required_for_client_role
+
+  # Update counter cache when user is discarded/undiscarded
+  after_discard :decrement_company_users_count
+  after_undiscard :increment_company_users_count
 
   # Clear cached permissions when role changes
   after_save :clear_permission_cache, if: :saved_change_to_role_id?
@@ -89,6 +93,16 @@ class User < ApplicationRecord
   # Clear project assignments when company changes
   def clear_projects_on_company_change
     projects.clear if persisted?
+  end
+
+  # Decrement company users_count when user is discarded
+  def decrement_company_users_count
+    company&.decrement!(:users_count)
+  end
+
+  # Increment company users_count when user is undiscarded
+  def increment_company_users_count
+    company&.increment!(:users_count)
   end
 
   # Cache permission codes with role/permissions as cache key

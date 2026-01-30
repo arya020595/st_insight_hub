@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class DashboardPolicy < ApplicationPolicy
-  def index?
-    user.has_permission?("dashboard.index")
-  end
+  # Inherit index? from ApplicationPolicy
+  # Automatically checks superadmin and permission_resource
 
   private
 

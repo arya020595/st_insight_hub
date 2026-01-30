@@ -19,7 +19,7 @@ docker compose exec web rails db:seed
 
 # 5. Open your browser
 # Visit: http://localhost:3000
-# Login: admin@example.com / password123
+# Login: superadmin@example.com / password123
 ```
 
 ## Daily Workflow

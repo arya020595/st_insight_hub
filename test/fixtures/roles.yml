@@ -1,25 +1,19 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# ============================================================================
+# ROLES - Based on Business Rules:
+# - Superadmin: Full system access (bypasses all permission checks)
+# - Client: Can only access dashboard management, view assigned projects
+# ============================================================================
+
 superadmin_role:
   name: Superadmin
-  description: Full access to all features
+  description: Full system access - bypasses all permission checks
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-admin_role:
-  name: Admin
-  description: Administrative access
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-viewer_role:
-  name: Viewer
-  description: View only access
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-no_access_role:
-  name: No Access
-  description: No permissions
+client_role:
+  name: Client
+  description: Client users - can only access assigned projects and their dashboards
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>

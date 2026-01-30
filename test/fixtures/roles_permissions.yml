@@ -1,51 +1,46 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# Admin role permissions
-admin_bi_dashboard:
-  role: admin_role
-  permission: bi_dashboard_index
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
+# ============================================================================
+# ROLE-PERMISSION ASSIGNMENTS
+# - Superadmin bypasses permission checks (no explicit permissions needed)
+# - Client role: dashboard.index, bi_dashboards.index, bi_dashboards.projects.index/show
+#                + audit_logs.index/show (can only see their own logs)
+# ============================================================================
 
-admin_audit_logs_index:
-  role: admin_role
-  permission: audit_logs_index
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-admin_audit_logs_show:
-  role: admin_role
-  permission: audit_logs_show
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-admin_dashboard:
-  role: admin_role
+# Client role permissions - read-only access to dashboards and assigned projects
+client_dashboard:
+  role: client_role
   permission: dashboard_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-# Viewer role permissions
-viewer_bi_dashboard:
-  role: viewer_role
+client_bi_dashboard:
+  role: client_role
   permission: bi_dashboard_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-viewer_audit_logs_index:
-  role: viewer_role
+client_projects_index:
+  role: client_role
+  permission: bi_dashboards_projects_index
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+client_projects_show:
+  role: client_role
+  permission: bi_dashboards_projects_show
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Client can view their own audit logs
+client_audit_logs_index:
+  role: client_role
   permission: audit_logs_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-viewer_audit_logs_show:
-  role: viewer_role
+client_audit_logs_show:
+  role: client_role
   permission: audit_logs_show
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-viewer_dashboard:
-  role: viewer_role
-  permission: dashboard_index
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>

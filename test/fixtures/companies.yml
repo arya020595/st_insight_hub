@@ -1,15 +1,34 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  code: MyString
-  status: MyString
-  description: MyText
-  discarded_at: 2026-01-30 08:26:39
+acme_corp:
+  name: Acme Corporation
+  code: ACME
+  status: active
+  description: Leading provider of business solutions
+  created_at: <%= Time.current - 1.year %>
+  updated_at: <%= Time.current %>
 
-two:
-  name: MyString
-  code: MyString
-  status: MyString
-  description: MyText
-  discarded_at: 2026-01-30 08:26:39
+dataflow_solutions:
+  name: DataFlow Solutions
+  code: DATAFLOW
+  status: active
+  description: Data analytics and insights company
+  created_at: <%= Time.current - 6.months %>
+  updated_at: <%= Time.current %>
+
+inactive_company:
+  name: Inactive Corp
+  code: INACTIVE
+  status: inactive
+  description: An inactive company
+  created_at: <%= Time.current - 2.years %>
+  updated_at: <%= Time.current - 1.year %>
+
+discarded_company:
+  name: Discarded Company
+  code: DISCARDED
+  status: active
+  description: A discarded company
+  discarded_at: <%= Time.current - 1.month %>
+  created_at: <%= Time.current - 3.years %>
+  updated_at: <%= Time.current - 1.month %>

@@ -112,9 +112,9 @@ module ApplicationHelper
     @sidebar_projects ||= begin
       base_scope = Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
 
-      # Non-superadmin users only see projects they own (created_by)
-      if current_user && !current_user.superadmin?
-        base_scope.where(created_by_id: current_user.id)
+      # Non-superadmin users only see projects from their company
+      if current_user && !current_user.superadmin? && current_user.company_id.present?
+        base_scope.where(company_id: current_user.company_id)
       else
         base_scope
       end

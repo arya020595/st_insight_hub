@@ -29,11 +29,7 @@ class Company < ApplicationRecord
     status == "active"
   end
 
-  def users_count
-    users.kept.count
-  end
-
-  def projects_count
-    projects.kept.count
-  end
+  # Counter cache columns are automatically maintained by Rails
+  # The after_discard/after_undiscard callbacks in User and Project
+  # ensure counts stay accurate even with soft deletes
 end

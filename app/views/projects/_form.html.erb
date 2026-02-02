@@ -44,7 +44,7 @@
           <% if @project.errors[:icon].any? %>
             <div class="invalid-feedback"><%= @project.errors[:icon].first %></div>
           <% end %>
-          <div class="form-text">Bootstrap Icons class name (e.g., bi-folder, bi-graph-up)</div>
+          <div class="form-text">Icon class name (e.g., bi-folder, bi-graph-up). Browse icons at <%= link_to 'Bootstrap Icons', 'https://icons.getbootstrap.com/', target: '_blank', rel: 'noopener' %></div>
         </div>
       </div>
       <div class="row">

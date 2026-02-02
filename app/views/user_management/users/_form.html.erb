@@ -1,4 +1,4 @@
-<%= form_with(model: [:user_management, user]) do |form| %>
+<%= form_with(model: [:user_management, user], data: { controller: "user-form" }) do |form| %>
   <div class="modal-header">
     <h5 class="modal-title" id="userModalLabel">
       <strong>
@@ -34,7 +34,7 @@
     </div>
     <div class="mb-3">
       <%= form.label :role_id, "Role", class: "form-label fw-semibold" %>
-      <%= form.collection_select :role_id, Role.kept, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true, data: { action: "change->user-form#toggleCompanyField" } } %>
+      <%= form.collection_select :role_id, Role.kept, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true, data: { user_form_target: "roleSelect", action: "change->user-form#toggleCompanyField" } } %>
     </div>
     <div class="mb-3" data-user-form-target="companyField">
       <%= form.label :company_id, "Company", class: "form-label fw-semibold" %>

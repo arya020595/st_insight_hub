@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
     authorize Project
     @q = policy_scope(Project).kept.ransack(params[:q])
     @q.sorts = "created_at desc" if @q.sorts.empty?
-    @pagy, @projects = pagy(@q.result.includes(:company, :users))
+    @pagy, @projects = pagy(@q.result.includes(:company))
   end
 
   def show
@@ -35,7 +35,7 @@ class ProjectsController < ApplicationController
       # Reload projects list for turbo stream
       @q = policy_scope(Project).kept.ransack(params[:q])
       @q.sorts = "created_at desc" if @q.sorts.empty?
-      @pagy, @projects = pagy(@q.result.includes(:company, :users))
+      @pagy, @projects = pagy(@q.result.includes(:company))
 
       respond_to do |format|
         format.html { redirect_to projects_path, notice: "Project was successfully created." }
@@ -64,7 +64,7 @@ class ProjectsController < ApplicationController
       # Reload projects list for turbo stream
       @q = policy_scope(Project).kept.ransack(params[:q])
       @q.sorts = "created_at desc" if @q.sorts.empty?
-      @pagy, @projects = pagy(@q.result.includes(:company, :users))
+      @pagy, @projects = pagy(@q.result.includes(:company))
 
       respond_to do |format|
         format.html { redirect_to projects_path, notice: "Project was successfully updated." }
@@ -90,7 +90,7 @@ class ProjectsController < ApplicationController
     # Reload projects list for turbo stream
     @q = policy_scope(Project).kept.ransack(params[:q])
     @q.sorts = "created_at desc" if @q.sorts.empty?
-    @pagy, @projects = pagy(@q.result.includes(:company, :users))
+    @pagy, @projects = pagy(@q.result.includes(:company))
 
     respond_to do |format|
       format.html { redirect_to projects_path, notice: "Project was successfully deleted." }

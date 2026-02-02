@@ -101,11 +101,15 @@ class CompaniesController < ApplicationController
 
   def assign_users
     @assigned_users = @company.users.kept.order(:name)
-    @available_users = User.kept.where.not(id: @company.user_ids).order(:name)
+    @available_users = User.kept
+                           .joins(:role)
+                           .where.not(id: @company.user_ids)
+                           .where.not(roles: { name: "Superadmin" })
+                           .order(:name)
   end
 
   def update_users
-    user_ids = params[:company][:user_ids].reject(&:blank?).map(&:to_i)
+    user_ids = Array(params.dig(:company, :user_ids)).reject(&:blank?).map(&:to_i)
     current_user_ids = @company.user_ids
 
     # Find users being removed from this company
@@ -144,7 +148,11 @@ class CompaniesController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     @assigned_users = @company.users.kept.order(:name)
-    @available_users = User.kept.where.not(id: @company.user_ids).order(:name)
+    @available_users = User.kept
+                           .joins(:role)
+                           .where.not(id: @company.user_ids)
+                           .where.not(roles: { name: "Superadmin" })
+                           .order(:name)
     flash.now[:alert] = "Failed to update users: #{e.message}"
     render :assign_users, status: :unprocessable_entity
   end

@@ -102,15 +102,13 @@ superadmin.permissions = Permission.all
 client = Role.find_or_create_by!(name: 'Client') do |role|
   role.description = 'Client company users - read-only access to assigned projects and dashboards'
 end
-# Client only has List and View permissions
+# Client only has List and View permissions (no audit log access)
 client_permissions = Permission.where(code: [
                                        'dashboard.index',
                                        'projects.index',
                                        'projects.show',
                                        'bi_dashboards.index',
-                                       'bi_dashboards.show',
-                                       'audit_logs.index',
-                                       'audit_logs.show'
+                                       'bi_dashboards.show'
                                      ])
 client.permissions = client_permissions
 

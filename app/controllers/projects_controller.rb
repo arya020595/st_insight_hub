@@ -41,12 +41,13 @@ class ProjectsController < ApplicationController
   def edit; end
 
   def update
+    IconFileService.new(@project).handle_icon_change(project_params)
+
     updated = audit_update(@project, module_name: "projects") do
       @project.update(filtered_project_params)
     end
 
     if updated
-      IconFileService.new(@project).handle_icon_change(project_params)
       reload_projects_list
 
       respond_to do |format|

@@ -3,13 +3,15 @@
 class Company < ApplicationRecord
   include Discard::Model
 
+  # Ignore removed columns
+  self.ignored_columns += ["code"]
+
   # Relationships
   has_many :users, dependent: :nullify
   has_many :projects, dependent: :restrict_with_error
 
   # Validations
   validates :name, presence: true
-  validates :code, presence: true, uniqueness: { conditions: -> { kept } }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
 
   # Scopes
@@ -18,7 +20,7 @@ class Company < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id name code description status created_at updated_at]
+    %w[id name description status created_at updated_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)

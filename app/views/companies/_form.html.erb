@@ -8,20 +8,12 @@
   <%= form_with model: @company, html: { class: 'company-form' }, data: { turbo_frame: "_top" } do |f| %>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-12 mb-3">
           <%= f.label :name, 'Company Name *', class: 'form-label' %>
           <%= f.text_field :name, class: "form-control #{'is-invalid' if @company.errors[:name].any?}", placeholder: 'Enter company name', required: true %>
           <% if @company.errors[:name].any? %>
             <div class="invalid-feedback"><%= @company.errors[:name].first %></div>
           <% end %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :code, 'Company Code *', class: 'form-label' %>
-          <%= f.text_field :code, class: "form-control #{'is-invalid' if @company.errors[:code].any?}", placeholder: 'e.g., COMP_001', required: true %>
-          <% if @company.errors[:code].any? %>
-            <div class="invalid-feedback"><%= @company.errors[:code].first %></div>
-          <% end %>
-          <div class="form-text">Unique identifier for this company</div>
         </div>
       </div>
       <div class="row">

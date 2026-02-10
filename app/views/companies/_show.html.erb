@@ -31,8 +31,6 @@
             <dl class="row mb-0">
               <dt class="col-sm-4 text-muted">Company Name:</dt>
               <dd class="col-sm-8 fw-semibold"><%= @company.name %></dd>
-              <dt class="col-sm-4 text-muted">Company Code:</dt>
-              <dd class="col-sm-8"><code><%= @company.code %></code></dd>
               <dt class="col-sm-4 text-muted">Description:</dt>
               <dd class="col-sm-8">
                 <%= @company.description.presence || content_tag(:span, 'No description', class: 'text-muted') %>

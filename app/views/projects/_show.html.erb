@@ -24,8 +24,6 @@
             <dl class="row mb-0">
               <dt class="col-sm-4 text-muted">Project Name:</dt>
               <dd class="col-sm-8 fw-semibold"><%= @project.name %></dd>
-              <dt class="col-sm-4 text-muted">Project Code:</dt>
-              <dd class="col-sm-8"><code><%= @project.code %></code></dd>
               <dt class="col-sm-4 text-muted">Description:</dt>
               <dd class="col-sm-8">
                 <%= @project.description.presence || content_tag(:span, 'No description', class: 'text-muted') %>
@@ -42,7 +40,6 @@
               <dd class="col-sm-8">
                 <% if @project.company.present? %>
                   <i class="bi bi-building me-1"></i><%= @project.company.name %>
-                  <span class="text-muted">(<%= @project.company.code %>)</span>
                 <% else %>
                   <span class="text-muted">No company assigned</span>
                 <% end %>

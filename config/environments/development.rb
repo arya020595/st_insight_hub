@@ -79,7 +79,6 @@ Rails.application.configure do
   # Devise mailer configuration
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
-  # Active Storage: Allow SVG files to be served inline with correct content type
-  config.active_storage.content_types_to_serve_as_binary -= [ "image/svg+xml" ]
-  config.active_storage.content_types_allowed_inline += [ "image/svg+xml" ]
+  # Active Storage: Serve SVG files as binary attachments to reduce XSS risk
+  config.active_storage.content_types_to_serve_as_binary += [ "image/svg+xml" ]
 end

@@ -1,56 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# Audit logs created by admin user
-admin_created_project:
-  action: create
-  module_name: projects
-  auditable_type: Project
-  auditable_id: 1
-  user: admin
-  user_name: Admin User
-  summary: Created project by admin
-  ip_address: 127.0.0.1
-  created_at: <%= Time.current - 2.days %>
-  updated_at: <%= Time.current - 2.days %>
+# ============================================================================
+# AUDIT LOGS - Based on Business Rules:
+# - Superadmin can view all audit logs
+# - Client users can only view their own audit logs
+# ============================================================================
 
-admin_updated_dashboard:
-  action: update
-  module_name: dashboards
-  auditable_type: Dashboard
-  auditable_id: 1
-  user: admin
-  user_name: Admin User
-  summary: Updated dashboard by admin
-  ip_address: 127.0.0.1
-  created_at: <%= Time.current - 1.day %>
-  updated_at: <%= Time.current - 1.day %>
-
-# Audit logs created by viewer user
-viewer_viewed_dashboard:
-  action: view
-  module_name: bi_dashboards
-  auditable_type: Dashboard
-  auditable_id: 1
-  user: viewer
-  user_name: Viewer User
-  summary: Viewed dashboard by viewer
-  ip_address: 127.0.0.1
-  created_at: <%= Time.current - 1.hour %>
-  updated_at: <%= Time.current - 1.hour %>
-
-viewer_created_something:
-  action: create
-  module_name: projects
-  auditable_type: Project
-  auditable_id: 2
-  user: viewer
-  user_name: Viewer User
-  summary: Created something by viewer
-  ip_address: 127.0.0.1
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-# Audit logs created by superadmin user
+# Audit logs created by superadmin
 superadmin_created_user:
   action: create
   module_name: user_management
@@ -62,3 +18,66 @@ superadmin_created_user:
   ip_address: 127.0.0.1
   created_at: <%= Time.current - 3.days %>
   updated_at: <%= Time.current - 3.days %>
+
+superadmin_created_company:
+  action: create
+  module_name: company_management
+  auditable_type: Company
+  auditable_id: 1
+  user: superadmin
+  user_name: Super Admin User
+  summary: Created company by superadmin
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 2.days %>
+  updated_at: <%= Time.current - 2.days %>
+
+# Audit logs created by client_acme_john
+client_john_viewed_dashboard:
+  action: view
+  module_name: bi_dashboards
+  auditable_type: Dashboard
+  auditable_id: 1
+  user: client_acme_john
+  user_name: John Doe
+  summary: Viewed dashboard by John Doe
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 1.hour %>
+  updated_at: <%= Time.current - 1.hour %>
+
+client_john_viewed_project:
+  action: view
+  module_name: projects
+  auditable_type: Project
+  auditable_id: 1
+  user: client_acme_john
+  user_name: John Doe
+  summary: Viewed project by John Doe
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 30.minutes %>
+  updated_at: <%= Time.current - 30.minutes %>
+
+# Audit logs created by client_acme_jane
+client_jane_viewed_dashboard:
+  action: view
+  module_name: bi_dashboards
+  auditable_type: Dashboard
+  auditable_id: 2
+  user: client_acme_jane
+  user_name: Jane Smith
+  summary: Viewed dashboard by Jane Smith
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 2.hours %>
+  updated_at: <%= Time.current - 2.hours %>
+
+# Audit logs created by client_dataflow_alice
+client_alice_viewed_dashboard:
+  action: view
+  module_name: bi_dashboards
+  auditable_type: Dashboard
+  auditable_id: 3
+  user: client_dataflow_alice
+  user_name: Alice Chen
+  summary: Viewed dashboard by Alice Chen
+  ip_address: 127.0.0.1
+  created_at: <%= Time.current - 1.day %>
+  updated_at: <%= Time.current - 1.day %>

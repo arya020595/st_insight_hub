@@ -1,48 +1,35 @@
-# frozen_string_literal: true
-
 class ProjectPolicy < ApplicationPolicy
-  # Admin can only show/edit/destroy their own projects
+  # READ: View specific project details
+  # Users can only view projects they're assigned to (unless superadmin)
   def show?
-    return true if user.superadmin?
     return false unless user.has_permission?(build_permission_code("show"))
 
-    user_owns_project?
-  end
-
-  def update?
-    return true if user.superadmin?
-    return false unless user.has_permission?(build_permission_code("update"))
-
-    user_owns_project?
-  end
-
-  def destroy?
-    return true if user.superadmin?
-    return false unless user.has_permission?(build_permission_code("destroy"))
-
-    user_owns_project?
+    # Superadmin sees all, others only see assigned projects
+    user.superadmin? || user_assigned_to_project?
   end
 
   private
 
   def permission_resource
-    "bi_dashboards.projects"
+    "projects"
   end
 
-  def user_owns_project?
-    record.created_by_id == user.id
+  def user_assigned_to_project?
+    user.dashboards.where(project: record).exists?
   end
 
   class Scope < ApplicationPolicy::Scope
     private
 
-    def apply_role_based_scope
-      # Admin can only see projects they own (created_by)
-      scope.where(created_by_id: user.id)
+    def permission_resource
+      "projects"
     end
 
-    def permission_resource
-      "bi_dashboards.projects"
+    def apply_role_based_scope
+      # Client users can only see projects they're assigned to
+      scope.joins(dashboards: :users)
+           .where(users: { id: user.id })
+           .distinct
     end
   end
 end

@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 class BiDashboardPolicy < ApplicationPolicy
-  def index?
-    user.has_permission?("bi_dashboards.index")
-  end
+  # Inherit index? from ApplicationPolicy
+  # Automatically checks superadmin and permissions
 
   # Check if user can access a specific dashboard
   def show?
-    return true if user.superadmin?
-    return false unless user.has_permission?(build_permission_code("index"))
+    return false unless user.has_permission?(build_permission_code("show"))
 
-    # Non-superadmin users can only access dashboards from projects they own
-    record.project.created_by_id == user.id
+    # Superadmin sees all, others only see dashboards they're assigned to
+    user.superadmin? || user.dashboards.exists?(id: record.id)
   end
 
   private
@@ -27,15 +25,15 @@ class BiDashboardPolicy < ApplicationPolicy
       "bi_dashboards"
     end
 
-    # Non-superadmin users only see projects they own or dashboards from projects they own
+    # Client users only see dashboards they're assigned to
     def apply_role_based_scope
       case scope.model_name.name
       when "Project"
-        # Filter projects by owner
-        scope.where(created_by_id: user.id)
+        # Filter projects that have dashboards assigned to the user
+        scope.joins(dashboards: :users).where(dashboards_users: { user_id: user.id }).distinct
       when "Dashboard"
-        # Filter dashboards by project owner
-        scope.joins(:project).where(projects: { created_by_id: user.id })
+        # Filter dashboards by user assignment
+        scope.joins(:users).where(dashboards_users: { user_id: user.id })
       else
         # Fallback: return empty relation for unsupported models
         scope.none

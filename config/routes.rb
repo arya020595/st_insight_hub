@@ -37,6 +37,16 @@ Rails.application.routes.draw do
     end
   end
 
+  # Company Management
+  resources :companies, concerns: :restorable do
+    member do
+      get :confirm_delete
+      get :assign_users
+      patch :update_users
+      delete :remove_user
+    end
+  end
+
   # User Management Namespace
   namespace :user_management do
     resources :users, concerns: :restorable do

@@ -1,0 +1,101 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="bi bi-person-plus-fill me-2"></i>
+      <strong>Assign Users to <%= @company.name %></strong>
+    </h5>
+    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <%= form_with model: @company, url: update_users_company_path(@company), method: :patch, html: { class: 'assign-users-form' }, data: { turbo_frame: "_top" } do |f| %>
+    <div class="modal-body">
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Note:</strong> When you change a user's company, they will automatically be removed from all projects in their previous company.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <div class="card">
+            <div class="card-header">
+              <h6><i class="bi bi-people-fill me-2"></i>Currently Assigned (<%= @assigned_users.count %>)</h6>
+            </div>
+            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+              <% if @assigned_users.any? %>
+                <div class="list-group">
+                  <% @assigned_users.each do |user| %>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong><%= user.name %></strong><br>
+                        <small class="text-muted"><%= user.email %></small><br>
+                        <span class="badge bg-secondary mt-1"><%= user.role&.name %></span>
+                      </div>
+                      <div class="form-check">
+                        <%= f.check_box :user_ids,
+                          { multiple: true, checked: true, class: 'form-check-input' },
+                          user.id,
+                          nil %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <p class="text-muted text-center py-4">No users currently assigned</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="card">
+            <div class="card-header">
+              <h6><i class="bi bi-person-plus me-2"></i>Available Users (<%= @available_users.count %>)</h6>
+            </div>
+            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+              <% if @available_users.any? %>
+                <div class="list-group">
+                  <% @available_users.each do |user| %>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong><%= user.name %></strong><br>
+                        <small class="text-muted"><%= user.email %></small><br>
+                        <span class="badge bg-secondary mt-1"><%= user.role&.name %></span>
+                        <% if user.company.present? %>
+                          <br>
+                          <small class="text-warning"><i class="bi bi-exclamation-triangle me-1"></i>Currently in: <%= user.company.name %></small>
+                        <% end %>
+                      </div>
+                      <div class="form-check">
+                        <%= f.check_box :user_ids,
+                          { multiple: true, class: 'form-check-input' },
+                          user.id,
+                          nil %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <p class="text-muted text-center py-4">No available users</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <small class="text-muted">
+            <i class="bi bi-lightbulb me-1"></i>
+            <strong>Tip:</strong> Check users on the left to keep them assigned, or check users on the right to assign them to this company.
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <%= link_to company_path(@company), class: "btn btn-secondary", **modal_link_data(size: 'modal-xl') do %>
+        Back
+      <% end %>
+      <%= f.submit "Save User Assignments", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+<% end %>

@@ -8,20 +8,12 @@
   <%= form_with model: @project, html: { class: 'project-form' }, data: { turbo_frame: "_top" } do |f| %>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-12 mb-3">
           <%= f.label :name, 'Project Name *', class: 'form-label' %>
           <%= f.text_field :name, class: "form-control #{'is-invalid' if @project.errors[:name].any?}", placeholder: 'Enter project name', required: true %>
           <% if @project.errors[:name].any? %>
             <div class="invalid-feedback"><%= @project.errors[:name].first %></div>
           <% end %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :code, 'Project Code *', class: 'form-label' %>
-          <%= f.text_field :code, class: "form-control #{'is-invalid' if @project.errors[:code].any?}", placeholder: 'e.g., PROJ_001', required: true %>
-          <% if @project.errors[:code].any? %>
-            <div class="invalid-feedback"><%= @project.errors[:code].first %></div>
-          <% end %>
-          <div class="form-text">Unique identifier for this project</div>
         </div>
       </div>
       <div class="row">
@@ -44,7 +36,7 @@
           <% if @project.errors[:icon].any? %>
             <div class="invalid-feedback"><%= @project.errors[:icon].first %></div>
           <% end %>
-          <div class="form-text">Bootstrap Icons class name (e.g., bi-folder, bi-graph-up)</div>
+          <div class="form-text">Icon class name (e.g., bi-folder, bi-graph-up). Browse icons at <%= link_to 'Bootstrap Icons', 'https://icons.getbootstrap.com/', target: '_blank', rel: 'noopener' %></div>
         </div>
       </div>
       <div class="row">
@@ -63,25 +55,25 @@
       <% if current_user.superadmin? %>
         <div class="row">
           <div class="col-md-12 mb-3">
-            <%= f.label :created_by_id, 'Owner (Admin)', class: 'form-label' %>
+            <%= f.label :company_id, 'Company', class: 'form-label' %>
             <span class="text-danger">*</span>
-            <%= f.select :created_by_id,
+            <%= f.select :company_id,
                 options_from_collection_for_select(
-                  User.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name),
+                  Company.kept.active.order(:name),
                   :id,
                   :name,
-                  @project.created_by_id
+                  @project.company_id
                 ),
-                { include_blank: '-- Select Owner --' },
+                { include_blank: '-- Select Company --' },
                 {
-                  class: "form-select #{'is-invalid' if @project.errors[:created_by].any?}",
+                  class: "form-select #{'is-invalid' if @project.errors[:company].any?}",
                   required: true
                 }
             %>
-            <% if @project.errors[:created_by].any? %>
-              <div class="invalid-feedback"><%= @project.errors[:created_by].first %></div>
+            <% if @project.errors[:company].any? %>
+              <div class="invalid-feedback"><%= @project.errors[:company].first %></div>
             <% end %>
-            <div class="form-text">Select the admin user who owns this project. Project code must be unique per owner.</div>
+            <div class="form-text">Select the company for this project.</div>
           </div>
         </div>
       <% end %>

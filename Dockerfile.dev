@@ -39,6 +39,9 @@ RUN bundle install
 # Copy the rest of the application
 COPY . .
 
+# Set entrypoint to handle bundle install and server.pid cleanup
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
 # Expose port 3000
 EXPOSE 3000
 

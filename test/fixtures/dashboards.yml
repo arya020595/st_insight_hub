@@ -1,12 +1,29 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-active_dashboard:
+# ============================================================================
+# DASHBOARDS - Based on Business Rules:
+# - Each project contains multiple dashboards
+# - When user has access to a project, they can view ALL dashboards under it
+# ============================================================================
+
+# Sales Analytics Project (active_project) - Acme Corp
+sales_overview_dashboard:
   project: active_project
-  name: Active Dashboard
-  embed_url: https://example.com/dashboard/active
+  name: Sales Overview
+  embed_url: https://example.com/embed/sales-overview
   embed_type: iframe
   status: active
   position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+revenue_breakdown_dashboard:
+  project: active_project
+  name: Revenue Breakdown
+  embed_url: https://example.com/embed/revenue
+  embed_type: iframe
+  status: active
+  position: 2
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
@@ -16,7 +33,7 @@ inactive_dashboard:
   embed_url: https://example.com/dashboard/inactive
   embed_type: iframe
   status: inactive
-  position: 2
+  position: 3
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
@@ -26,15 +43,38 @@ discarded_dashboard:
   embed_url: https://example.com/dashboard/discarded
   embed_type: iframe
   status: active
-  position: 3
+  position: 4
   discarded_at: <%= Time.current - 1.day %>
   created_at: <%= Time.current - 2.days %>
   updated_at: <%= Time.current - 1.day %>
 
+# Marketing Insights Project - Acme Corp
+campaign_dashboard:
+  project: marketing_project
+  name: Campaign Performance
+  embed_url: https://example.com/embed/campaigns
+  embed_type: iframe
+  status: active
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Inactive Project - Dashboard
 dashboard_of_inactive_project:
   project: inactive_project
   name: Dashboard of Inactive Project
   embed_url: https://example.com/dashboard/inactive_project
+  embed_type: iframe
+  status: active
+  position: 1
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# DataFlow Solutions - Customer Insights Project
+customer_analytics_dashboard:
+  project: dataflow_project
+  name: Customer Analytics
+  embed_url: https://example.com/embed/customer-analytics
   embed_type: iframe
   status: active
   position: 1

@@ -91,8 +91,8 @@ module ApplicationHelper
   # via +includes(:dashboards)+ to avoid N+1 queries when iterating over projects and
   # accessing their dashboards.
   #
-  # For non-superadmin users, only projects they own (created_by) are returned.
-  # Superadmin users bypass this restriction (but they don't see the BI Dashboard menu anyway).
+  # For non-superadmin users, only projects they are assigned to are returned.
+  # Superadmin users see all projects (but they don't see the BI Dashboard menu anyway).
   #
   # NOTE: This method only eager loads dashboards for the base scope defined here. If you
   # chain additional scopes on the returned relation in views or partials (for example
@@ -112,9 +112,9 @@ module ApplicationHelper
     @sidebar_projects ||= begin
       base_scope = Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
 
-      # Non-superadmin users only see projects they own (created_by)
+      # Non-superadmin users only see projects that have dashboards they are assigned to
       if current_user && !current_user.superadmin?
-        base_scope.where(created_by_id: current_user.id)
+        base_scope.joins(dashboards: :users).where(dashboards_users: { user_id: current_user.id }).distinct
       else
         base_scope
       end

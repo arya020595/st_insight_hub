@@ -1,0 +1,67 @@
+# Join table for dashboards and users (has_and_belongs_to_many)
+
+# ============================================================================
+# DASHBOARD-USER ASSIGNMENTS - Based on Business Rules:
+# - Superadmin has access to all dashboards (bypasses checks)
+# - Client users only see dashboards they are explicitly assigned to
+# - Users can only be assigned to dashboards from their company's projects
+# ============================================================================
+
+# Acme Corporation: Sales Analytics Project - Sales Overview Dashboard
+# Assigned to: John Doe (client_acme_john)
+john_sales_overview:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:sales_overview_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_john) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+john_revenue_breakdown:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:revenue_breakdown_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_john) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Acme Corporation: Marketing Insights Project - Campaign Dashboard
+# Assigned to: John Doe, Jane Smith
+john_campaign:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:campaign_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_john) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+jane_campaign:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:campaign_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_jane) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# DataFlow Solutions: Customer Insights Project - Customer Analytics Dashboard
+# Assigned to: Alice Chen, Mike Johnson
+alice_customer_analytics:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:customer_analytics_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_dataflow_alice) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+mike_customer_analytics:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:customer_analytics_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_dataflow_mike) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Inactive dashboard assignment for testing
+john_inactive_dashboard:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:inactive_dashboard) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_john) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Dashboard from inactive project assignment
+john_dashboard_inactive_project:
+  dashboard_id: <%= ActiveRecord::FixtureSet.identify(:dashboard_of_inactive_project) %>
+  user_id: <%= ActiveRecord::FixtureSet.identify(:client_acme_john) %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# NOTE: Jane Smith (client_acme_jane) is NOT assigned to Sales dashboards
+# This tests that unassigned dashboards are not accessible

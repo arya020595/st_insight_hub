@@ -3,16 +3,20 @@
 class Project < ApplicationRecord
   include Discard::Model
 
+  # Ignore removed columns
+  self.ignored_columns += [ "code" ]
+
   # Relationships
-  belongs_to :created_by, class_name: "User", optional: true
+  belongs_to :company, counter_cache: true
   has_many :dashboards, dependent: :destroy
 
   # Validations
   validates :name, presence: true
-  # Ensure project code is unique per creator among non-discarded (kept) records
-  validates :code, presence: true, uniqueness: { scope: :created_by_id, conditions: -> { kept } }
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
-  validates :icon, format: { with: /\Abi-[\w-]+\z/, allow_blank: true, message: "must be a valid Bootstrap Icons class (e.g., bi-folder, bi-graph-up)" }
+
+  # Update counter cache when project is discarded/undiscarded
+  after_discard :decrement_company_projects_count
+  after_undiscard :increment_company_projects_count
 
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }
@@ -21,11 +25,11 @@ class Project < ApplicationRecord
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id name code description status icon show_in_sidebar sidebar_position created_at updated_at]
+    %w[id name description status icon show_in_sidebar sidebar_position company_id created_at updated_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[dashboards]
+    %w[dashboards company]
   end
 
   def active?
@@ -34,5 +38,17 @@ class Project < ApplicationRecord
 
   def dashboards_count
     dashboards.kept.count
+  end
+
+  private
+
+  # Decrement company projects_count when project is discarded
+  def decrement_company_projects_count
+    company&.decrement!(:projects_count)
+  end
+
+  # Increment company projects_count when project is undiscarded
+  def increment_company_projects_count
+    company&.increment!(:projects_count)
   end
 end

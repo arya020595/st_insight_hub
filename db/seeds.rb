@@ -27,36 +27,52 @@ puts "\n🔐 Creating permissions..."
 puts '─' * 80
 
 permission_definitions = [
-  # Dashboard
-  { code: 'dashboard.index', name: 'View Dashboard', resource: 'dashboard', section: 'Dashboard' },
+  # ============================================================================
+  # 1. DASHBOARD - Main dashboard page (dashboard_controller.rb)
+  # ============================================================================
+  { code: 'dashboard.index', name: 'View', resource: 'dashboard', section: 'Dashboard' },
 
-  # BI Dashboards
-  { code: 'bi_dashboards.index', name: 'View BI Dashboards', resource: 'bi_dashboards', section: 'BI Dashboards' },
+  # ============================================================================
+  # 2. PROJECT MANAGEMENT - Projects and BI Dashboards (projects_controller.rb, bi_dashboards_controller.rb)
+  # ============================================================================
+  # Projects
+  { code: 'projects.index', name: 'List', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.show', name: 'View', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.create', name: 'Create', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.update', name: 'Update', resource: 'projects', section: 'Project Management' },
+  { code: 'projects.destroy', name: 'Delete', resource: 'projects', section: 'Project Management' },
 
-  # Projects (Dashboard Management)
-  { code: 'bi_dashboards.projects.index', name: 'View Projects', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.show', name: 'View Project Details', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.create', name: 'Create Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.update', name: 'Update Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
-  { code: 'bi_dashboards.projects.destroy', name: 'Delete Project', resource: 'bi_dashboards.projects', section: 'Dashboard Management' },
+  # Dashboards (nested within projects)
+  { code: 'dashboards.create', name: 'Create', resource: 'dashboards', section: 'Project Management' },
+  { code: 'dashboards.update', name: 'Update', resource: 'dashboards', section: 'Project Management' },
+  { code: 'dashboards.destroy', name: 'Delete', resource: 'dashboards', section: 'Project Management' },
 
-  # User Management - Users
-  { code: 'user_management.users.index', name: 'View Users', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.show', name: 'View User Details', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.create', name: 'Create User', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.update', name: 'Update User', resource: 'user_management.users', section: 'User Management' },
-  { code: 'user_management.users.destroy', name: 'Delete User', resource: 'user_management.users', section: 'User Management' },
+  # BI Dashboards (viewing embedded dashboards in sidebar)
+  { code: 'bi_dashboards.index', name: 'List', resource: 'bi_dashboards', section: 'Project Management' },
+  { code: 'bi_dashboards.show', name: 'View', resource: 'bi_dashboards', section: 'Project Management' },
 
-  # User Management - Roles
-  { code: 'user_management.roles.index', name: 'View Roles', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.show', name: 'View Role Details', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.create', name: 'Create Role', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.update', name: 'Update Role', resource: 'user_management.roles', section: 'User Management' },
-  { code: 'user_management.roles.destroy', name: 'Delete Role', resource: 'user_management.roles', section: 'User Management' },
+  # ============================================================================
+  # 3. USER MANAGEMENT - Users and Roles (user_management/users_controller.rb, user_management/roles_controller.rb)
+  # ============================================================================
+  # Users
+  { code: 'user_management.users.index', name: 'List', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.show', name: 'View', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.create', name: 'Create', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.update', name: 'Update', resource: 'user_management.users', section: 'User Management' },
+  { code: 'user_management.users.destroy', name: 'Delete', resource: 'user_management.users', section: 'User Management' },
 
-  # Audit Logs
-  { code: 'audit_logs.index', name: 'View Audit Logs', resource: 'audit_logs', section: 'Audit Logs' },
-  { code: 'audit_logs.show', name: 'View Audit Log Details', resource: 'audit_logs', section: 'Audit Logs' }
+  # Roles
+  { code: 'user_management.roles.index', name: 'List', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.show', name: 'View', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.create', name: 'Create', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.update', name: 'Update', resource: 'user_management.roles', section: 'User Management' },
+  { code: 'user_management.roles.destroy', name: 'Delete', resource: 'user_management.roles', section: 'User Management' },
+
+  # ============================================================================
+  # 4. AUDIT LOGS - Activity tracking (audit_logs_controller.rb)
+  # ============================================================================
+  { code: 'audit_logs.index', name: 'List', resource: 'audit_logs', section: 'Audit Logs' },
+  { code: 'audit_logs.show', name: 'View', resource: 'audit_logs', section: 'Audit Logs' }
 ]
 
 permission_definitions.each do |attrs|
@@ -82,22 +98,46 @@ end
 # Note: Superadmin bypasses permission checks, but assign all for visibility
 superadmin.permissions = Permission.all
 
-# Admin role - Client users (each admin represents a company)
-admin = Role.find_or_create_by!(name: 'Admin') do |role|
-  role.description = 'Client company access - can only see assigned projects and dashboards'
+# Client role - Client users (read-only access to assigned projects)
+client = Role.find_or_create_by!(name: 'Client') do |role|
+  role.description = 'Client company users - read-only access to assigned projects and dashboards'
 end
-admin_permissions = Permission.where(code: [
+# Client has List and View permissions (including their own audit logs)
+client_permissions = Permission.where(code: [
                                        'dashboard.index',
+                                       'projects.index',
+                                       'projects.show',
                                        'bi_dashboards.index',
-                                       'bi_dashboards.projects.index',
-                                       'bi_dashboards.projects.show',
-                                       'bi_dashboards.projects.create',
-                                       'bi_dashboards.projects.update',
-                                       'bi_dashboards.projects.destroy'
+                                       'bi_dashboards.show',
+                                       'audit_logs.index',
+                                       'audit_logs.show'
                                      ])
-admin.permissions = admin_permissions
+client.permissions = client_permissions
 
 puts "✓ Created #{Role.count} roles"
+
+# ============================================================================
+# COMPANIES
+# ============================================================================
+puts "\n🏢 Creating companies..."
+puts '─' * 80
+
+company_a = Company.find_or_create_by!(name: 'Acme Corporation') do |company|
+  company.description = 'Global technology solutions provider'
+  company.status = 'active'
+end
+
+company_b = Company.find_or_create_by!(name: 'TechVision Inc') do |company|
+  company.description = 'Innovative software development company'
+  company.status = 'active'
+end
+
+company_c = Company.find_or_create_by!(name: 'DataFlow Solutions') do |company|
+  company.description = 'Data analytics and business intelligence'
+  company.status = 'active'
+end
+
+puts "✓ Created #{Company.count} companies"
 
 # ============================================================================
 # USERS
@@ -105,34 +145,80 @@ puts "✓ Created #{Role.count} roles"
 puts "\n👤 Creating users..."
 puts '─' * 80
 
-# Superadmin - Development team
+# Superadmin - Development team (no company)
 superadmin_user = User.find_or_create_by!(email: 'superadmin@example.com') do |user|
   user.name = 'Super Admin'
   user.password = 'password123'
   user.password_confirmation = 'password123'
   user.role = superadmin
+  user.company = nil
 end
 
-# Admin users - Each represents a company/client
-admin_company_a = User.find_or_create_by!(email: 'admin.company.a@example.com') do |user|
-  user.name = 'Company A Admin'
+# Company A - Client users
+client_a1 = User.find_or_create_by!(email: 'john.doe@acme.com') do |user|
+  user.name = 'John Doe'
   user.password = 'password123'
   user.password_confirmation = 'password123'
-  user.role = admin
+  user.role = client
+  user.company = company_a
 end
 
-admin_company_b = User.find_or_create_by!(email: 'admin.company.b@example.com') do |user|
-  user.name = 'Company B Admin'
+client_a2 = User.find_or_create_by!(email: 'jane.smith@acme.com') do |user|
+  user.name = 'Jane Smith'
   user.password = 'password123'
   user.password_confirmation = 'password123'
-  user.role = admin
+  user.role = client
+  user.company = company_a
 end
 
-admin_company_c = User.find_or_create_by!(email: 'admin.company.c@example.com') do |user|
-  user.name = 'Company C Admin'
+client_a3 = User.find_or_create_by!(email: 'bob.wilson@acme.com') do |user|
+  user.name = 'Bob Wilson'
   user.password = 'password123'
   user.password_confirmation = 'password123'
-  user.role = admin
+  user.role = client
+  user.company = company_a
+end
+
+# Company B - Client users
+client_b1 = User.find_or_create_by!(email: 'alice.chen@techvision.com') do |user|
+  user.name = 'Alice Chen'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = client
+  user.company = company_b
+end
+
+client_b2 = User.find_or_create_by!(email: 'mike.johnson@techvision.com') do |user|
+  user.name = 'Mike Johnson'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = client
+  user.company = company_b
+end
+
+# Company C - Client users
+client_c1 = User.find_or_create_by!(email: 'sarah.williams@dataflow.com') do |user|
+  user.name = 'Sarah Williams'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = client
+  user.company = company_c
+end
+
+client_c2 = User.find_or_create_by!(email: 'david.brown@dataflow.com') do |user|
+  user.name = 'David Brown'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = client
+  user.company = company_c
+end
+
+client_c3 = User.find_or_create_by!(email: 'emma.davis@dataflow.com') do |user|
+  user.name = 'Emma Davis'
+  user.password = 'password123'
+  user.password_confirmation = 'password123'
+  user.role = client
+  user.company = company_c
 end
 
 puts "✓ Created #{User.count} users"
@@ -146,90 +232,78 @@ puts '─' * 80
 project_configs = [
   {
     name: 'Sales Analytics',
-    code: 'SALES_ANALYTICS',
     description: 'Sales performance and revenue analytics dashboards',
     icon: 'bi-graph-up',
     status: 'active',
-    owner: admin_company_a,
+    company: company_a,
     dashboards: [
-      { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active' },
-      { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active' }
+      { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a2 ] },
+      { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a2 ] }
     ]
   },
   {
     name: 'Marketing Insights',
-    code: 'MARKETING_INSIGHTS',
     description: 'Marketing campaign performance dashboards',
     icon: 'bi-megaphone',
     status: 'active',
-    owner: admin_company_a,
+    company: company_a,
     dashboards: [
-      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' },
-      { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active' }
-    ]
-  },
-  {
-    name: 'Marketing Insights B',
-    code: 'MARKETING_INSIGHTS_B',
-    description: 'Marketing campaign performance dashboards for Company B',
-    icon: 'bi-megaphone',
-    status: 'active',
-    owner: admin_company_b,
-    dashboards: [
-      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns-b', embed_type: 'iframe', status: 'active' }
+      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a3 ] },
+      { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a3 ] }
     ]
   },
   {
     name: 'Operations Dashboard',
-    code: 'OPERATIONS',
     description: 'Operational metrics and KPIs',
     icon: 'bi-gear',
     status: 'active',
-    owner: admin_company_b,
+    company: company_b,
     dashboards: [
-      { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active' }
+      { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active', users: [ client_b1, client_b2 ] },
+      { name: 'Productivity Metrics', embed_url: 'https://example.com/embed/productivity', embed_type: 'iframe', status: 'active', users: [ client_b1, client_b2 ] }
     ]
   },
   {
     name: 'Customer Insights',
-    code: 'CUSTOMER_INSIGHTS',
     description: 'Customer behavior and satisfaction analytics',
     icon: 'bi-people',
     status: 'active',
-    owner: admin_company_c,
+    company: company_c,
     dashboards: [
-      { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active' },
-      { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active' }
+      { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2, client_c3 ] },
+      { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2, client_c3 ] }
     ]
   },
   {
     name: 'Financial Reports',
-    code: 'FINANCIAL_REPORTS',
     description: 'Financial performance and budget tracking',
     icon: 'bi-currency-dollar',
     status: 'active',
-    owner: admin_company_c,
+    company: company_c,
     dashboards: [
-      { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active' }
+      { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2 ] },
+      { name: 'Expense Tracking', embed_url: 'https://example.com/embed/expenses', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2 ] }
     ]
   }
 ]
 
 project_configs.each do |config|
-  project = Project.find_or_create_by!(code: config[:code], created_by_id: config[:owner].id) do |p|
-    p.name = config[:name]
+  project = Project.find_or_create_by!(name: config[:name], company_id: config[:company].id) do |p|
     p.description = config[:description]
     p.icon = config[:icon]
     p.status = config[:status]
   end
 
   config[:dashboards].each_with_index do |dash_config, index|
-    project.dashboards.find_or_create_by!(name: dash_config[:name]) do |d|
+    dashboard = project.dashboards.find_or_create_by!(name: dash_config[:name]) do |d|
       d.embed_url = dash_config[:embed_url]
       d.embed_type = dash_config[:embed_type]
       d.status = dash_config[:status]
       d.position = index
     end
+
+    # Assign users to dashboard
+    dashboard.users = dash_config[:users] if dash_config[:users].present?
   end
 end
 
@@ -244,16 +318,21 @@ puts "\n📋 Summary:"
 puts '─' * 80
 puts "\n👔 Roles: #{Role.count}"
 puts "   - Superadmin: Full system access (development team)"
-puts "   - Admin: Client company access (scoped to owned projects)"
+puts "   - Client: Read-only access to assigned projects"
+puts "\n🏢 Companies: #{Company.count}"
+Company.all.each do |company|
+  puts "   - #{company.name}: #{company.users.count} users, #{company.projects.count} projects"
+end
 puts "\n👤 Users: #{User.count}"
 puts "   - 1 Superadmin"
-puts "   - #{User.joins(:role).where(roles: { name: 'Admin' }).count} Admin users (representing companies)"
+puts "   - #{User.joins(:role).where(roles: { name: 'Client' }).count} Client users"
 puts "\n📊 Projects: #{Project.count} with #{Dashboard.count} dashboards"
-puts "\n🔗 Project Owners:"
+puts "\n🔗 Dashboard Assignments:"
 
-Project.includes(:created_by).each do |project|
-  owner = project.created_by&.name || 'No owner'
-  puts "   - #{project.name}: #{owner}"
+Dashboard.includes(:project, :users).each do |dashboard|
+  project_name = dashboard.project&.name || 'No project'
+  user_names = dashboard.users.any? ? dashboard.users.pluck(:name).join(', ') : 'No users assigned'
+  puts "   - #{dashboard.name} (#{project_name}): #{user_names}"
 end
 
 puts "\n" + '─' * 80
@@ -263,15 +342,18 @@ puts "\n  SUPERADMIN (Development Team - Full Access):"
 puts '  📧 Email: superadmin@example.com'
 puts '  🔑 Password: password123'
 puts ''
-puts '  ADMIN - COMPANY A (Sales Analytics, Marketing Insights):'
-puts '  📧 Email: admin.company.a@example.com'
+puts '  CLIENT - Acme Corporation:'
+puts '  📧 Email: john.doe@acme.com, jane.smith@acme.com, bob.wilson@acme.com'
 puts '  🔑 Password: password123'
+puts '  Projects: Sales Analytics, Marketing Insights'
 puts ''
-puts '  ADMIN - COMPANY B (Marketing Insights, Operations Dashboard):'
-puts '  📧 Email: admin.company.b@example.com'
+puts '  CLIENT - TechVision Inc:'
+puts '  📧 Email: alice.chen@techvision.com, mike.johnson@techvision.com'
 puts '  🔑 Password: password123'
+puts '  Projects: Operations Dashboard'
 puts ''
-puts '  ADMIN - COMPANY C (Customer Insights, Financial Reports):'
-puts '  📧 Email: admin.company.c@example.com'
+puts '  CLIENT - DataFlow Solutions:'
+puts '  📧 Email: sarah.williams@dataflow.com, david.brown@dataflow.com, emma.davis@dataflow.com'
 puts '  🔑 Password: password123'
+puts '  Projects: Customer Insights, Financial Reports'
 puts '─' * 80

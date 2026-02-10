@@ -30,6 +30,9 @@
                     <%= sort_link(@q, :role_id, 'Role') %>
                   </th>
                   <th class="text-center">
+                    <%= sort_link(@q, :company_id, 'Company') %>
+                  </th>
+                  <th class="text-center">
                     <%= sort_link(@q, :current_sign_in_at, 'Last Sign In') %>
                   </th>
                   <th class="text-center">
@@ -61,6 +64,13 @@
                       { class: 'form-select form-select-sm',
                       data: { action: "input->search-form#instantSubmit" } } %>
                   </th>
+                  <th>
+                    <%= f.select :company_id_eq,
+                      options_from_collection_for_select(Company.kept, :id, :name, f.object.company_id_eq),
+                      { include_blank: 'Select Company..' },
+                      { class: 'form-select form-select-sm',
+                      data: { action: "input->search-form#instantSubmit" } } %>
+                  </th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -71,7 +81,7 @@
                   <%= render partial: 'user_row', collection: @users, as: :user %>
                 <% else %>
                   <tr>
-                    <td colspan="8" class="text-center text-muted py-4">
+                    <td colspan="9" class="text-center text-muted py-4">
                       No users found.
                       <% if record_policy(User.new, UserManagement::UserPolicy).new? %>
                         <%= link_to 'Add a new user', new_user_management_user_path, class: 'text-decoration-none' %>

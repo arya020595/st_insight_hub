@@ -58,6 +58,26 @@
           <div class="form-text">Lower numbers appear first</div>
         </div>
       </div>
+      <% if current_user.superadmin? %>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <%= f.label :user_ids, 'Assign Users (Client)', class: 'form-label' %>
+            <%= f.select :user_ids,
+                options_for_select(
+                  @project.company.present? ? @project.company.users.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name).pluck(:name, :id) : [],
+                  @dashboard.user_ids
+                ),
+                {},
+                {
+                  class: "form-select",
+                  multiple: true,
+                  size: 5
+                }
+            %>
+            <div class="form-text">Hold Ctrl/Cmd to select multiple users. Only users from the project's company are shown.</div>
+          </div>
+        </div>
+      <% end %>
     </div>
     <div class="modal-footer">
       <%= link_to project_path(@project), class: "btn btn-secondary" do %>

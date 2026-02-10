@@ -1,5 +1,14 @@
 #!/bin/bash -e
 
+# Remove any existing server.pid file
+if [ -f tmp/pids/server.pid ]; then
+  rm tmp/pids/server.pid
+fi
+
+# Install missing gems automatically
+echo "Checking for missing gems..."
+bundle check || bundle install --jobs 4 --retry 3
+
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare

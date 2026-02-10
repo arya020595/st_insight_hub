@@ -19,7 +19,7 @@ docker compose exec web rails db:seed
 
 # 5. Open your browser
 # Visit: http://localhost:3000
-# Login: admin@example.com / password123
+# Login: superadmin@example.com / password123
 ```
 
 ## Daily Workflow
@@ -56,7 +56,8 @@ docker compose exec web rails generate migration AddColumnToUsers
 docker compose exec web rails routes
 
 # Install new gems (after updating Gemfile)
-docker compose exec web bundle install
+# Just restart - gems install automatically!
+docker compose restart web
 
 # Open bash terminal
 docker compose exec web bash
@@ -124,40 +125,28 @@ docker compose exec db psql -U postgres -c "SELECT version();"
 
 This happens when someone added a new gem and you pulled their changes.
 
-**Solution: Just restart the container** 🎉
+**Solution: Just run `docker compose up -d`** 🎉
 
 ```bash
-# The entrypoint automatically runs bundle install on startup
-docker compose restart web
-
-# Or if you want to see the bundle install output:
-docker compose down
+# Gems install automatically on container startup!
 docker compose up -d
+
+# Watch the installation progress (optional)
 docker compose logs -f web
 ```
 
 **How this works:**
 
-- Your `docker-compose.yml` uses a persistent `bundle_cache` volume
-- Gems are stored in this volume, not in the image
-- The entrypoint runs `bundle check || bundle install` on every startup
+- The Docker entrypoint automatically runs `bundle check || bundle install` on every startup
+- Your `docker-compose.yml` uses a persistent `bundle_cache` volume to store gems
 - New gems are installed automatically without rebuilding!
+- The server starts automatically after gem installation completes
 
-**If container is stuck restarting:**
+**If you see gems being installed:**
 
-```bash
-# Check logs first to see the error
-docker compose logs web
-
-# Force restart
-docker compose down
-docker compose up -d
-```
-
-**Prevention for team:**
-When you add a new gem, mention in PR/commit message:
-
-> "Added new gem - teammates need to restart: `docker compose restart web`"
+- This is normal! Just wait ~1-2 minutes for installation to complete
+- The Rails server will start automatically when done
+- You can watch progress with `docker compose logs -f web`
 
 ### Reset everything?
 
@@ -183,6 +172,7 @@ docker compose logs db
 ```
 
 Common issues:
+
 - **Port conflicts**: Stop local PostgreSQL service
 - **Database errors**: Run `docker compose restart web`
 - **Code not updating**: Check volume mounts in docker-compose.yml

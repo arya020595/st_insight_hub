@@ -24,8 +24,6 @@
             <dl class="row mb-0">
               <dt class="col-sm-4 text-muted">Project Name:</dt>
               <dd class="col-sm-8 fw-semibold"><%= @project.name %></dd>
-              <dt class="col-sm-4 text-muted">Project Code:</dt>
-              <dd class="col-sm-8"><code><%= @project.code %></code></dd>
               <dt class="col-sm-4 text-muted">Description:</dt>
               <dd class="col-sm-8">
                 <%= @project.description.presence || content_tag(:span, 'No description', class: 'text-muted') %>
@@ -38,13 +36,12 @@
               </dd>
               <dt class="col-sm-4 text-muted">Dashboards Count:</dt>
               <dd class="col-sm-8"><span class="badge bg-info"><%= @project.dashboards_count %></span></dd>
-              <dt class="col-sm-4 text-muted">Created By:</dt>
+              <dt class="col-sm-4 text-muted">Company:</dt>
               <dd class="col-sm-8">
-                <% if @project.created_by.present? %>
-                  <i class="bi bi-person-circle me-1"></i><%= @project.created_by.name %>
-                  <span class="text-muted">(<%= @project.created_by.email %>)</span>
+                <% if @project.company.present? %>
+                  <i class="bi bi-building me-1"></i><%= @project.company.name %>
                 <% else %>
-                  <span class="text-muted">System</span>
+                  <span class="text-muted">No company assigned</span>
                 <% end %>
               </dd>
               <dt class="col-sm-4 text-muted">Created At:</dt>

@@ -1,33 +1,82 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-bi_dashboard_index:
-  name: View BI Dashboards
-  code: bi_dashboards.index
-  resource: bi_dashboards
-  section: bi_dashboards
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
+# ============================================================================
+# PERMISSIONS - 4 Main Sections:
+# 1. Dashboard - main dashboard page
+# 2. Project Management - projects, dashboards, bi_dashboards
+# 3. User Management - users and roles
+# 4. Audit Logs - activity tracking
+#
+# Client role: List (index) and View (show) only
+# ============================================================================
 
-audit_logs_index:
-  name: View Audit Logs
-  code: audit_logs.index
-  resource: audit_logs
-  section: audit_logs
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
-audit_logs_show:
-  name: Show Audit Log
-  code: audit_logs.show
-  resource: audit_logs
-  section: audit_logs
-  created_at: <%= Time.current %>
-  updated_at: <%= Time.current %>
-
+# ============================================================================
+# 1. DASHBOARD
+# ============================================================================
 dashboard_index:
   name: View Dashboard
   code: dashboard.index
   resource: dashboard
-  section: dashboard
+  section: Dashboard
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# ============================================================================
+# 2. PROJECT MANAGEMENT
+# ============================================================================
+# Projects
+projects_index:
+  name: List Projects
+  code: projects.index
+  resource: projects
+  section: Project Management
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+projects_show:
+  name: View Project
+  code: projects.show
+  resource: projects
+  section: Project Management
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# BI Dashboards (viewing embedded dashboards)
+bi_dashboards_index:
+  name: List BI Dashboards
+  code: bi_dashboards.index
+  resource: bi_dashboards
+  section: Project Management
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+bi_dashboards_show:
+  name: View BI Dashboard
+  code: bi_dashboards.show
+  resource: bi_dashboards
+  section: Project Management
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# ============================================================================
+# 3. USER MANAGEMENT (not used in current tests)
+# ============================================================================
+
+# ============================================================================
+# 4. AUDIT LOGS
+# ============================================================================
+audit_logs_index:
+  name: List Audit Logs
+  code: audit_logs.index
+  resource: audit_logs
+  section: Audit Logs
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+audit_logs_show:
+  name: View Audit Log
+  code: audit_logs.show
+  resource: audit_logs
+  section: Audit Logs
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>

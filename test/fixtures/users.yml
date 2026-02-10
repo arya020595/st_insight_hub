@@ -1,5 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# ============================================================================
+# USERS - Based on Business Rules:
+# - Superadmin: No company (development team - full system access)
+# - Client: MUST have a company assigned
+# ============================================================================
+
+# Superadmin - Development team (no company)
 superadmin:
   email: superadmin@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
@@ -8,26 +15,40 @@ superadmin:
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-admin:
-  email: admin@example.com
+# Client users - Acme Corporation
+client_acme_john:
+  email: john.doe@acme.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
-  name: Admin User
-  role: admin_role
+  name: John Doe
+  role: client_role
+  company: acme_corp
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-viewer:
-  email: viewer@example.com
+client_acme_jane:
+  email: jane.smith@acme.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
-  name: Viewer User
-  role: viewer_role
+  name: Jane Smith
+  role: client_role
+  company: acme_corp
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
-no_permission:
-  email: noperm@example.com
+# Client users - DataFlow Solutions
+client_dataflow_alice:
+  email: alice.chen@dataflow.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
-  name: No Permission User
-  role: no_access_role
+  name: Alice Chen
+  role: client_role
+  company: dataflow_solutions
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+client_dataflow_mike:
+  email: mike.johnson@dataflow.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  name: Mike Johnson
+  role: client_role
+  company: dataflow_solutions
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>

@@ -10,7 +10,7 @@ class BiDashboardsController < ApplicationController
   end
 
   def show
-    @dashboard = Dashboard.kept.includes(project: :created_by).find(params[:id])
+    @dashboard = Dashboard.kept.includes(:project).find(params[:id])
     @project = @dashboard.project
 
     # Check project is active and visible in sidebar

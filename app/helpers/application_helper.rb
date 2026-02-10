@@ -91,8 +91,8 @@ module ApplicationHelper
   # via +includes(:dashboards)+ to avoid N+1 queries when iterating over projects and
   # accessing their dashboards.
   #
-  # For non-superadmin users, only projects they own (created_by) are returned.
-  # Superadmin users bypass this restriction (but they don't see the BI Dashboard menu anyway).
+  # For non-superadmin users, only projects they are assigned to are returned.
+  # Superadmin users see all projects (but they don't see the BI Dashboard menu anyway).
   #
   # NOTE: This method only eager loads dashboards for the base scope defined here. If you
   # chain additional scopes on the returned relation in views or partials (for example
@@ -112,9 +112,9 @@ module ApplicationHelper
     @sidebar_projects ||= begin
       base_scope = Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
 
-      # Non-superadmin users only see projects they own (created_by)
+      # Non-superadmin users only see projects that have dashboards they are assigned to
       if current_user && !current_user.superadmin?
-        base_scope.where(created_by_id: current_user.id)
+        base_scope.joins(dashboards: :users).where(dashboards_users: { user_id: current_user.id }).distinct
       else
         base_scope
       end
@@ -132,5 +132,14 @@ module ApplicationHelper
     %w[http https].include?(uri.scheme) ? url : nil
   rescue URI::InvalidURIError
     nil
+  end
+
+  # Returns the minimum password length requirement for a given model
+  # @param model [ActiveRecord::Base, Class] the model instance or class to check
+  # @return [Integer] minimum password length (defaults to 6 if not found)
+  def minimum_password_length(model = User)
+    klass = model.is_a?(Class) ? model : model.class
+    length_validator = klass.validators_on(:password).find { |v| v.is_a?(ActiveModel::Validations::LengthValidator) }
+    length_validator&.options&.dig(:minimum) || 6
   end
 end

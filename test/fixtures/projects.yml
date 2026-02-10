@@ -1,38 +1,66 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# ============================================================================
+# PROJECTS - Based on Business Rules:
+# - Each project belongs to a company
+# - Users are assigned to dashboards via dashboards_users join table
+# ============================================================================
+
+# Acme Corporation Projects
 active_project:
-  name: Active Project
-  code: PROJ_001
-  description: This is an active project
+  name: Sales Analytics
+  description: Sales performance and revenue analytics
   status: active
-  icon: bi-folder
+  icon: bi-graph-up
   show_in_sidebar: true
   sidebar_position: 1
-  created_by: admin
+  company: acme_corp
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+marketing_project:
+  name: Marketing Insights
+  description: Marketing campaign performance
+  status: active
+  icon: bi-megaphone
+  show_in_sidebar: true
+  sidebar_position: 2
+  company: acme_corp
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
 inactive_project:
   name: Inactive Project
-  code: PROJ_002
   description: This is an inactive project
   status: inactive
   icon: bi-folder-x
   show_in_sidebar: false
-  sidebar_position: 2
-  created_by: admin
+  sidebar_position: 3
+  company: acme_corp
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
 
+# DataFlow Solutions Projects
+dataflow_project:
+  name: Customer Insights
+  description: Customer analytics and insights
+  status: active
+  icon: bi-people
+  show_in_sidebar: true
+  sidebar_position: 1
+  company: dataflow_solutions
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+# Discarded project (soft-deleted)
 discarded_project:
   name: Discarded Project
-  code: PROJ_003
   description: This is a discarded project
   status: active
   icon: bi-trash
   show_in_sidebar: true
-  sidebar_position: 3
-  created_by: admin
+  sidebar_position: 99
+  company: dataflow_solutions
   discarded_at: <%= Time.current - 1.day %>
   created_at: <%= Time.current - 2.days %>
   updated_at: <%= Time.current - 1.day %>

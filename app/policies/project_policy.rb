@@ -15,7 +15,7 @@ class ProjectPolicy < ApplicationPolicy
   end
 
   def user_assigned_to_project?
-    user.project_ids.include?(record.id)
+    user.dashboards.where(project: record).exists?
   end
 
   class Scope < ApplicationPolicy::Scope

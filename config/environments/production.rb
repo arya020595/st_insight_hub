@@ -87,4 +87,8 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Active Storage: Allow SVG files to be served inline with correct content type
+  config.active_storage.content_types_to_serve_as_binary -= [ "image/svg+xml" ]
+  config.active_storage.content_types_allowed_inline += [ "image/svg+xml" ]
 end

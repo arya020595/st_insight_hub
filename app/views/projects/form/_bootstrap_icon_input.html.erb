@@ -1,0 +1,23 @@
+<%# Bootstrap Icon Input Partial %>
+<%# Renders the Bootstrap icon input with live preview %>
+<div class="input-group">
+  <%= f.text_field :icon,
+      class: "form-control #{'is-invalid' if project.errors[:icon].any?}",
+      placeholder: 'e.g., bi-folder, bi-graph-up',
+      value: project.icon || 'bi-folder',
+      data: {
+        icon_toggle_target: 'iconInput',
+        action: 'input->icon-toggle#previewBootstrapIcon'
+      } %>
+  <span class="input-group-text bg-white">
+    <i data-icon-toggle-target="iconPreview"
+       class="bi <%= project.icon.presence || 'bi-folder' %>"
+       style="font-size: 1.25rem;"></i>
+  </span>
+</div>
+<% if project.errors[:icon].any? %>
+  <div class="invalid-feedback d-block"><%= project.errors[:icon].first %></div>
+<% end %>
+<div class="form-text">
+  Icon class name. Browse at <%= link_to 'Bootstrap Icons', 'https://icons.getbootstrap.com/', target: '_blank', rel: 'noopener' %>
+</div>

@@ -13,7 +13,7 @@
   <div class="row mb-3">
     <div class="col">
       <h4 class="mb-0">
-        <i class="<%= @project.icon.presence || 'bi bi-folder' %> me-2"></i>
+        <%= project_icon(@project) %>
         <%= @dashboard.name %>
       </h4>
       <p class="text-muted small mb-0"><%= @project.name %></p>

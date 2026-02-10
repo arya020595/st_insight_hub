@@ -1,0 +1,36 @@
+<%# Custom SVG File Input Partial %>
+<%# Renders the SVG file upload with preview and remove option %>
+<% if show_svg_section?(project) %>
+  <div class="d-flex align-items-center gap-2 mb-2 p-2 border rounded bg-light">
+    <div style="width: 32px; height: 32px;">
+      <%= image_tag rails_blob_path(project.icon_file, disposition: :inline, only_path: true),
+          style: 'width: 100%; height: 100%; object-fit: contain;',
+          alt: 'Current icon' %>
+    </div>
+    <span class="text-success small flex-grow-1">
+      <i class="bi bi-check-circle me-1"></i> Custom icon uploaded
+    </span>
+    <div class="form-check form-check-inline mb-0">
+      <%= f.check_box :remove_icon_file,
+          class: "form-check-input",
+          id: "remove_icon_file",
+          data: {
+            icon_toggle_target: 'removeFileCheckbox',
+            action: 'change->icon-toggle#handleRemoveFileChange'
+          } %>
+      <%= f.label :remove_icon_file, 'Remove', class: 'form-check-label text-danger small' %>
+    </div>
+  </div>
+<% end %>
+<%= f.file_field :icon_file,
+    accept: '.svg,image/svg+xml',
+    class: "form-control #{'is-invalid' if project.errors[:icon_file].any?}",
+    data: {
+      icon_toggle_target: 'fileInput',
+      action: 'change->icon-toggle#previewSvgFile'
+    } %>
+<% if project.errors[:icon_file].any? %>
+  <div class="invalid-feedback d-block"><%= project.errors[:icon_file].first %></div>
+<% end %>
+<div class="form-text">Upload an SVG file (max 100KB)</div>
+<div data-icon-toggle-target="svgPreview"></div>

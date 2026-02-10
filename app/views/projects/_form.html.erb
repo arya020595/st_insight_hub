@@ -30,13 +30,38 @@
             <div class="invalid-feedback"><%= @project.errors[:status].first %></div>
           <% end %>
         </div>
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6 mb-3"
+             data-controller="icon-toggle"
+             data-icon-toggle-has-existing-file-value="<%= show_svg_section?(@project) %>"
+             data-icon-toggle-default-icon-value="<%= @project.icon.presence || 'bi-folder' %>">
           <%= f.label :icon, 'Sidebar Icon', class: 'form-label' %>
-          <%= f.text_field :icon, class: "form-control #{'is-invalid' if @project.errors[:icon].any?}", placeholder: 'e.g., bi-folder, bi-graph-up', value: @project.icon || 'bi-folder' %>
-          <% if @project.errors[:icon].any? %>
-            <div class="invalid-feedback"><%= @project.errors[:icon].first %></div>
-          <% end %>
-          <div class="form-text">Icon class name (e.g., bi-folder, bi-graph-up). Browse icons at <%= link_to 'Bootstrap Icons', 'https://icons.getbootstrap.com/', target: '_blank', rel: 'noopener' %></div>
+          <%# Hidden field to track which icon type user selected %>
+          <%= f.hidden_field :icon_type, value: initial_icon_type(@project), data: { icon_toggle_target: 'iconTypeField' } %>
+          <%# Segmented buttons for icon type selection %>
+          <div class="btn-group w-100 mb-3" role="group" aria-label="Icon type selection">
+            <input type="radio" class="btn-check" name="icon_type_radio" id="iconTypeBootstrap" value="bootstrap"
+                   <%= 'checked' unless show_svg_section?(@project) %>
+                   data-icon-toggle-target="bootstrapRadio"
+                   data-action="change->icon-toggle#toggle">
+            <label class="btn btn-outline-primary" for="iconTypeBootstrap">
+              <i class="bi bi-bootstrap me-1"></i> Bootstrap Icon
+            </label>
+            <input type="radio" class="btn-check" name="icon_type_radio" id="iconTypeSvg" value="svg"
+                   <%= 'checked' if show_svg_section?(@project) %>
+                   data-icon-toggle-target="svgRadio"
+                   data-action="change->icon-toggle#toggle">
+            <label class="btn btn-outline-primary" for="iconTypeSvg">
+              <i class="bi bi-file-earmark-image me-1"></i> Custom SVG
+            </label>
+          </div>
+          <%# Bootstrap Icon Section %>
+          <div data-icon-toggle-target="bootstrapSection" style="<%= 'display: none;' if show_svg_section?(@project) %>">
+            <%= render 'projects/form/bootstrap_icon_input', f: f, project: @project %>
+          </div>
+          <%# Custom SVG Section %>
+          <div data-icon-toggle-target="svgSection" style="<%= 'display: none;' unless show_svg_section?(@project) %>">
+            <%= render 'projects/form/svg_file_input', f: f, project: @project %>
+          </div>
         </div>
       </div>
       <div class="row">

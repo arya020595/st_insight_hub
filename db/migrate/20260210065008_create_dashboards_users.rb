@@ -6,7 +6,7 @@ class CreateDashboardsUsers < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :dashboards_users, [:dashboard_id, :user_id], unique: true
-    add_index :dashboards_users, [:user_id, :dashboard_id]
+    add_index :dashboards_users, [ :dashboard_id, :user_id ], unique: true
+    add_index :dashboards_users, [ :user_id, :dashboard_id ]
   end
 end

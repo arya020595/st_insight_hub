@@ -120,20 +120,17 @@ puts "✓ Created #{Role.count} roles"
 puts "\n🏢 Creating companies..."
 puts '─' * 80
 
-company_a = Company.find_or_create_by!(code: 'COMP_A') do |company|
-  company.name = 'Acme Corporation'
+company_a = Company.find_or_create_by!(name: 'Acme Corporation') do |company|
   company.description = 'Global technology solutions provider'
   company.status = 'active'
 end
 
-company_b = Company.find_or_create_by!(code: 'COMP_B') do |company|
-  company.name = 'TechVision Inc'
+company_b = Company.find_or_create_by!(name: 'TechVision Inc') do |company|
   company.description = 'Innovative software development company'
   company.status = 'active'
 end
 
-company_c = Company.find_or_create_by!(code: 'COMP_C') do |company|
-  company.name = 'DataFlow Solutions'
+company_c = Company.find_or_create_by!(name: 'DataFlow Solutions') do |company|
   company.description = 'Data analytics and business intelligence'
   company.status = 'active'
 end
@@ -233,89 +230,78 @@ puts '─' * 80
 project_configs = [
   {
     name: 'Sales Analytics',
-    code: 'SALES_ANALYTICS',
     description: 'Sales performance and revenue analytics dashboards',
     icon: 'bi-graph-up',
     status: 'active',
     company: company_a,
-    users: [ client_a1, client_a2 ],
     dashboards: [
-      { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active' },
-      { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active' }
+      { name: 'Sales Overview', embed_url: 'https://example.com/embed/sales-overview', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a2 ] },
+      { name: 'Revenue Breakdown', embed_url: 'https://example.com/embed/revenue', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a2 ] }
     ]
   },
   {
     name: 'Marketing Insights',
-    code: 'MARKETING_INSIGHTS',
     description: 'Marketing campaign performance dashboards',
     icon: 'bi-megaphone',
     status: 'active',
     company: company_a,
-    users: [ client_a1, client_a3 ],
     dashboards: [
-      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active' },
-      { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active' }
+      { name: 'Campaign Performance', embed_url: 'https://example.com/embed/campaigns', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a3 ] },
+      { name: 'Social Media Analytics', embed_url: 'https://example.com/embed/social', embed_type: 'iframe', status: 'active', users: [ client_a1, client_a3 ] }
     ]
   },
   {
     name: 'Operations Dashboard',
-    code: 'OPERATIONS',
     description: 'Operational metrics and KPIs',
     icon: 'bi-gear',
     status: 'active',
     company: company_b,
-    users: [ client_b1, client_b2 ],
     dashboards: [
-      { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active' },
-      { name: 'Productivity Metrics', embed_url: 'https://example.com/embed/productivity', embed_type: 'iframe', status: 'active' }
+      { name: 'KPI Dashboard', embed_url: 'https://example.com/embed/kpi', embed_type: 'iframe', status: 'active', users: [ client_b1, client_b2 ] },
+      { name: 'Productivity Metrics', embed_url: 'https://example.com/embed/productivity', embed_type: 'iframe', status: 'active', users: [ client_b1, client_b2 ] }
     ]
   },
   {
     name: 'Customer Insights',
-    code: 'CUSTOMER_INSIGHTS',
     description: 'Customer behavior and satisfaction analytics',
     icon: 'bi-people',
     status: 'active',
     company: company_c,
-    users: [ client_c1, client_c2, client_c3 ],
     dashboards: [
-      { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active' },
-      { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active' }
+      { name: 'Customer Satisfaction', embed_url: 'https://example.com/embed/csat', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2, client_c3 ] },
+      { name: 'Churn Analysis', embed_url: 'https://example.com/embed/churn', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2, client_c3 ] }
     ]
   },
   {
     name: 'Financial Reports',
-    code: 'FINANCIAL_REPORTS',
     description: 'Financial performance and budget tracking',
     icon: 'bi-currency-dollar',
     status: 'active',
     company: company_c,
-    users: [ client_c1, client_c2 ],
     dashboards: [
-      { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active' },
-      { name: 'Expense Tracking', embed_url: 'https://example.com/embed/expenses', embed_type: 'iframe', status: 'active' }
+      { name: 'Budget Overview', embed_url: 'https://example.com/embed/budget', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2 ] },
+      { name: 'Expense Tracking', embed_url: 'https://example.com/embed/expenses', embed_type: 'iframe', status: 'active', users: [ client_c1, client_c2 ] }
     ]
   }
 ]
 
 project_configs.each do |config|
-  project = Project.find_or_create_by!(code: config[:code], company_id: config[:company].id) do |p|
-    p.name = config[:name]
+  project = Project.find_or_create_by!(name: config[:name], company_id: config[:company].id) do |p|
     p.description = config[:description]
     p.icon = config[:icon]
     p.status = config[:status]
   end
 
-  # Assign users to project
-  project.users = config[:users]
-
   config[:dashboards].each_with_index do |dash_config, index|
-    project.dashboards.find_or_create_by!(name: dash_config[:name]) do |d|
+    dashboard = project.dashboards.find_or_create_by!(name: dash_config[:name]) do |d|
       d.embed_url = dash_config[:embed_url]
       d.embed_type = dash_config[:embed_type]
       d.status = dash_config[:status]
       d.position = index
     end
+
+    # Assign users to dashboard
+    dashboard.users = dash_config[:users] if dash_config[:users].present?
   end
 end
 
@@ -339,12 +325,12 @@ puts "\n👤 Users: #{User.count}"
 puts "   - 1 Superadmin"
 puts "   - #{User.joins(:role).where(roles: { name: 'Client' }).count} Client users"
 puts "\n📊 Projects: #{Project.count} with #{Dashboard.count} dashboards"
-puts "\n🔗 Project Assignments:"
+puts "\n🔗 Dashboard Assignments:"
 
-Project.includes(:company, :users).each do |project|
-  company_name = project.company&.name || 'No company'
-  user_names = project.users.pluck(:name).join(', ')
-  puts "   - #{project.name} (#{company_name}): #{user_names}"
+Dashboard.includes(:project, :users).each do |dashboard|
+  project_name = dashboard.project&.name || 'No project'
+  user_names = dashboard.users.any? ? dashboard.users.pluck(:name).join(', ') : 'No users assigned'
+  puts "   - #{dashboard.name} (#{project_name}): #{user_names}"
 end
 
 puts "\n" + '─' * 80

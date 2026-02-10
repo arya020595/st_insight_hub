@@ -5,7 +5,7 @@
     </h5>
     <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
-  <%= form_with model: @project, html: { class: 'project-form' }, data: { turbo_frame: "_top", controller: "project-form" } do |f| %>
+  <%= form_with model: @project, html: { class: 'project-form' }, data: { turbo_frame: "_top" } do |f| %>
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12 mb-3">
@@ -67,38 +67,13 @@
                 { include_blank: '-- Select Company --' },
                 {
                   class: "form-select #{'is-invalid' if @project.errors[:company].any?}",
-                  required: true,
-                  data: {
-                    project_form_target: "companySelect",
-                    action: "change->project-form#loadUsers"
-                  }
+                  required: true
                 }
             %>
             <% if @project.errors[:company].any? %>
               <div class="invalid-feedback"><%= @project.errors[:company].first %></div>
             <% end %>
             <div class="form-text">Select the company for this project.</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 mb-3">
-            <%= f.label :user_ids, 'Assign Users (Client)', class: 'form-label' %>
-            <%= f.select :user_ids,
-                options_for_select(
-                  @project.company.present? ? @project.company.users.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name).pluck(:name, :id) : [],
-                  @project.user_ids
-                ),
-                {},
-                {
-                  class: "form-select",
-                  multiple: true,
-                  size: 5,
-                  data: {
-                    project_form_target: "usersSelect"
-                  }
-                }
-            %>
-            <div class="form-text">Hold Ctrl/Cmd to select multiple users. Users are filtered based on selected company.</div>
           </div>
         </div>
       <% end %>

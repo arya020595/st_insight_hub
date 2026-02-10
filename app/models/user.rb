@@ -11,7 +11,7 @@ class User < ApplicationRecord
   belongs_to :role, optional: true
   belongs_to :company, optional: true, counter_cache: true
   has_many :audit_logs, dependent: :nullify
-  has_and_belongs_to_many :projects, join_table: :projects_users
+  has_and_belongs_to_many :dashboards, join_table: :dashboards_users
 
   validates :name, presence: true
   validate :company_required_for_client_role
@@ -22,8 +22,8 @@ class User < ApplicationRecord
 
   # Clear cached permissions when role changes
   after_save :clear_permission_cache, if: :saved_change_to_role_id?
-  # Clear project assignments when company changes
-  before_save :clear_projects_on_company_change, if: :will_save_change_to_company_id?
+  # Clear dashboard assignments when company changes
+  before_save :clear_dashboards_on_company_change, if: :will_save_change_to_company_id?
 
   # Ransack configuration
   def self.ransackable_attributes(_auth_object = nil)
@@ -31,7 +31,7 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[role company audit_logs projects]
+    %w[role company audit_logs dashboards]
   end
 
   # Check if user has a specific permission code
@@ -90,9 +90,9 @@ class User < ApplicationRecord
     errors.add(:company_id, "must be selected for Client role") unless role.name == "Superadmin"
   end
 
-  # Clear project assignments when company changes
-  def clear_projects_on_company_change
-    projects.clear if persisted?
+  # Clear dashboard assignments when company changes
+  def clear_dashboards_on_company_change
+    dashboards.clear if persisted?
   end
 
   # Decrement company users_count when user is discarded

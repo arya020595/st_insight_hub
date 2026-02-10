@@ -7,6 +7,7 @@ class Dashboard < ApplicationRecord
   URL_FORMAT = URI::DEFAULT_PARSER.make_regexp(%w[http https]).freeze
 
   belongs_to :project
+  has_and_belongs_to_many :users, join_table: :dashboards_users
 
   validates :name, presence: true
   validates :embed_url, presence: true, format: { with: URL_FORMAT, message: "must be a valid HTTP or HTTPS URL" }
@@ -23,7 +24,7 @@ class Dashboard < ApplicationRecord
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[project]
+    %w[project users]
   end
 
   def active?

@@ -9,12 +9,10 @@ class Project < ApplicationRecord
   # Relationships
   belongs_to :company, counter_cache: true
   has_many :dashboards, dependent: :destroy
-  has_and_belongs_to_many :users, join_table: :projects_users
 
   # Validations
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
-  validate :users_belong_to_same_company
 
   # Update counter cache when project is discarded/undiscarded
   after_discard :decrement_company_projects_count
@@ -31,7 +29,7 @@ class Project < ApplicationRecord
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[dashboards company users]
+    %w[dashboards company]
   end
 
   def active?
@@ -52,15 +50,5 @@ class Project < ApplicationRecord
   # Increment company projects_count when project is undiscarded
   def increment_company_projects_count
     company&.increment!(:projects_count)
-  end
-
-  # Validate that all assigned users belong to the project's company
-  def users_belong_to_same_company
-    return if users.empty? || company_id.blank?
-
-    invalid_users = users.select { |user| user.company_id != company_id }
-    if invalid_users.any?
-      errors.add(:users, "must belong to the same company as the project")
-    end
   end
 end

@@ -96,6 +96,6 @@ class DashboardsController < ApplicationController
   end
 
   def dashboard_params
-    params.require(:dashboard).permit(:name, :embed_url, :embed_type, :status, :position)
+    params.require(:dashboard).permit(:name, :embed_url, :embed_type, :status, :position, user_ids: [])
   end
 end

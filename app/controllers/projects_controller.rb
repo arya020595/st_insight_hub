@@ -100,27 +100,15 @@ class ProjectsController < ApplicationController
 
   def confirm_delete; end
 
-  # AJAX endpoint to get users for a specific company
-  def company_users
-    company = Company.find(params[:company_id])
-    users = company.users.kept
-                   .joins(:role)
-                   .where.not(roles: { name: "Superadmin" })
-                   .order(:name)
-                   .pluck(:id, :name, :email)
-
-    render json: users.map { |id, name, email| { id: id, name: name, email: email } }
-  end
-
   private
 
   def set_project
-    @project = Project.kept.includes(:company, :users).find(params[:id])
+    @project = Project.kept.includes(:company).find(params[:id])
     authorize @project
   end
 
   def project_params
-    permitted = [ :name, :code, :description, :status, :icon, :show_in_sidebar, :sidebar_position, :company_id, user_ids: [] ]
+    permitted = [ :name, :description, :status, :icon, :show_in_sidebar, :sidebar_position, :company_id ]
     params.require(:project).permit(permitted)
   end
 end

@@ -24,11 +24,8 @@ module ProjectsHelper
   # @param project [Project] the project to check
   # @return [Boolean] true if project has attached icon file
   def project_has_custom_icon?(project)
-    project.icon_file.attached?
-  rescue StandardError
-    false
+    project.icon_file&.attached? || false
   end
-
   # Determines if the form should show SVG section by default
   # @param project [Project] the project being edited
   # @return [Boolean] true if project has existing SVG

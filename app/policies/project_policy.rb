@@ -27,7 +27,9 @@ class ProjectPolicy < ApplicationPolicy
 
     def apply_role_based_scope
       # Client users can only see projects they're assigned to
-      scope.joins(:users).where(users: { id: user.id })
+      scope.joins(dashboards: :users)
+           .where(users: { id: user.id })
+           .distinct
     end
   end
 end

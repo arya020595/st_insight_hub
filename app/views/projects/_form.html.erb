@@ -33,7 +33,7 @@
         <div class="col-md-6 mb-3"
              data-controller="icon-toggle"
              data-icon-toggle-has-existing-file-value="<%= show_svg_section?(@project) %>"
-             data-icon-toggle-default-icon-value="<%= @project.icon.presence || 'bi-folder' %>">
+             data-icon-toggle-default-icon-value="<%= sanitize_bootstrap_icon(@project.icon) || 'bi-folder' %>">
           <%= f.label :icon, 'Sidebar Icon', class: 'form-label' %>
           <%# Hidden field to track which icon type user selected %>
           <%= f.hidden_field :icon_type, value: initial_icon_type(@project), data: { icon_toggle_target: 'iconTypeField' } %>

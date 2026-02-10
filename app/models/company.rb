@@ -4,7 +4,7 @@ class Company < ApplicationRecord
   include Discard::Model
 
   # Ignore removed columns
-  self.ignored_columns += ["code"]
+  self.ignored_columns += [ "code" ]
 
   # Relationships
   has_many :users, dependent: :nullify

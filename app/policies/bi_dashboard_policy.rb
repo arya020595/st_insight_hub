@@ -8,8 +8,8 @@ class BiDashboardPolicy < ApplicationPolicy
   def show?
     return false unless user.has_permission?(build_permission_code("show"))
 
-    # Superadmin sees all, others only see dashboards from assigned projects
-    user.superadmin? || user.project_ids.include?(record.project_id)
+    # Superadmin sees all, others only see dashboards they're assigned to
+    user.superadmin? || user.dashboard_ids.include?(record.id)
   end
 
   private
@@ -25,15 +25,15 @@ class BiDashboardPolicy < ApplicationPolicy
       "bi_dashboards"
     end
 
-    # Client users only see projects they're assigned to or dashboards from those projects
+    # Client users only see dashboards they're assigned to
     def apply_role_based_scope
       case scope.model_name.name
       when "Project"
-        # Filter projects by user assignment
-        scope.joins(:users).where(users: { id: user.id })
+        # Filter projects that have dashboards assigned to the user
+        scope.joins(dashboards: :users).where(dashboards_users: { user_id: user.id }).distinct
       when "Dashboard"
-        # Filter dashboards by project assignment
-        scope.joins(:project).merge(Project.joins(:users).where(users: { id: user.id }))
+        # Filter dashboards by user assignment
+        scope.joins(:users).where(dashboards_users: { user_id: user.id })
       else
         # Fallback: return empty relation for unsupported models
         scope.none

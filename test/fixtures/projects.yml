@@ -3,14 +3,12 @@
 # ============================================================================
 # PROJECTS - Based on Business Rules:
 # - Each project belongs to a company
-# - Users are assigned to projects via projects_users join table
-# - Unassigned projects are not accessible to users
+# - Users are assigned to dashboards via dashboards_users join table
 # ============================================================================
 
 # Acme Corporation Projects
 active_project:
   name: Sales Analytics
-  code: SALES_001
   description: Sales performance and revenue analytics
   status: active
   icon: bi-graph-up
@@ -22,7 +20,6 @@ active_project:
 
 marketing_project:
   name: Marketing Insights
-  code: MARKETING_001
   description: Marketing campaign performance
   status: active
   icon: bi-megaphone
@@ -34,7 +31,6 @@ marketing_project:
 
 inactive_project:
   name: Inactive Project
-  code: PROJ_INACTIVE
   description: This is an inactive project
   status: inactive
   icon: bi-folder-x
@@ -47,7 +43,6 @@ inactive_project:
 # DataFlow Solutions Projects
 dataflow_project:
   name: Customer Insights
-  code: CUSTOMER_001
   description: Customer analytics and insights
   status: active
   icon: bi-people
@@ -60,7 +55,6 @@ dataflow_project:
 # Discarded project (soft-deleted)
 discarded_project:
   name: Discarded Project
-  code: PROJ_DISCARDED
   description: This is a discarded project
   status: active
   icon: bi-trash

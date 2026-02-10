@@ -112,9 +112,9 @@ module ApplicationHelper
     @sidebar_projects ||= begin
       base_scope = Project.kept.active.visible_in_sidebar.sidebar_ordered.includes(:dashboards)
 
-      # Non-superadmin users only see projects they are assigned to
+      # Non-superadmin users only see projects that have dashboards they are assigned to
       if current_user && !current_user.superadmin?
-        base_scope.joins(:users).where(users: { id: current_user.id })
+        base_scope.joins(dashboards: :users).where(dashboards_users: { user_id: current_user.id }).distinct
       else
         base_scope
       end

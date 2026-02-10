@@ -2,7 +2,6 @@
 
 acme_corp:
   name: Acme Corporation
-  code: ACME
   status: active
   description: Leading provider of business solutions
   created_at: <%= Time.current - 1.year %>
@@ -10,7 +9,6 @@ acme_corp:
 
 dataflow_solutions:
   name: DataFlow Solutions
-  code: DATAFLOW
   status: active
   description: Data analytics and insights company
   created_at: <%= Time.current - 6.months %>
@@ -18,7 +16,6 @@ dataflow_solutions:
 
 inactive_company:
   name: Inactive Corp
-  code: INACTIVE
   status: inactive
   description: An inactive company
   created_at: <%= Time.current - 2.years %>
@@ -26,7 +23,6 @@ inactive_company:
 
 discarded_company:
   name: Discarded Company
-  code: DISCARDED
   status: active
   description: A discarded company
   discarded_at: <%= Time.current - 1.month %>

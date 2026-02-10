@@ -9,7 +9,7 @@ class BiDashboardPolicy < ApplicationPolicy
     return false unless user.has_permission?(build_permission_code("show"))
 
     # Superadmin sees all, others only see dashboards they're assigned to
-    user.superadmin? || user.dashboard_ids.include?(record.id)
+    user.superadmin? || user.dashboards.exists?(id: record.id)
   end
 
   private

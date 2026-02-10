@@ -30,7 +30,7 @@ namespace :data do
 
       puts "\nAvailable companies:"
       companies.each_with_index do |company, index|
-        puts "#{index + 1}. #{company.name} (#{company.code})"
+        puts "#{index + 1}. #{company.name}"
       end
 
       print "\nSelect company number (1-#{companies.count}): "

@@ -70,20 +70,17 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: st_insight_hub_production
-    username: st_insight_hub
-    password: <%= ENV["ST_INSIGHT_HUB_DATABASE_PASSWORD"] %>
+  primary:
+    url: <%= ENV.fetch("DATABASE_URL") %>
   cache:
-    <<: *primary_production
+    url: <%= ENV.fetch("DATABASE_URL") %>
     database: st_insight_hub_production_cache
     migrations_paths: db/cache_migrate
   queue:
-    <<: *primary_production
+    url: <%= ENV.fetch("DATABASE_URL") %>
     database: st_insight_hub_production_queue
     migrations_paths: db/queue_migrate
   cable:
-    <<: *primary_production
+    url: <%= ENV.fetch("DATABASE_URL") %>
     database: st_insight_hub_production_cable
     migrations_paths: db/cable_migrate

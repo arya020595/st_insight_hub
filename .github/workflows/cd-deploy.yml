@@ -110,7 +110,7 @@ jobs:
             done
 
             echo "→ Running database migrations..."
-            docker compose exec -T web rails db:migrate
+            docker compose exec -T web ./bin/rails db:create db:migrate
 
             echo ""
             echo "=========================================="

@@ -30,6 +30,9 @@ WORKDIR /rails
 # Install bundler
 RUN gem install bundler
 
+# Add Rails bin directory to PATH
+ENV PATH="/rails/bin:${PATH}"
+
 # Copy dependency files
 COPY Gemfile Gemfile.lock ./
 

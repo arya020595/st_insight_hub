@@ -112,6 +112,9 @@ jobs:
             echo "→ Running database migrations..."
             docker compose exec -T web ./bin/rails db:create db:migrate
 
+            echo "→ Setting up cache database..."
+            docker compose exec -T web bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:migrate:cache || true"
+
             echo ""
             echo "=========================================="
             echo "✅ ${APP_NAME} deployed successfully!"

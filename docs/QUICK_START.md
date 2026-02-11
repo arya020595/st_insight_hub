@@ -148,6 +148,29 @@ docker compose logs -f web
 - The Rails server will start automatically when done
 - You can watch progress with `docker compose logs -f web`
 
+### Cache database error (solid_cache_entries does not exist)?
+
+This happens when cache database hasn't been set up.
+
+```bash
+# Setup cache database
+docker compose exec web bash -c "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:migrate:cache"
+
+# Restart services
+docker compose restart web
+```
+
+**Why this happens:**
+
+- App uses multi-database setup (primary, cache, queue, cable)
+- Cache database uses Solid Cache for storing cached data
+- First deployment may miss cache database setup
+
+**Prevention:**
+
+- Deployment workflow automatically runs cache migrations
+- For local dev, run: `docker compose exec web rails db:prepare`
+
 ### Reset everything?
 
 ```bash

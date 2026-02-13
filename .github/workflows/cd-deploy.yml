@@ -62,7 +62,7 @@ jobs:
           echo "Sent Slack start notification"
 
       - name: Deploy to production server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}

@@ -12,11 +12,15 @@ module UserManagement
     end
 
     def show
+      return redirect_to user_management_roles_path unless turbo_frame_request?
+
       @permissions_by_section = @role.permissions.group_by(&:section)
     end
 
     def new
       authorize Role, policy_class: UserManagement::RolePolicy
+      return redirect_to user_management_roles_path unless turbo_frame_request?
+
       @role = Role.new
       @permissions = Permission.kept.order(:section, :name)
     end
@@ -46,6 +50,8 @@ module UserManagement
     end
 
     def edit
+      return redirect_to user_management_roles_path unless turbo_frame_request?
+
       @permissions = Permission.kept.order(:section, :name)
     end
 
@@ -93,12 +99,7 @@ module UserManagement
 
     def confirm_delete
       authorize @role, :confirm_delete?, policy_class: UserManagement::RolePolicy
-
-      if turbo_frame_request?
-        render layout: false
-      else
-        redirect_to user_management_roles_path
-      end
+      return redirect_to user_management_roles_path unless turbo_frame_request?
     end
 
     private

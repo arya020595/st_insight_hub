@@ -1,4 +1,4 @@
-<%= turbo_stream.replace "roles-table-body" do %>
+<%= turbo_stream.update "roles-table-body" do %>
   <% if @roles.any? %>
     <%= render partial: 'role_row', collection: @roles, as: :role %>
   <% else %>

@@ -11,11 +11,15 @@ class CompaniesController < ApplicationController
   end
 
   def show
+    return redirect_to companies_path unless turbo_frame_request?
+
     @users = @company.users.kept.includes(:role).order(:name)
   end
 
   def new
     authorize Company
+    return redirect_to companies_path unless turbo_frame_request?
+
     @company = Company.new
   end
 
@@ -37,7 +41,9 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    return redirect_to companies_path unless turbo_frame_request?
+  end
 
   def update
     data_before = @company.attributes.dup
@@ -79,12 +85,7 @@ class CompaniesController < ApplicationController
 
   def confirm_delete
     authorize @company, :confirm_delete?
-
-    if turbo_frame_request?
-      render layout: false
-    else
-      redirect_to companies_path
-    end
+    return redirect_to companies_path unless turbo_frame_request?
   end
 
   def restore
@@ -100,6 +101,8 @@ class CompaniesController < ApplicationController
   end
 
   def assign_users
+    return redirect_to companies_path unless turbo_frame_request?
+
     @assigned_users = @company.users.kept.order(:name)
     @available_users = User.kept
                            .joins(:role)

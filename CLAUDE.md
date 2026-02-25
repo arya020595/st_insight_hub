@@ -500,6 +500,27 @@ cd-deploy.yml: SSH to production → docker compose pull → up -d → db:migrat
 **Problem**: Sidebar calls `has_permission?` many times, each querying permissions.
 **Solution**: `ApplicationController#eager_load_user_permissions` preloads `{ role: :permissions }` on every request.
 
+### 8. Turbo Stream `replace` Destroys Table Body IDs
+
+**Problem**: After a `turbo_stream.replace "table-body-id"`, the `<tbody id="table-body-id">` element is gone from the DOM. Subsequent turbo stream operations targeting that ID silently fail, and table styling breaks.
+**Root cause**: `turbo_stream.replace` swaps the **entire element** (including the tag with its `id`) with the block content (raw `<tr>` rows). The wrapper `<tbody>` disappears.
+**Solution**: Always use `turbo_stream.update "table-body-id"` — it replaces only the **inner HTML**, keeping the `<tbody>` wrapper and its `id` intact.
+
+### 9. Modal Content Shows on Page Refresh
+
+**Problem**: After opening a modal, refreshing the browser shows the modal content (modal-header, modal-body) rendered directly in the page instead of inside the table/index page.
+**Root cause**: The shared modal uses `turbo_action: "advance"` on its turbo frame, so opening a modal changes the browser URL (e.g. `/projects/1`, `/projects/new`). On refresh, Rails renders the action's view (which is modal-structured HTML) as a full page.
+**Solution**: All controller actions that render modal content must check `turbo_frame_request?` and redirect to the index if accessed directly:
+
+```ruby
+def show
+  return redirect_to things_path unless turbo_frame_request?
+  # ... normal logic
+end
+```
+
+Apply to: `show`, `new`, `edit`, `confirm_delete`, `assign_users` — any action whose view is wrapped in `turbo_frame_tag "modal"`.
+
 ---
 
 ## Code Style & Conventions
@@ -599,3 +620,5 @@ When an AI agent modifies this codebase, verify:
 - [ ] Sidebar link guarded with `can_view_menu?("resource.index")`
 - [ ] No `ENV.fetch` in production section of `database.yml`
 - [ ] JS imports use ESM (no `require()`)
+- [ ] `turbo_stream.update` (not `replace`) used for table body refreshes
+- [ ] `turbo_frame_request?` guard on all modal-rendering actions (`show`, `new`, `edit`, `confirm_delete`, etc.)

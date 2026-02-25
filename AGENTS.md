@@ -766,6 +766,16 @@ test/
 
 8. **Multi-tenant through dashboard assignment**: Client users don't see all dashboards in their company's projects — they only see dashboards they're explicitly assigned to via `dashboards_users` join table.
 
+9. **Turbo Stream `update` vs `replace` for table bodies**: Always use `turbo_stream.update "table-body-id"` (NOT `turbo_stream.replace`) when refreshing table body content. `replace` swaps the **entire element** (including its `id` attribute), so the `<tbody id="...">` wrapper is removed from the DOM. Subsequent turbo stream operations targeting that ID will silently fail. `update` only replaces the **inner HTML**, preserving the wrapper element.
+
+10. **Modal actions must guard with `turbo_frame_request?`**: All controller actions that render modal content (`show`, `new`, `edit`, `confirm_delete`, `assign_users`) must include an early return redirect unless `turbo_frame_request?` is true. The shared modal uses `turbo_action: "advance"` which changes the browser URL when a modal opens. If the user refreshes the page at that URL, the modal-structured HTML (modal-header, modal-body) renders directly into the main content area instead of inside a modal. Pattern:
+    ```ruby
+    def show
+      return redirect_to things_path unless turbo_frame_request?
+      # ... normal logic
+    end
+    ```
+
 ---
 
 ## 16. Documentation Index

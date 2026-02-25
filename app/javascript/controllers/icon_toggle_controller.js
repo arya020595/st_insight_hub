@@ -3,35 +3,35 @@ import { Controller } from "@hotwired/stimulus";
 /**
  * IconToggleController
  *
- * Manages icon selection between Bootstrap Icons and Custom SVG uploads.
- * Provides live preview for Bootstrap icons and SVG file uploads.
+ * Manages icon selection between Bootstrap Icons and Custom Icon uploads.
+ * Supports SVG, PNG, JPEG, WEBP, and GIF uploads with live preview.
  *
  * Targets:
  * - bootstrapRadio: Radio button for Bootstrap icon selection
- * - svgRadio: Radio button for custom SVG selection
+ * - customRadio: Radio button for custom icon selection
  * - bootstrapSection: Container for Bootstrap icon input
- * - svgSection: Container for SVG file upload
+ * - customSection: Container for icon file upload
  * - iconInput: Text input for Bootstrap icon class
  * - iconPreview: Element to display Bootstrap icon preview
- * - fileInput: File input for SVG upload
- * - svgPreview: Container for SVG file preview
- * - removeFileCheckbox: Checkbox to remove existing SVG
+ * - fileInput: File input for icon upload
+ * - iconPreviewArea: Container for icon file preview
+ * - removeFileCheckbox: Checkbox to remove existing icon
  * - iconTypeField: Hidden field to track selected icon type
  *
  * Values:
- * - hasExistingFile: Boolean indicating if project has existing SVG
+ * - hasExistingFile: Boolean indicating if project has existing icon
  * - defaultIcon: Default Bootstrap icon class (default: "bi-folder")
  */
 export default class extends Controller {
   static targets = [
     "bootstrapRadio",
-    "svgRadio",
+    "customRadio",
     "bootstrapSection",
-    "svgSection",
+    "customSection",
     "iconInput",
     "iconPreview",
     "fileInput",
-    "svgPreview",
+    "iconPreviewArea",
     "removeFileCheckbox",
     "iconTypeField",
   ];
@@ -42,7 +42,22 @@ export default class extends Controller {
   };
 
   // Validation constants
-  static MAX_FILE_SIZE = 100 * 1024; // 100KB
+  static MAX_FILE_SIZE = 500 * 1024; // 500KB
+  static VALID_IMAGE_TYPES = [
+    "image/svg+xml",
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+  ];
+  static VALID_IMAGE_EXTENSIONS = [
+    ".svg",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".gif",
+  ];
   static VALID_BOOTSTRAP_ICON_PATTERN = /^bi-[\w-]+$/;
 
   connect() {
@@ -55,9 +70,9 @@ export default class extends Controller {
   // ============================================================================
 
   initializeState() {
-    if (this.hasExistingFileValue && this.hasSvgRadioTarget) {
-      this.svgRadioTarget.checked = true;
-      this.showSvgSection();
+    if (this.hasExistingFileValue && this.hasCustomRadioTarget) {
+      this.customRadioTarget.checked = true;
+      this.showCustomSection();
     } else if (this.hasBootstrapRadioTarget) {
       this.bootstrapRadioTarget.checked = true;
       this.showBootstrapSection();
@@ -75,17 +90,17 @@ export default class extends Controller {
     if (selectedValue === "bootstrap") {
       this.showBootstrapSection();
     } else {
-      this.showSvgSection();
+      this.showCustomSection();
     }
   }
 
   showBootstrapSection() {
     this.setSectionVisibility(this.bootstrapSectionTarget, true);
-    this.setSectionVisibility(this.svgSectionTarget, false);
+    this.setSectionVisibility(this.customSectionTarget, false);
   }
 
-  showSvgSection() {
-    this.setSectionVisibility(this.svgSectionTarget, true);
+  showCustomSection() {
+    this.setSectionVisibility(this.customSectionTarget, true);
     this.setSectionVisibility(this.bootstrapSectionTarget, false);
   }
 
@@ -120,52 +135,67 @@ export default class extends Controller {
   }
 
   // ============================================================================
-  // SVG File Preview
+  // Icon File Preview (SVG, PNG, JPEG, WEBP, GIF)
   // ============================================================================
 
-  previewSvgFile(event) {
+  previewIconFile(event) {
     const file = event.target.files[0];
 
     if (!file) {
-      this.clearSvgPreview();
+      this.clearIconPreview();
       return;
     }
 
-    const validationError = this.validateSvgFile(file);
+    const validationError = this.validateIconFile(file);
     if (validationError) {
       this.showPreviewError(validationError);
       event.target.value = "";
       return;
     }
 
-    this.renderSvgPreview(file);
+    if (this.isSvgFile(file)) {
+      this.renderSvgPreview(file);
+    } else {
+      this.renderRasterPreview(file);
+    }
   }
 
-  validateSvgFile(file) {
-    if (!this.isValidSvgFile(file)) {
-      return "Please select a valid SVG file.";
+  validateIconFile(file) {
+    if (!this.isValidImageFile(file)) {
+      return "Please select a valid image file (SVG, PNG, JPEG, WEBP, or GIF).";
     }
 
     if (file.size > this.constructor.MAX_FILE_SIZE) {
-      return "File size exceeds 100KB limit.";
+      const maxKB = this.constructor.MAX_FILE_SIZE / 1024;
+      return `File size exceeds ${maxKB}KB limit.`;
     }
 
     return null;
   }
 
-  isValidSvgFile(file) {
+  isValidImageFile(file) {
+    const validType = this.constructor.VALID_IMAGE_TYPES.includes(file.type);
+    const validExt = this.constructor.VALID_IMAGE_EXTENSIONS.some((ext) =>
+      file.name.toLowerCase().endsWith(ext),
+    );
+    return validType || validExt;
+  }
+
+  isSvgFile(file) {
     return (
       file.type === "image/svg+xml" || file.name.toLowerCase().endsWith(".svg")
     );
   }
 
+  // ---- SVG preview (rendered inline) ----
+
   renderSvgPreview(file) {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      if (!this.hasSvgPreviewTarget) return;
+      if (!this.hasIconPreviewAreaTarget) return;
 
-      this.svgPreviewTarget.innerHTML = this.buildSvgPreviewHtml(
+      this.iconPreviewAreaTarget.innerHTML = this.buildSvgPreviewHtml(
         e.target.result,
         file.name,
         file.size,
@@ -190,16 +220,55 @@ export default class extends Controller {
   }
 
   normalizeSvgSize() {
-    const svgElement = this.svgPreviewTarget.querySelector("svg");
+    const svgElement = this.iconPreviewAreaTarget.querySelector("svg");
     if (svgElement) {
       svgElement.style.width = "32px";
       svgElement.style.height = "32px";
     }
   }
 
+  // ---- Raster image preview (PNG, JPEG, WEBP, GIF via dataURL) ----
+
+  renderRasterPreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      if (!this.hasIconPreviewAreaTarget) return;
+
+      this.iconPreviewAreaTarget.innerHTML = this.buildRasterPreviewHtml(
+        e.target.result,
+        file.name,
+        file.size,
+      );
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  buildRasterPreviewHtml(dataUrl, fileName, fileSize) {
+    return `
+      <div class="d-flex align-items-center gap-2 mt-2 p-2 border rounded bg-light">
+        <div style="width: 32px; height: 32px;">
+          <img src="${dataUrl}" alt="Icon preview"
+               style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" />
+        </div>
+        <span class="text-success small">
+          <i class="bi bi-check-circle me-1"></i>
+          ${this.escapeHtml(fileName)} (${this.formatFileSize(fileSize)})
+        </span>
+      </div>
+    `;
+  }
+
+  // ---- Legacy alias (in case old views still reference previewSvgFile) ----
+
+  previewSvgFile(event) {
+    this.previewIconFile(event);
+  }
+
   handleRemoveFileChange(event) {
     if (event.target.checked) {
-      this.clearSvgPreview();
+      this.clearIconPreview();
     }
   }
 
@@ -219,15 +288,15 @@ export default class extends Controller {
     }
   }
 
-  clearSvgPreview() {
-    if (this.hasSvgPreviewTarget) {
-      this.svgPreviewTarget.innerHTML = "";
+  clearIconPreview() {
+    if (this.hasIconPreviewAreaTarget) {
+      this.iconPreviewAreaTarget.innerHTML = "";
     }
   }
 
   showPreviewError(message) {
-    if (this.hasSvgPreviewTarget) {
-      this.svgPreviewTarget.innerHTML = `
+    if (this.hasIconPreviewAreaTarget) {
+      this.iconPreviewAreaTarget.innerHTML = `
         <div class="alert alert-danger py-2 mt-2 small">
           <i class="bi bi-exclamation-triangle me-1"></i> ${this.escapeHtml(message)}
         </div>

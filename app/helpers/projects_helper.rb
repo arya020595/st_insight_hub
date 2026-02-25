@@ -26,18 +26,21 @@ module ProjectsHelper
   def project_has_custom_icon?(project)
     project.icon_file&.attached? || false
   end
-  # Determines if the form should show SVG section by default
+  # Determines if the form should show custom icon section by default
   # @param project [Project] the project being edited
-  # @return [Boolean] true if project has existing SVG
-  def show_svg_section?(project)
+  # @return [Boolean] true if project has existing custom icon
+  def show_custom_icon_section?(project)
     project.persisted? && project_has_custom_icon?(project)
   end
 
+  # Legacy alias for backward compatibility
+  alias_method :show_svg_section?, :show_custom_icon_section?
+
   # Returns the initial icon type for the form
   # @param project [Project] the project being edited
-  # @return [String] 'svg' or 'bootstrap'
+  # @return [String] 'custom' or 'bootstrap'
   def initial_icon_type(project)
-    show_svg_section?(project) ? "svg" : "bootstrap"
+    show_custom_icon_section?(project) ? "custom" : "bootstrap"
   end
 
   # Returns a sanitized Bootstrap icon class
@@ -60,17 +63,35 @@ module ProjectsHelper
 
   private
 
-  # Renders a custom SVG icon from Active Storage
+  # Renders a custom icon from Active Storage
+  # Uses optimized variants for raster images (PNG, JPEG, WEBP, GIF)
+  # SVGs are served as-is (vector, no resizing needed)
   # @param project [Project] the project with attached icon
   # @param size [String] CSS size
   # @param css_class [String] additional CSS classes
   # @return [String] HTML img tag
   def render_custom_icon(project, size:, css_class:)
+    icon_source = if project.raster_icon?
+      # Serve optimized variant: resized to 64px, quality 80, stripped metadata
+      project.optimized_icon(size: 64)
+    else
+      # SVG: serve original blob directly
+      project.icon_file
+    end
+
+    # ActiveStorage::Variant uses rails_representation_path; Blob uses rails_blob_path
+    icon_url = if icon_source.respond_to?(:processed)
+      rails_representation_path(icon_source, only_path: true, disposition: :inline)
+    else
+      rails_blob_path(icon_source, disposition: :inline, only_path: true)
+    end
+
     image_tag(
-      rails_blob_path(project.icon_file, disposition: :inline, only_path: true),
+      icon_url,
       class: "project-custom-icon #{css_class}".strip,
-      style: "width: #{size}; height: #{size}; vertical-align: -0.125em;",
-      alt: "#{project.name} icon"
+      style: "width: #{size}; height: #{size}; vertical-align: -0.125em; object-fit: contain;",
+      alt: "#{project.name} icon",
+      loading: "lazy"
     )
   end
 

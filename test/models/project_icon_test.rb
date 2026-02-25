@@ -133,9 +133,28 @@ class ProjectIconTest < ActiveSupport::TestCase
   end
 
   # ============================================================================
-  # TEST 6: Validate only SVG files are accepted
+  # TEST 6: Validate only supported image files are accepted
   # ============================================================================
-  test "reject non-svg file upload" do
+  test "reject unsupported file upload" do
+    pdf_content = "%PDF-1.4" # PDF header
+    pdf_file = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new(pdf_content),
+      filename: "document.pdf",
+      content_type: "application/pdf"
+    )
+
+    project = Project.new(
+      name: "Invalid Icon Project",
+      status: "active",
+      company: @company
+    )
+    project.icon_file.attach(pdf_file)
+
+    assert_not project.valid?
+    assert_includes project.errors[:icon_file], "must be an image file (SVG, PNG, JPEG, WEBP, or GIF)"
+  end
+
+  test "accept PNG file upload" do
     png_content = "\x89PNG\r\n\x1a\n" # PNG header
     png_file = ActiveStorage::Blob.create_and_upload!(
       io: StringIO.new(png_content),
@@ -144,24 +163,24 @@ class ProjectIconTest < ActiveSupport::TestCase
     )
 
     project = Project.new(
-      name: "Invalid Icon Project",
+      name: "PNG Icon Project",
       status: "active",
       company: @company
     )
     project.icon_file.attach(png_file)
 
-    assert_not project.valid?
-    assert_includes project.errors[:icon_file], "must be an SVG file"
+    assert project.valid?
+    assert project.raster_icon?
   end
 
   # ============================================================================
-  # TEST 7: Validate file size limit (100KB max)
+  # TEST 7: Validate file size limit (500KB max)
   # ============================================================================
-  test "reject svg file over 100kb" do
-    # Create SVG content larger than 100KB
-    large_svg_content = '<svg xmlns="http://www.w3.org/2000/svg">' + ("x" * 110_000) + "</svg>"
-    large_svg_file = ActiveStorage::Blob.create_and_upload!(
-      io: StringIO.new(large_svg_content),
+  test "reject icon file over 500kb" do
+    # Create content larger than 500KB
+    large_content = '<svg xmlns="http://www.w3.org/2000/svg">' + ("x" * 520_000) + "</svg>"
+    large_file = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new(large_content),
       filename: "large-icon.svg",
       content_type: "image/svg+xml"
     )
@@ -171,10 +190,10 @@ class ProjectIconTest < ActiveSupport::TestCase
       status: "active",
       company: @company
     )
-    project.icon_file.attach(large_svg_file)
+    project.icon_file.attach(large_file)
 
     assert_not project.valid?
-    assert_includes project.errors[:icon_file], "must be less than 100KB"
+    assert_includes project.errors[:icon_file], "must be less than #{Project::MAX_ICON_FILE_SIZE / 1024}KB"
   end
 
   # ============================================================================

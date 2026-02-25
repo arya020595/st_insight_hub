@@ -770,13 +770,14 @@ test/
 
 ## 16. Documentation Index
 
-| Document               | Path                                        | Content                |
-| ---------------------- | ------------------------------------------- | ---------------------- |
-| Quick Start            | `docs/QUICK_START.md`                       | Setup and first run    |
-| Architecture Blueprint | `docs/ARCHITECTURE_BLUEPRINT.md`            | Detailed system design |
-| Devise Guide           | `docs/DEVISE_GUIDE.md`                      | Authentication setup   |
-| Ransack Guide          | `docs/ransack/RANSACK_GUIDE.md`             | Search & filtering     |
-| Multi-Sort             | `docs/ransack/MULTI_SORT_IMPLEMENTATION.md` | Multi-column sort      |
-| Tom Select Guide       | `docs/TOM_SELECT_GUIDE.md`                  | Multi-select combo box |
-| Project Icon Upload    | `docs/PROJECT_ICON_UPLOAD.md`               | Active Storage icons   |
-| Production Deployment  | `docs/PRODUCTION_DEPLOYMENT_GUIDE.md`       | Deployment guide       |
+| Document               | Path                                        | Content                                |
+| ---------------------- | ------------------------------------------- | -------------------------------------- |
+| Quick Start            | `docs/QUICK_START.md`                       | Setup and first run                    |
+| Architecture Blueprint | `docs/ARCHITECTURE_BLUEPRINT.md`            | Detailed system design                 |
+| Devise Guide           | `docs/DEVISE_GUIDE.md`                      | Authentication setup                   |
+| Ransack Guide          | `docs/ransack/RANSACK_GUIDE.md`             | Search & filtering                     |
+| Multi-Sort             | `docs/ransack/MULTI_SORT_IMPLEMENTATION.md` | Multi-column sort                      |
+| Tom Select Guide       | `docs/TOM_SELECT_GUIDE.md`                  | Multi-select combo box                 |
+| Project Icon Upload    | `docs/PROJECT_ICON_UPLOAD.md`               | Active Storage icons                   |
+| Dashboard Embed Guide  | `docs/DASHBOARD_EMBED_GUIDE.md`             | iframe vs embed_url — when to use each |
+| Production Deployment  | `docs/PRODUCTION_DEPLOYMENT_GUIDE.md`       | Deployment guide                       |

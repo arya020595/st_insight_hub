@@ -4,9 +4,18 @@ class Project < ApplicationRecord
   include Discard::Model
 
   # Constants
-  MAX_ICON_FILE_SIZE = 100.kilobytes
+  MAX_ICON_FILE_SIZE = 500.kilobytes
   VALID_STATUSES = %w[active inactive].freeze
   DEFAULT_ICON = "bi-folder"
+  VALID_ICON_CONTENT_TYPES = %w[
+    image/svg+xml
+    image/png
+    image/jpeg
+    image/webp
+    image/gif
+  ].freeze
+  # Maximum pixel dimensions for stored icon (raster images are resized on upload)
+  ICON_MAX_DIMENSION = 256
 
   # Ignore removed columns
   self.ignored_columns += [ "code" ]
@@ -49,7 +58,7 @@ class Project < ApplicationRecord
     dashboards.kept.count
   end
 
-  # Returns the icon to display - either custom SVG or Bootstrap icon class
+  # Returns the icon to display - either custom file or Bootstrap icon class
   # @return [Symbol, String] :custom if has custom icon, otherwise Bootstrap icon class
   def display_icon
     if icon_file.attached?
@@ -59,15 +68,34 @@ class Project < ApplicationRecord
     end
   end
 
-  # Check if this project uses a custom SVG icon
+  # Check if this project uses a custom uploaded icon
   # @return [Boolean] true if custom icon is attached
   def custom_icon?
     icon_file.attached?
   end
 
+  # Check if the attached icon is a raster image (not SVG)
+  # @return [Boolean] true if PNG, JPEG, WEBP, or GIF
+  def raster_icon?
+    icon_file.attached? && icon_file.content_type != "image/svg+xml"
+  end
+
+  # Returns an optimized variant for raster icons (resized + compressed)
+  # SVGs are returned as-is since they're vector and don't need resizing
+  # @param size [Integer] max dimension in pixels (default: 64)
+  # @return [ActiveStorage::Variant, ActiveStorage::Attached::One] the optimized icon
+  def optimized_icon(size: 64)
+    return icon_file unless raster_icon?
+
+    icon_file.variant(
+      resize_to_limit: [ size, size ],
+      saver: { quality: 80, strip: true }
+    )
+  end
+
   private
 
-  # Validate icon file is SVG format and within size limit
+  # Validate icon file format and size
   def icon_file_format
     return unless icon_file.attached?
 
@@ -76,15 +104,15 @@ class Project < ApplicationRecord
   end
 
   def validate_icon_content_type
-    return if icon_file.content_type == "image/svg+xml"
+    return if VALID_ICON_CONTENT_TYPES.include?(icon_file.content_type)
 
-    errors.add(:icon_file, "must be an SVG file")
+    errors.add(:icon_file, "must be an image file (SVG, PNG, JPEG, WEBP, or GIF)")
   end
 
   def validate_icon_file_size
     return if icon_file.byte_size <= MAX_ICON_FILE_SIZE
 
-    errors.add(:icon_file, "must be less than 100KB")
+    errors.add(:icon_file, "must be less than #{MAX_ICON_FILE_SIZE / 1024}KB")
   end
 
   # Decrement company projects_count when project is discarded

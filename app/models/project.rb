@@ -14,8 +14,8 @@ class Project < ApplicationRecord
     image/webp
     image/gif
   ].freeze
-  # Maximum pixel dimensions for stored icon (raster images are resized on upload)
-  ICON_MAX_DIMENSION = 256
+  # Explicit list of raster MIME types — used for `raster_icon?` check
+  RASTER_ICON_CONTENT_TYPES = %w[image/png image/jpeg image/webp image/gif].freeze
 
   # Ignore removed columns
   self.ignored_columns += [ "code" ]
@@ -74,18 +74,22 @@ class Project < ApplicationRecord
     icon_file.attached?
   end
 
-  # Check if the attached icon is a raster image (not SVG)
-  # @return [Boolean] true if PNG, JPEG, WEBP, or GIF
+  # Check if the attached icon is a known raster image (PNG, JPEG, WEBP, or GIF)
+  # Only returns true for explicitly supported raster types — not just "not SVG".
+  # @return [Boolean]
   def raster_icon?
-    icon_file.attached? && icon_file.content_type != "image/svg+xml"
+    icon_file.attached? && RASTER_ICON_CONTENT_TYPES.include?(icon_file.content_type)
   end
 
-  # Returns an optimized variant for raster icons (resized + compressed)
-  # SVGs are returned as-is since they're vector and don't need resizing
+  # Returns an optimized on-demand variant for raster icons (resized + compressed).
+  # SVGs are returned as-is (vector, no resizing needed).
+  # Falls back to the original blob if the attachment is not variable (e.g. invalid file
+  # that slipped past validation) to avoid raising ActiveStorage::InvariableError.
   # @param size [Integer] max dimension in pixels (default: 64)
-  # @return [ActiveStorage::Variant, ActiveStorage::Attached::One] the optimized icon
+  # @return [ActiveStorage::VariantWithRecord, ActiveStorage::Attached::One]
   def optimized_icon(size: 64)
     return icon_file unless raster_icon?
+    return icon_file unless icon_file.variable?
 
     icon_file.variant(
       resize_to_limit: [ size, size ],

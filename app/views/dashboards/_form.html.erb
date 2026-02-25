@@ -67,14 +67,17 @@
                   @project.company.present? ? @project.company.users.kept.joins(:role).where.not(roles: { name: 'Superadmin' }).order(:name).pluck(:name, :id) : [],
                   @dashboard.user_ids
                 ),
-                {},
+                { include_blank: true },
                 {
                   class: "form-select",
                   multiple: true,
-                  size: 5
+                  data: {
+                    controller: "tom-select",
+                    tom_select_placeholder_value: "Search and select users..."
+                  }
                 }
             %>
-            <div class="form-text">Hold Ctrl/Cmd to select multiple users. Only users from the project's company are shown.</div>
+            <div class="form-text">Search and select users to assign. Only users from the project's company are shown.</div>
           </div>
         </div>
       <% end %>

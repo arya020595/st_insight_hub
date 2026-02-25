@@ -34,7 +34,11 @@ module UserManagement
           summary: "Created role: #{@role.name}",
           data_after: @role.attributes.merge(permission_ids: @role.permission_ids)
         )
-        redirect_to user_management_roles_path, notice: "Role was successfully created."
+        reload_roles_list
+        respond_to do |format|
+          format.html { redirect_to user_management_roles_path, notice: "Role was successfully created." }
+          format.turbo_stream
+        end
       else
         @permissions = Permission.kept.order(:section, :name)
         render :new, status: :unprocessable_entity
@@ -58,7 +62,11 @@ module UserManagement
           data_before: data_before,
           data_after: @role.attributes.merge(permission_ids: @role.permission_ids)
         )
-        redirect_to user_management_roles_path, notice: "Role was successfully updated."
+        reload_roles_list
+        respond_to do |format|
+          format.html { redirect_to user_management_roles_path, notice: "Role was successfully updated." }
+          format.turbo_stream
+        end
       else
         @permissions = Permission.kept.order(:section, :name)
         render :edit, status: :unprocessable_entity
@@ -76,7 +84,11 @@ module UserManagement
         summary: "Deleted role: #{@role.name}",
         data_before: data_before
       )
-      redirect_to user_management_roles_path, notice: "Role was successfully deleted."
+      reload_roles_list
+      respond_to do |format|
+        format.html { redirect_to user_management_roles_path, notice: "Role was successfully deleted." }
+        format.turbo_stream
+      end
     end
 
     def confirm_delete
@@ -103,6 +115,12 @@ module UserManagement
     def update_permissions
       permission_ids = params[:role][:permission_ids]&.reject(&:blank?)&.map(&:to_i) || []
       @role.permission_ids = permission_ids
+    end
+
+    def reload_roles_list
+      @q = policy_scope(Role, policy_scope_class: UserManagement::RolePolicy::Scope).kept.ransack(params[:q])
+      @q.sorts = "name asc" if @q.sorts.empty?
+      @pagy, @roles = pagy(@q.result.includes(:permissions))
     end
   end
 end

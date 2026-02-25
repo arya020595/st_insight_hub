@@ -9,3 +9,6 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 # Bootstrap
 pin "bootstrap", to: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.esm.min.js"
 pin "@popperjs/core", to: "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js"
+
+# Tom Select (multi-select combo box) - vendored ESM bundle from esm.sh
+pin "tom-select", to: "tom-select.js"

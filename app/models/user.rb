@@ -71,12 +71,14 @@ class User < ApplicationRecord
     return :dashboard_path if has_permission?("dashboard.index")
 
     # Check other permissions in order of priority
+    return :projects_path if has_permission?("projects.index")
     return :bi_dashboards_path if has_permission?("bi_dashboards.index")
     return :user_management_users_path if has_permission?("user_management.users.index")
     return :audit_logs_path if has_permission?("audit_logs.index")
 
-    # Default fallback
-    :dashboard_path
+    # Default fallback - use profile path to avoid infinite loops
+    # if the user has no permissions that map to a route
+    :profile_path
   end
 
   private

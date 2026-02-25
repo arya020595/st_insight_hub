@@ -36,7 +36,7 @@ class DashboardsController < ApplicationController
 
   def edit
     authorize @project, :update?
-    return redirect_to project_path(@project) unless turbo_frame_request?
+    redirect_to project_path(@project) unless turbo_frame_request?
   end
 
   def update
@@ -86,7 +86,7 @@ class DashboardsController < ApplicationController
 
   def confirm_delete
     authorize @project, :destroy?
-    return redirect_to project_path(@project) unless turbo_frame_request?
+    redirect_to project_path(@project) unless turbo_frame_request?
   end
 
   private

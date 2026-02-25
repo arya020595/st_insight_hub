@@ -12,7 +12,7 @@ module UserManagement
     end
 
     def show
-      return redirect_to user_management_users_path unless turbo_frame_request?
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def new
@@ -41,7 +41,7 @@ module UserManagement
     end
 
     def edit
-      return redirect_to user_management_users_path unless turbo_frame_request?
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def update
@@ -85,7 +85,7 @@ module UserManagement
 
     def confirm_delete
       authorize @user, :confirm_delete?, policy_class: UserManagement::UserPolicy
-      return redirect_to user_management_users_path unless turbo_frame_request?
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def restore

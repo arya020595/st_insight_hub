@@ -42,7 +42,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    return redirect_to companies_path unless turbo_frame_request?
+    redirect_to companies_path unless turbo_frame_request?
   end
 
   def update
@@ -85,7 +85,7 @@ class CompaniesController < ApplicationController
 
   def confirm_delete
     authorize @company, :confirm_delete?
-    return redirect_to companies_path unless turbo_frame_request?
+    redirect_to companies_path unless turbo_frame_request?
   end
 
   def restore

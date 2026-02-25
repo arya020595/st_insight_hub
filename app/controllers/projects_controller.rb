@@ -43,7 +43,7 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    return redirect_to projects_path unless turbo_frame_request?
+    redirect_to projects_path unless turbo_frame_request?
   end
 
   def update
@@ -77,7 +77,7 @@ class ProjectsController < ApplicationController
   end
 
   def confirm_delete
-    return redirect_to projects_path unless turbo_frame_request?
+    redirect_to projects_path unless turbo_frame_request?
   end
 
   private

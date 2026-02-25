@@ -99,7 +99,7 @@ module UserManagement
 
     def confirm_delete
       authorize @role, :confirm_delete?, policy_class: UserManagement::RolePolicy
-      return redirect_to user_management_roles_path unless turbo_frame_request?
+      redirect_to user_management_roles_path unless turbo_frame_request?
     end
 
     private

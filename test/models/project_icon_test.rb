@@ -155,9 +155,8 @@ class ProjectIconTest < ActiveSupport::TestCase
   end
 
   test "accept PNG file upload" do
-    png_content = "\x89PNG\r\n\x1a\n" # PNG header
     png_file = ActiveStorage::Blob.create_and_upload!(
-      io: StringIO.new(png_content),
+      io: file_fixture("icon.png").open,
       filename: "icon.png",
       content_type: "image/png"
     )

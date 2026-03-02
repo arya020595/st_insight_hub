@@ -2,20 +2,22 @@
 
 ## Overview
 
-This document describes the custom SVG icon upload feature for projects, which allows users to choose between Bootstrap Icons or custom SVG files for project sidebar icons.
+This document describes the custom icon upload feature for projects, which allows users to choose between Bootstrap Icons or custom image files (SVG, PNG, JPEG, WEBP, or GIF) for project sidebar icons.
 
 ## Background
 
 ### Problem Statement
 
-Previously, projects only supported Bootstrap Icons specified by class name (e.g., `bi-folder`). Users requested the ability to upload custom SVG icons for better branding and visual distinction between projects.
+Previously, projects only supported Bootstrap Icons specified by class name (e.g., `bi-folder`). Users requested the ability to upload custom icons for better branding and visual distinction between projects.
 
 ### Solution
 
 We implemented a toggle-based UI that allows users to:
 
 1. **Bootstrap Icon**: Enter a Bootstrap icon class name with live preview
-2. **Custom SVG**: Upload an SVG file (max 100KB) with validation
+2. **Custom Icon**: Upload an image file — SVG, PNG, JPEG, WEBP, or GIF (max 500KB) with validation
+
+Raster images (PNG, JPEG, WEBP, GIF) are automatically optimized on display via Active Storage variants (resized to a max of 64px, quality 80, metadata stripped). SVGs are served as-is.
 
 The system automatically handles switching between icon types, including cleanup of old attachments.
 

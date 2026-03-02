@@ -85,6 +85,13 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
+  test "show redirects to index without turbo frame request" do
+    sign_in @superadmin
+
+    get audit_log_path(@john_log)
+    assert_redirected_to audit_logs_path
+  end
+
   # ============================================================================
   # SHOW ACTION TESTS - Role-based Access
   # ============================================================================
@@ -93,11 +100,11 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
     sign_in @superadmin
 
     # Superadmin can view any user's log
-    get audit_log_path(@john_log)
+    get audit_log_path(@john_log), headers: { "Turbo-Frame" => "modal" }
     assert_response :success
     assert_match @john_log.summary, response.body
 
-    get audit_log_path(@alice_log)
+    get audit_log_path(@alice_log), headers: { "Turbo-Frame" => "modal" }
     assert_response :success
     assert_match @alice_log.summary, response.body
   end
@@ -105,7 +112,7 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
   test "client can view their own audit log" do
     sign_in @client_john
 
-    get audit_log_path(@john_log)
+    get audit_log_path(@john_log), headers: { "Turbo-Frame" => "modal" }
     assert_response :success
     assert_match @john_log.summary, response.body
   end
@@ -113,7 +120,7 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
   test "client cannot view other users audit logs" do
     sign_in @client_john
 
-    get audit_log_path(@jane_log)
+    get audit_log_path(@jane_log), headers: { "Turbo-Frame" => "modal" }
     # Should be redirected with authorization error
     assert_redirected_to dashboard_path
     assert_equal "You are not authorized to perform this action.", flash[:alert]
@@ -122,7 +129,7 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
   test "client cannot view audit logs from different company" do
     sign_in @client_john  # Acme user
 
-    get audit_log_path(@alice_log)  # DataFlow user's log
+    get audit_log_path(@alice_log), headers: { "Turbo-Frame" => "modal" }  # DataFlow user's log
     assert_redirected_to dashboard_path
     assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
@@ -134,14 +141,14 @@ class AuditLogsControllerTest < ActionDispatch::IntegrationTest
   test "show raises error for non-existent audit log ID" do
     sign_in @superadmin
 
-    get audit_log_path(id: 99999)
+    get audit_log_path(id: 99999), headers: { "Turbo-Frame" => "modal" }
     assert_response :not_found
   end
 
   test "show handles invalid audit log ID gracefully" do
     sign_in @superadmin
 
-    get audit_log_path(id: "invalid-id")
+    get audit_log_path(id: "invalid-id"), headers: { "Turbo-Frame" => "modal" }
     assert_response :not_found
   end
 

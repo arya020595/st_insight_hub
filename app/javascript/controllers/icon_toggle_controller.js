@@ -21,6 +21,7 @@ import { Controller } from "@hotwired/stimulus";
  * Values:
  * - hasExistingFile: Boolean indicating if project has existing icon
  * - defaultIcon: Default Bootstrap icon class (default: "bi-folder")
+ * - maxFileSize: Maximum allowed file size in bytes (passed from Rails, default: 500KB)
  */
 export default class extends Controller {
   static targets = [
@@ -39,10 +40,9 @@ export default class extends Controller {
   static values = {
     hasExistingFile: { type: Boolean, default: false },
     defaultIcon: { type: String, default: "bi-folder" },
+    // Passed from Rails via data-icon-toggle-max-file-size-value to stay in sync with Project::MAX_ICON_FILE_SIZE
+    maxFileSize: { type: Number, default: 500 * 1024 },
   };
-
-  // Validation constants
-  static MAX_FILE_SIZE = 500 * 1024; // 500KB
   static VALID_IMAGE_TYPES = [
     "image/svg+xml",
     "image/png",
@@ -153,11 +153,7 @@ export default class extends Controller {
       return;
     }
 
-    if (this.isSvgFile(file)) {
-      this.renderSvgPreview(file);
-    } else {
-      this.renderRasterPreview(file);
-    }
+    this.renderImagePreview(file);
   }
 
   validateIconFile(file) {
@@ -165,8 +161,8 @@ export default class extends Controller {
       return "Please select a valid image file (SVG, PNG, JPEG, WEBP, or GIF).";
     }
 
-    if (file.size > this.constructor.MAX_FILE_SIZE) {
-      const maxKB = this.constructor.MAX_FILE_SIZE / 1024;
+    if (file.size > this.maxFileSizeValue) {
+      const maxKB = this.maxFileSizeValue / 1024;
       return `File size exceeds ${maxKB}KB limit.`;
     }
 
@@ -181,75 +177,33 @@ export default class extends Controller {
     return validType || validExt;
   }
 
-  isSvgFile(file) {
-    return (
-      file.type === "image/svg+xml" || file.name.toLowerCase().endsWith(".svg")
+  // ---- Unified image preview via object URL (safe from DOM injection) ----
+  // Both SVG and raster files are previewed via <img src="objectURL"> rather
+  // than inserting raw file content, which prevents script execution in SVGs.
+
+  renderImagePreview(file) {
+    if (!this.hasIconPreviewAreaTarget) return;
+
+    const objectUrl = URL.createObjectURL(file);
+    this.iconPreviewAreaTarget.innerHTML = this.buildImagePreviewHtml(
+      objectUrl,
+      file.name,
+      file.size,
     );
-  }
 
-  // ---- SVG preview (rendered inline) ----
-
-  renderSvgPreview(file) {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      if (!this.hasIconPreviewAreaTarget) return;
-
-      this.iconPreviewAreaTarget.innerHTML = this.buildSvgPreviewHtml(
-        e.target.result,
-        file.name,
-        file.size,
-      );
-
-      this.normalizeSvgSize();
-    };
-
-    reader.readAsText(file);
-  }
-
-  buildSvgPreviewHtml(svgContent, fileName, fileSize) {
-    return `
-      <div class="d-flex align-items-center gap-2 mt-2 p-2 border rounded bg-light">
-        <div style="width: 32px; height: 32px;">${svgContent}</div>
-        <span class="text-success small">
-          <i class="bi bi-check-circle me-1"></i>
-          ${this.escapeHtml(fileName)} (${this.formatFileSize(fileSize)})
-        </span>
-      </div>
-    `;
-  }
-
-  normalizeSvgSize() {
-    const svgElement = this.iconPreviewAreaTarget.querySelector("svg");
-    if (svgElement) {
-      svgElement.style.width = "32px";
-      svgElement.style.height = "32px";
+    // Revoke the object URL once the image has loaded to release memory
+    const img = this.iconPreviewAreaTarget.querySelector("img");
+    if (img) {
+      img.onload = () => URL.revokeObjectURL(objectUrl);
+      img.onerror = () => URL.revokeObjectURL(objectUrl);
     }
   }
 
-  // ---- Raster image preview (PNG, JPEG, WEBP, GIF via dataURL) ----
-
-  renderRasterPreview(file) {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      if (!this.hasIconPreviewAreaTarget) return;
-
-      this.iconPreviewAreaTarget.innerHTML = this.buildRasterPreviewHtml(
-        e.target.result,
-        file.name,
-        file.size,
-      );
-    };
-
-    reader.readAsDataURL(file);
-  }
-
-  buildRasterPreviewHtml(dataUrl, fileName, fileSize) {
+  buildImagePreviewHtml(objectUrl, fileName, fileSize) {
     return `
       <div class="d-flex align-items-center gap-2 mt-2 p-2 border rounded bg-light">
         <div style="width: 32px; height: 32px;">
-          <img src="${dataUrl}" alt="Icon preview"
+          <img src="${objectUrl}" alt="Icon preview"
                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" />
         </div>
         <span class="text-success small">

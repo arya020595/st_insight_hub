@@ -1,12 +1,12 @@
 <% if notice.present? %>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <div class="alert alert-success alert-dismissible fade show" role="alert" data-controller="flash">
     <i class="bi bi-check-circle-fill me-2"></i>
     <%= notice %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% end %>
 <% if alert.present? %>
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" data-controller="flash">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
     <%= alert %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

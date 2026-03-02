@@ -13,11 +13,15 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    return redirect_to projects_path unless turbo_frame_request?
+
     @dashboards = @project.dashboards.kept.ordered
   end
 
   def new
     authorize Project
+    return redirect_to projects_path unless turbo_frame_request?
+
     @project = Project.new
   end
 
@@ -38,7 +42,9 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    redirect_to projects_path unless turbo_frame_request?
+  end
 
   def update
     IconFileService.new(@project).handle_icon_change(project_params)
@@ -70,7 +76,9 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def confirm_delete; end
+  def confirm_delete
+    redirect_to projects_path unless turbo_frame_request?
+  end
 
   private
 

@@ -11,10 +11,14 @@ module UserManagement
       @pagy, @users = pagy(@q.result.includes(:role))
     end
 
-    def show; end
+    def show
+      redirect_to user_management_users_path unless turbo_frame_request?
+    end
 
     def new
       authorize User, policy_class: UserManagement::UserPolicy
+      return redirect_to user_management_users_path unless turbo_frame_request?
+
       @user = User.new
     end
 
@@ -36,7 +40,9 @@ module UserManagement
       end
     end
 
-    def edit; end
+    def edit
+      redirect_to user_management_users_path unless turbo_frame_request?
+    end
 
     def update
       data_before = @user.attributes.except("encrypted_password").dup
@@ -79,12 +85,7 @@ module UserManagement
 
     def confirm_delete
       authorize @user, :confirm_delete?, policy_class: UserManagement::UserPolicy
-
-      if turbo_frame_request?
-        render layout: false
-      else
-        redirect_to user_management_users_path
-      end
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def restore

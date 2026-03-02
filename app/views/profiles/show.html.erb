@@ -78,7 +78,7 @@
                     <div class="info-label">
                       <i class="bi bi-calendar-check text-primary me-2"></i>Member Since
                     </div>
-                    <div class="info-value"><%= @user.created_at.strftime("%B %d, %Y") %></div>
+                    <div class="info-value"><%= @user.created_at.in_time_zone.strftime("%B %d, %Y") %></div>
                   </div>
                 </div>
               </div>
@@ -100,9 +100,9 @@
                       <i class="bi bi-clock-history text-success me-2"></i>Last Sign In
                     </div>
                     <div class="info-value">
-                      <%= @user.last_sign_in_at ? @user.last_sign_in_at.strftime("%B %d, %Y") : 'Never' %>
+                      <%= @user.last_sign_in_at ? @user.last_sign_in_at.in_time_zone.strftime("%B %d, %Y") : 'Never' %>
                       <% if @user.last_sign_in_at %>
-                        <small class="text-muted d-block"><%= @user.last_sign_in_at.strftime("%I:%M %p") %></small>
+                        <small class="text-muted d-block"><%= @user.last_sign_in_at.in_time_zone.strftime("%I:%M %p") %></small>
                       <% end %>
                     </div>
                   </div>

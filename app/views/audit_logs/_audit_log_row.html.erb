@@ -33,7 +33,7 @@
     <code class="small"><%= audit_log.ip_address || '-' %></code>
   </td>
   <td class="text-center">
-    <span title="<%= audit_log.created_at.strftime('%Y-%m-%d %H:%M:%S') %>">
+    <span title="<%= audit_log.created_at.in_time_zone.strftime('%Y-%m-%d %H:%M:%S') %>">
       <%= time_ago_in_words(audit_log.created_at) %> ago
     </span>
   </td>

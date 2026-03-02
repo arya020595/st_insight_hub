@@ -40,7 +40,7 @@
                 <% end %>
               </dd>
               <dt class="col-sm-4 text-muted">At:</dt>
-              <dd class="col-sm-8"><%= @audit_log.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+              <dd class="col-sm-8"><%= @audit_log.created_at.in_time_zone.strftime("%B %d, %Y at %I:%M %p") %></dd>
               <dt class="col-sm-4 text-muted">IP Address:</dt>
               <dd class="col-sm-8">
                 <%= @audit_log.ip_address.presence || content_tag(:span, 'N/A', class: 'text-muted') %>

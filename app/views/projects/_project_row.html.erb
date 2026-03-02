@@ -29,6 +29,6 @@
       <%= project.status.titleize %>
     </span>
   </td>
-  <td class="text-center"><%= project.created_at.strftime("%b %d, %Y %H:%M") if project.created_at %></td>
-  <td class="text-center"><%= project.updated_at.strftime("%b %d, %Y %H:%M") if project.updated_at %></td>
+  <td class="text-center"><%= project.created_at.in_time_zone.strftime("%b %d, %Y %H:%M") if project.created_at %></td>
+  <td class="text-center"><%= project.updated_at.in_time_zone.strftime("%b %d, %Y %H:%M") if project.updated_at %></td>
 </tr>

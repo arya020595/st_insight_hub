@@ -21,7 +21,8 @@ module BiDashboardManagementSystem
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    # Display all times in Malaysian Time (MYT, UTC+8)
+    config.time_zone = "Kuala Lumpur"
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end

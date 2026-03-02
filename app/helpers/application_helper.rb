@@ -65,22 +65,24 @@ module ApplicationHelper
     end
   end
 
-  # Format datetime for display
+  # Format datetime for display in the configured application time zone (Malaysian Time).
   # @param datetime [DateTime] the datetime to format
   # @param format [Symbol] the format to use (:short, :long, :date_only)
   # @return [String] formatted datetime
   def format_datetime(datetime, format = :short)
     return "-" if datetime.blank?
 
+    local = datetime.in_time_zone
+
     case format
     when :short
-      datetime.strftime("%Y-%m-%d %H:%M")
+      local.strftime("%Y-%m-%d %H:%M")
     when :long
-      datetime.strftime("%B %d, %Y at %I:%M %p")
+      local.strftime("%B %d, %Y at %I:%M %p")
     when :date_only
-      datetime.strftime("%Y-%m-%d")
+      local.strftime("%Y-%m-%d")
     else
-      datetime.to_s
+      local.to_s
     end
   end
 

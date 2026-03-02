@@ -48,7 +48,7 @@
               </dt>
               <dd class="col-sm-8">
                 <% if @user.current_sign_in_at %>
-                  <%= @user.current_sign_in_at.strftime("%B %d, %Y at %I:%M %p") %>
+                  <%= @user.current_sign_in_at.in_time_zone.strftime("%B %d, %Y at %I:%M %p") %>
                 <% else %>
                   <%= tag.span "Never signed in", class: "text-muted" %>
                 <% end %>
@@ -57,13 +57,13 @@
                 Created At:
               </dt>
               <dd class="col-sm-8">
-                <%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <%= @user.created_at.in_time_zone.strftime("%B %d, %Y at %I:%M %p") %>
               </dd>
               <dt class="col-sm-4 text-muted">
                 Updated At:
               </dt>
               <dd class="col-sm-8">
-                <%= @user.updated_at.strftime("%B %d, %Y at %I:%M %p") %>
+                <%= @user.updated_at.in_time_zone.strftime("%B %d, %Y at %I:%M %p") %>
               </dd>
             </dl>
           </div>

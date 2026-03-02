@@ -23,6 +23,6 @@
   </td>
   <td class="text-center"><%= role.id %></td>
   <td><%= role.name %></td>
-  <td class="text-center"><%= role.created_at.strftime("%b %d, %Y %H:%M") %></td>
-  <td class="text-center"><%= role.updated_at.strftime("%b %d, %Y %H:%M") %></td>
+  <td class="text-center"><%= role.created_at.in_time_zone.strftime("%b %d, %Y %H:%M") %></td>
+  <td class="text-center"><%= role.updated_at.in_time_zone.strftime("%b %d, %Y %H:%M") %></td>
 </tr>

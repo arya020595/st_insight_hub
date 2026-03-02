@@ -9,8 +9,9 @@ class AuditLogsController < ApplicationController
   end
 
   def show
+    return redirect_to audit_logs_path unless turbo_frame_request?
+
     @audit_log = AuditLog.find(params[:id])
     authorize @audit_log
-    redirect_to audit_logs_path unless turbo_frame_request?
   end
 end

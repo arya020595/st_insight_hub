@@ -5,12 +5,15 @@ if [ -f tmp/pids/server.pid ]; then
   rm tmp/pids/server.pid
 fi
 
-# Install missing gems automatically
-echo "Checking for missing gems..."
-bundle check || bundle install --jobs 4 --retry 3
+# Install missing gems automatically (development only)
+if [ "$RAILS_ENV" != "production" ]; then
+  echo "Checking for missing gems..."
+  bundle check || bundle install --jobs 4 --retry 3
+fi
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "Preparing all databases (primary, cache, queue, cable)..."
   ./bin/rails db:prepare
 fi
 

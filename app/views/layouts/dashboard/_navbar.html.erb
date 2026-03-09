@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand" href="<%= root_path %>">
-      <i class="bi bi-bar-chart-line-fill me-2"></i>
-      <%= ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub') %>
+    <a class="navbar-brand d-flex align-items-center" href="<%= root_path %>">
+      <%= image_tag "st_insight_hub_logo_dashboard.jpeg", alt: ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub'), class: "navbar-logo me-2" %>
+      <span class="visually-hidden"><%= ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub') %></span>
     </a>
-    <button id="sidebarToggle" class="btn btn-outline-light me-3" type="button">
+    <button id="sidebarToggle" class="btn btn-outline-dark me-3" type="button" aria-label="Toggle sidebar">
       <i class="bi bi-list"></i>
     </button>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

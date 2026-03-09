@@ -4,7 +4,7 @@
       <%= image_tag "st_insight_hub_logo_dashboard.jpeg", alt: ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub'), class: "navbar-logo me-2" %>
       <span class="visually-hidden"><%= ENV.fetch('APP_COMPANY_NAME', 'ST Insight Hub') %></span>
     </a>
-    <button id="sidebarToggle" class="btn btn-outline-dark me-3" type="button">
+    <button id="sidebarToggle" class="btn btn-outline-dark me-3" type="button" aria-label="Toggle sidebar">
       <i class="bi bi-list"></i>
     </button>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

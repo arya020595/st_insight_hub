@@ -2,9 +2,8 @@
   <div class="login-wrapper">
     <div class="login-container">
       <div class="brand-section">
-        <i class="bi bi-bar-chart-fill brand-icon"></i>
-        <h1 class="brand-title">ST Insight Hub</h1>
-        <p class="brand-subtitle">Business Intelligence Dashboard</p>
+        <%= image_tag "st_insight_hub_logo.png", alt: "ST Insight Hub", class: "brand-logo" %>
+        <p class="brand-subtitle">Empowering Decisions Through Insight</p>
       </div>
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="field">
@@ -31,7 +30,14 @@
           <%= link_to "Forgot your password?", new_password_path(resource_name) %>
         <% end %>
       </div>
-      <p class="powered-by">Powered By ST Datablu</p>
+      <div class="powered-by text-center">
+        <p class="powered-by-text">Powered by</p>
+        <div class="powered-by-partners">
+          <span class="partner-name">ST Advisory</span>
+          <span class="separator">|</span>
+          <span class="partner-name">ST Datablu</span>
+        </div>
+      </div>
     </div>
     <div class="login-background"></div>
   </div>

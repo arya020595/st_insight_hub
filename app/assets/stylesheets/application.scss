@@ -543,10 +543,13 @@
   margin-bottom: 2rem;
 }
 
-#login-page .brand-icon {
-  font-size: 3.5rem;
-  color: #0d6efd;
-  margin-bottom: 0.5rem;
+#login-page .brand-logo {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 #login-page .brand-title {

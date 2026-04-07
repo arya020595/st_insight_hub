@@ -13,6 +13,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      packages: read
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -63,10 +65,14 @@ jobs:
 
       - name: Deploy to production server
         uses: appleboy/ssh-action@v1.2.5
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          envs: GHCR_TOKEN,GHCR_USER
           script: |
             set -e
 
@@ -82,6 +88,9 @@ jobs:
             echo "=========================================="
 
             cd "$APP_PATH"
+
+            echo "→ Logging in to GitHub Container Registry..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
             echo "→ Pulling latest Docker image..."
             docker compose pull
@@ -126,6 +135,9 @@ jobs:
             echo "✅ ${APP_NAME} deployed successfully!"
             echo "=========================================="
             docker compose ps
+
+            echo "→ Logging out from GitHub Container Registry..."
+            docker logout ghcr.io
 
       - name: Notify Slack - Deployment Result
         if: always()

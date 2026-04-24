@@ -56,7 +56,7 @@ gem "ransack"
 gem "sidekiq", "~> 8.1"
 
 # dry-rb: functional programming helpers
-gem "dry-monads", "~> 1.9"
+gem "dry-monads", "~> 1.10"
 
 # State machine library for Ruby objects (AASM) — used to model object states and transitions
 gem "aasm", "~> 5.5", ">= 5.5.2"
